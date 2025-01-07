@@ -9,7 +9,7 @@ import torch
 import wandb
 from sentence_transformers import SentenceTransformer
 from torch.optim import Adam
-import tensorflow_hub as hub 
+# import tensorflow_hub as hub 
 from data import create_dataset
 from rt1_pytorch.rt1_policy import RT1Policy
 from tqdm import tqdm
@@ -22,6 +22,9 @@ import pickle
 import time
 from tqdm import tqdm
 from ai2thor.controller import Controller
+from motionglot.generate_lambda_actions import get_actions
+from motionglot.tokenize_moma import detokenize_action
+import cv2
 
 np.random.seed(47)
 
@@ -64,7 +67,7 @@ def parse_args():
     )
     parser.add_argument(
         "--split-type",
-        default = 'k_fold_scene',
+        default = 'task_split',
         choices = ['k_fold_scene', 'task_split', 'diversity_ablation'],
     )
     parser.add_argument(
@@ -97,6 +100,23 @@ def parse_args():
         help='use distance input if true, not if false', 
         action='store_true'
     )
+    #MotionGlot args below
+    parser.add_argument(
+        "--image_token_model", 
+        help="point to the file with the name of all files", 
+        default= "motionglot/img_token_model.pth", 
+        type=str
+    )
+    parser.add_argument("--checkpoint_path",
+        help="point to the file with the name of all files",
+        default= "results/checkpoints/motionglot-nodist-task_split" ,
+        type=str
+    )
+    parser.add_argument("--tokenizer_path", 
+        help=" path to folder with tokenizer " , 
+        default= "motionglot/lambda_tokenizer/moma", 
+        type= str 
+    ) 
     return parser.parse_args()
 
 
@@ -165,11 +185,11 @@ def main():
 
 
     #NOTE: has to be Not None because of raw instruction input
-    text_embedding_model = (
-        SentenceTransformer(args.sentence_transformer)
-        if args.sentence_transformer
-        else hub.load("https://tfhub.dev/google/universal-sentence-encoder/4") 
-    )
+    # text_embedding_model = (
+    #     SentenceTransformer(args.sentence_transformer)
+    #     if args.sentence_transformer
+    #     else hub.load("https://tfhub.dev/google/universal-sentence-encoder/4") 
+    # )
    
 
     def get_text_embedding(observation: Dict):
@@ -226,7 +246,7 @@ def main():
         a = None
         word_action = state_action['word_action']
         i = state_action['i']
-        print(word_action)
+        # print(word_action)
         if word_action in ['MoveAhead', 'MoveBack', 'MoveRight', 'MoveLeft']:
             if word_action == "MoveAhead":
                 a = dict(action="MoveAgent", ahead=move, right=0, returnToStart=False,speed=1,fixedDeltaTime=fixedDeltaTime)
@@ -265,7 +285,7 @@ def main():
             print(e)         
             breakpoint()
         
-        time.sleep(0.1)
+        # time.sleep(0.1)
         success = event.metadata['lastActionSuccess']
         error = event.metadata['errorMessage']
 
@@ -320,7 +340,7 @@ def main():
     if args.eval_set == 'train':
         iterable_keys = np.random.choice(np.array(iterable_keys), size=len(test_dataloader.dataset.dataset_keys), replace=False)
 
-    for task in tqdm(iterable_keys):   
+    for task in tqdm(iterable_keys[30:]):   
 
         traj_group = train_dataloader.dataset.hdf[task]
         
@@ -329,22 +349,26 @@ def main():
         json_str = traj_group[traj_steps[0]].attrs['metadata']
         traj_json_dict = json.loads(json_str)
 
+        nl_cmd = traj_json_dict['nl_command']
+
         #skip tasks that already rolled out
-        if traj_json_dict['nl_command'] in completed_dict and completed_dict[traj_json_dict['nl_command']] == 1:
+        if nl_cmd in completed_dict and completed_dict[nl_cmd] == 1:
             print("skipped")
             continue
 
-        #extract the NL command
-        language_command_embedding = get_text_embedding(np.array([[traj_json_dict['nl_command']]]))
-        language_command_embedding = np.repeat(language_command_embedding, 6, axis=1)
+        #get NL cmd embedding
+        # language_command_embedding = get_text_embedding(np.array([[nl_cmd]]))
+        # language_command_embedding = np.repeat(language_command_embedding, 6, axis=1)
 
         # start/reset THOR env for every trajectory/task
         controller, last_event, i = start_reset(traj_json_dict['scene'], controller)
 
         #extract the visual observation from initialzed environment
-        curr_image = last_event.frame
-        visual_observation = np.expand_dims(np.expand_dims(curr_image, axis=0) , axis=0)
-        visual_observation = np.repeat(visual_observation, 6, axis=1)
+        curr_image = last_event.frame.copy()
+        curr_image = cv2.resize(curr_image, (224, 224), interpolation=cv2.INTER_AREA)
+        curr_image = torch.from_numpy(curr_image).permute(2,0,1).unsqueeze(0)
+        # visual_observation = np.expand_dims(np.expand_dims(curr_image, axis=0) , axis=0)
+        # visual_observation = np.repeat(visual_observation, 6, axis=1)
 
         #track the starting coordinates for body, yaw rotation and arm coordinate
         curr_arm_coordinate = np.array(list(last_event.metadata["arm"]["joints"][3]['position'].values()))
@@ -383,17 +407,42 @@ def main():
             
             return dist_to_goal, ee_dist_to_obj
 
+        def _extract_actions(action_string):
+            """
+            Parses an action string and returns a tuple with the action word and a list of indices.
+            
+            Parameters:
+            - action_string (str): The action string to parse (e.g., "RotateAgent 3" or "MoveArm 1 , 2 , 3").
+            
+            Returns:
+            - tuple: A tuple containing the action word (str) and a list of indices (list of ints).
+            """
+            action_string = action_string.strip()
+
+            # Split the string into the action word and the rest
+            parts = action_string.split(" ", 1)
+            action_word = parts[0]  # The first part is the action word
+            indices = None  # Default to None if no indices are found
+
+            if len(parts) > 1:  # Check if there's more content after the action word
+                indices_part = parts[1]  # The rest contains the indices
+                # Parse indices, ensuring only valid integers are processed
+                indices = [int(x.strip()) for x in indices_part.replace(",", " ").split() if x.strip().isdigit()]
+                if not indices:  # If the list of indices is empty, set to None
+                    indices = None
+            return action_word, indices
+
         #extract distances from the environment
         if args.use_dist:
             dist_to_goal, ee_dist_to_obj = _get_distances(True)
 
 
         #track the total number of steps and the last control mode
-        num_steps = 0; curr_mode = None; is_terminal = False
+        num_steps = 0; action_discrete = None; is_terminal = False
 
        
         #track data for all steps
-        trajectory_data = []
+        # trajectory_data = []
         
         print("\n")
         print("\n")
@@ -402,49 +451,69 @@ def main():
         print("\n")
         time.sleep(1)
         pickedup = False
-        while (curr_mode != 'stop' or is_terminal) and num_steps < 400:
+        while (action_discrete != 'Done' or is_terminal) and num_steps < 400:
             
             #provide the current observation to the model
-            if args.use_dist:
-                curr_observation = {
-                    'image': visual_observation,
-                    'context': language_command_embedding,
-                    'goal_dist': dist_to_goal,
-                    'ee_obj_dist': ee_dist_to_obj
-                }
+            # if args.use_dist:
+            #     curr_observation = {
+            #         'image': visual_observation,
+            #         'context': language_command_embedding,
+            #         'goal_dist': dist_to_goal,
+            #         'ee_obj_dist': ee_dist_to_obj
+            #     }
+            # else:
+            #     curr_observation = {
+            #         'image': visual_observation,
+            #         'context': language_command_embedding
+            #     }
+
+            # generated_action_tokens = rt1_model_policy.act(curr_observation)
+            mg_tokens = get_actions(curr_image, nl_cmd, args.tokenizer_path, args.image_token_model, args.checkpoint_path)
+            print(f'mg: {mg_tokens}')
+            action_discrete, action_cont_idx = _extract_actions(mg_tokens)
+            #skips nonsense motionglot predictions that are not real actions
+            if action_discrete not in ["Done", "MoveArm", "LookUp", "LookDown", "RotateAgent", "MoveAhead", "MoveArmBase", "PickUp", "Release", "MoveBack", "MoveLeft", "MoveRight"]:
+                # print(f"Skipped {action_discrete}")
+                continue
+            if action_discrete == "MoveArmBase":
+                breakpoint()
+                print("Skipped MoveArmBase")
+                continue
+            if action_discrete in ['MoveArm', 'MoveArmBase']:
+                action_delta_arm = detokenize_action(action_discrete, action_cont_idx)
+                action_delta_rot = 0
+            elif action_discrete in ['RotateAgent']:
+                action_delta_rot = detokenize_action(action_discrete, action_cont_idx)
+                action_delta_arm = [0,0,0]
             else:
-                curr_observation = {
-                    'image': visual_observation,
-                    'context': language_command_embedding
-                }
-            
-            generated_action_tokens = rt1_model_policy.act(curr_observation)
+                action_delta_arm = [0,0,0]
+                action_delta_rot = 0
 
             #de-tokenize the generated actions from RT1
-            curr_mode = train_dataloader.dataset.detokenize_mode(generated_action_tokens['control_mode'][0])
+            # curr_mode = train_dataloader.dataset.detokenize_mode(generated_action_tokens['control_mode'][0])
             # print(curr_mode)
 
             # terminate_episode = generated_action_tokens['terminate_episode'][0] #not needed for actual rolling out
 
-            continuous_variables = {
-                'body_yaw_delta': generated_action_tokens['body_yaw_delta'],
-                'arm_position_delta': generated_action_tokens['arm_position_delta'],
-                'curr_mode': curr_mode
-            }
+            # continuous_variables = {
+            #     'body_yaw_delta': generated_action_tokens['body_yaw_delta'],
+            #     'arm_position_delta': generated_action_tokens['arm_position_delta'],
+            #     'curr_mode': action_discrete
+            # }
 
-            continuous_variables = train_dataloader.dataset.detokenize_continuous_data(continuous_variables)
-            body_yaw_delta = continuous_variables['body_yaw_delta'][0][0]
-            arm_position_delta = np.squeeze(continuous_variables['arm_position_delta'])
-            curr_action = train_dataloader.dataset.detokenize_action(curr_mode, body_yaw_delta, arm_position_delta)
+            # continuous_variables = train_dataloader.dataset.detokenize_continuous_data(continuous_variables)
+            # body_yaw_delta = continuous_variables['body_yaw_delta'][0][0]
+            # arm_position_delta = np.squeeze(continuous_variables['arm_position_delta'])
+            # curr_action = train_dataloader.dataset.detokenize_action(curr_mode, body_yaw_delta, arm_position_delta)
 
             #update the tracked coordinate data based on model output
-            curr_arm_coordinate += arm_position_delta
+            curr_arm_coordinate += action_delta_arm
 
 
             #execute the generated action in the AI2THOR simulator
             step_args = {
-                'word_action': curr_action,
-                'body_yaw_delta': body_yaw_delta,
+                'word_action': action_discrete,
+                'body_yaw_delta': action_delta_rot,
                 'arm_position': curr_arm_coordinate,
                 'i': i
             }
@@ -467,38 +536,42 @@ def main():
 
             
             #fetch object holding from simulator; also maybe fetch coordinate of body/arm + yaw from simulator
-            agent_holding = np.array(last_event.metadata['arm']['heldObjects'])
+            # agent_holding = np.array(last_event.metadata['arm']['heldObjects'])
             
             #fetch the new visual observation from the simulator, update the current mode and increment number of steps
-            curr_image = np.expand_dims(np.expand_dims(last_event.frame, axis=0) , axis=0)
+            # curr_image = np.expand_dims(np.expand_dims(last_event.frame, axis=0) , axis=0)
+            curr_image = last_event.frame.copy()
+            curr_image = cv2.resize(curr_image, (224, 224), interpolation=cv2.INTER_AREA)
+            curr_image = torch.from_numpy(curr_image).permute(2,0,1).unsqueeze(0)
 
             #removes the oldest observation in the window of 6 and adds the latest to replace it
-            visual_observation = visual_observation[:,1:,:,:,:]
-            visual_observation = np.concatenate((visual_observation, curr_image), axis=1)
+            # visual_observation = visual_observation[:,1:,:,:,:]
+            # visual_observation = np.concatenate((visual_observation, curr_image), axis=1)
             
             num_steps +=1
 
             curr_arm_coordinate = np.array(list(last_event.metadata["arm"]["joints"][3]['position'].values()))
             
+            time.sleep(0.1)
 
             #add data to the dataframe CSV
-            step_data = {   
-                'task': traj_json_dict['nl_command'],
-                'scene': traj_json_dict['scene'],
-                'img': curr_image,
-                'yaw_body_delta': body_yaw_delta,
-                'xyz_ee': curr_arm_coordinate,
-                'xyz_ee_delta': arm_position_delta,
-                'holding_obj': agent_holding,
-                'control_mode': curr_mode,
-                'action': curr_action,
-                # 'terminate': terminate_episode,
-                'step': num_steps,
-                'timeout': num_steps >=1500,
-                'error': error
-            }
+            # step_data = {   
+            #     'task': traj_json_dict['nl_command'],
+            #     'scene': traj_json_dict['scene'],
+            #     'img': curr_image,
+            #     'yaw_body_delta': body_yaw_delta,
+            #     'xyz_ee': curr_arm_coordinate,
+            #     'xyz_ee_delta': arm_position_delta,
+            #     'holding_obj': agent_holding,
+            #     'control_mode': curr_mode,
+            #     'action': curr_action,
+            #     # 'terminate': terminate_episode,
+            #     'step': num_steps,
+            #     'timeout': num_steps >=1500,
+            #     'error': error
+            # }
             
-            trajectory_data.append(step_data)
+            # trajectory_data.append(step_data)
 
         #save the final event with all metadata: save as a json file dict
         # save_path = os.path.join(args.trajectory_save_path, task)
@@ -507,7 +580,6 @@ def main():
 
         #close the old GUI for AI2Thor after trajectory finishes
         # ai2thor_env.controller.stop()
-        time.sleep(0.25)
 
         nav_to_target = input("Enter score for nav_to_target: ")
         grasped_target_obj = input("Enter score for grasped_target_obj: ")

@@ -208,6 +208,8 @@ models/main_models/rt1_ft_env
 models/main_models/spoc-robot-training/
 models/main_models/rt1/src/
 models/main_models/rt1/val_losses/
+models/main_models/rt1/motionglot/pickle_data
+models/main_models/rt1/motionglot/img_token_model.pth
 /modespot/
 Trajectories/
 sim_commands.npy
