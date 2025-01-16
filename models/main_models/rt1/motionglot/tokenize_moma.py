@@ -351,10 +351,8 @@ if __name__ == "__main__":
         all_text = pickle.load(file)
     with open('all_lang_instruct.pkl', 'rb') as file:
         all_lang = pickle.load(file)
-    # breakpoint()
     with open('all_scenes.pkl', 'rb') as file:
         all_scenes = pickle.load(file)
-    
     with open('all_masks.pkl', 'rb') as file:
         all_masks = pickle.load(file)
     with open('all_tokens_ids.pkl', 'rb') as file:
@@ -370,23 +368,25 @@ if __name__ == "__main__":
     num_traj = len(all_token_ids)
     assert len(all_token_ids) == len(all_masks)
 
-    all_train, all_valid= [] , [] 
-    all_train_mask, all_valid_mask = [], []
+    # all_train, all_valid= [] , [] 
+    # all_train_mask, all_valid_mask = [], []
 
 
-    if os.path.exists("scene_to_ids.json") and os.path.exists("scene_to_masks.json") and os.path.exists("scene_to_langs.json"):
-        with open("scene_to_ids.json", "r") as file:
-            scene_to_ids = json.load(file)
-        with open("scene_to_masks.json", "r") as file:
-            scene_to_masks = json.load(file)
-        with open("scene_to_langs.json", "r") as file:
-            scene_to_langs = json.load(file)
-    else:
-        scene_to_ids, scene_to_masks, scene_to_langs = split_by_scene(all_token_ids, all_masks, all_scenes, all_lang)
-    # scene_to_ids = realign(scene_to_ids)
-    breakpoint()
-    scenes = list(sorted(list(scene_to_ids.keys())))
+    # if os.path.exists("scene_to_ids.json") and os.path.exists("scene_to_masks.json") and os.path.exists("scene_to_langs.json"):
+    #     with open("scene_to_ids.json", "r") as file:
+    #         scene_to_ids = json.load(file)
+    #     with open("scene_to_masks.json", "r") as file:
+    #         scene_to_masks = json.load(file)
+    #     with open("scene_to_langs.json", "r") as file:
+    #         scene_to_langs = json.load(file)
+    # else:
+    #     scene_to_ids, scene_to_masks, scene_to_langs = split_by_scene(all_token_ids, all_masks, all_scenes, all_lang)
+
+    # scenes = list(sorted(list(scene_to_ids.keys())))
     
+    train_langs = []
+    val_langs = []
+
     train_data = []
     val_data = []
     # test_data = []
@@ -396,26 +396,49 @@ if __name__ == "__main__":
     # test_mask = []
 
     if args.split_type == 'task_gen':
-        for scene in scenes:   
-            scene_ids = copy(scene_to_ids[scene])
-            mask_ids = copy(scene_to_masks[scene])
+        # for scene in scenes:   
+        #     scene_ids = copy(scene_to_ids[scene])
+        #     mask_ids = copy(scene_to_masks[scene])
             
-            # indices = np.arange(len(scene_ids))
-            # np.random.shuffle(indices)
-            # scene_ids = scene_ids[indices]
-            # mask_ids = mask_ids[indices]
+        #     # indices = np.arange(len(scene_ids))
+        #     # np.random.shuffle(indices)
+        #     # scene_ids = scene_ids[indices]
+        #     # mask_ids = mask_ids[indices]
 
-            split_idx = int(len(scene_ids)*(train_split))
-            split_idx2 = int(len(scene_ids)*(train_split+val_split))
+        #     split_idx = int(len(scene_ids)*(train_split))
+        #     split_idx2 = int(len(scene_ids)*(train_split+val_split))
             
-            train_data += scene_ids[:split_idx]
-            val_data += scene_ids[split_idx:split_idx2]
-            # test_data += scene_ids[split_idx2:]
+        #     train_data += scene_ids[:split_idx]
+        #     val_data += scene_ids[split_idx:split_idx2]
+        #     # test_data += scene_ids[split_idx2:]
 
-            train_mask += mask_ids[:split_idx]
-            val_mask += mask_ids[split_idx:split_idx2]
-            # test_mask += mask_ids[split_idx2:]
+        #     train_mask += mask_ids[:split_idx]
+        #     val_mask += mask_ids[split_idx:split_idx2]
+        #     # test_mask += mask_ids[split_idx2:]
         
+
+        with open('train_cmds_task_gen.pkl', 'rb') as file:
+            train_cmds_task_gen = pickle.load(file)
+        with open('val_cmds_task_gen.pkl', 'rb') as file:
+            val_cmds_task_gen = pickle.load(file)
+
+        # Iterate through train_cmds_task_gen to find matching elements and their indices
+        for cmd in train_cmds_task_gen:
+            for i, lang_group in enumerate(all_lang):
+                if cmd == lang_group[0]:  # Match only the first element of each inner list
+                    train_langs.append(lang_group[0])
+                    train_data.append(all_token_ids[i].tolist())
+                    train_mask.append(all_masks[i].tolist())
+        # Iterate through val_cmds_task_gen to find matching elements and their indices
+        for cmd in val_cmds_task_gen:
+            for i, lang_group in enumerate(all_lang):
+                if cmd == lang_group[0]:  # Match only the first element of each inner list
+                    val_langs.append(lang_group[0])
+                    val_data.append(all_token_ids[i].tolist())
+                    val_mask.append(all_masks[i].tolist())
+
+        assert set(train_langs).isdisjoint(set(val_langs)), "The lists have overlapping elements!"
+
         # Flatten the first two dimensions (3D to 2D)
         train_data = torch.tensor(list(chain.from_iterable(train_data)))
         val_data = torch.tensor(list(chain.from_iterable(val_data)))
@@ -463,7 +486,7 @@ if __name__ == "__main__":
 
     print(train_data.shape, train_mask.shape ,valid_mask.shape ,valid_data.shape)
 
-    tokenizer.save_pretrained("lambda_tokenizer/lambda_scene_gen")
+    tokenizer.save_pretrained("lambda_tokenizer/lambda_task_gen")
 
-    with open("train_data_lambda/lambda_scene_gen.pkl", "wb") as f:
+    with open("train_data_lambda/lambda_task_gen.pkl", "wb") as f:
         pickle.dump(DATA , f)
