@@ -494,7 +494,7 @@ if __name__ == "__main__":
 
     tokenizer.save_pretrained(f"lambda_tokenizer/lambda_{args.split_type}_{args.test_scene}")
 
-    with open(f"tokenized_pickles/lambda_{args.split_type}_{args.test_scene}.pkl", "wb") as f:
+    with open(f"tokenized_dataset_pickles/lambda_{args.split_type}_{args.test_scene}.pkl", "wb") as f:
         pickle.dump(DATA , f)
     
     print("FINISHED!")
