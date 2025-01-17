@@ -339,6 +339,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     train_split = 0.8
     val_split = 0.1
+    test_scene = args.test_scene
 
     tokenizer , VOCAB  = define_vocabulary()
     
@@ -395,7 +396,41 @@ if __name__ == "__main__":
     val_mask = []
     # test_mask = []
 
-    if args.split_type == 'task_gen':
+    if args.split_type == "task_gen":
+        with open('train_cmds_task_gen.pkl', 'rb') as file:
+            train_cmds_subset = pickle.load(file)
+        with open('val_cmds_task_gen.pkl', 'rb') as file:
+            val_cmds_subset = pickle.load(file)
+    else:
+        with open(f'train_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
+            train_cmds_subset = pickle.load(file)
+        with open(f'val_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
+            val_cmds_subset = pickle.load(file)
+
+    # Iterate through train_cmds_task_gen to find matching elements and their indices
+    for cmd in train_cmds_subset:
+        for i, lang_group in enumerate(all_lang):
+            if cmd == lang_group[0]:  # Match only the first element of each inner list
+                train_langs.append(lang_group[0])
+                train_data.append(all_token_ids[i].tolist())
+                train_mask.append(all_masks[i].tolist())
+    # Iterate through val_cmds_task_gen to find matching elements and their indices
+    for cmd in val_cmds_subset:
+        for i, lang_group in enumerate(all_lang):
+            if cmd == lang_group[0]:  # Match only the first element of each inner list
+                val_langs.append(lang_group[0])
+                val_data.append(all_token_ids[i].tolist())
+                val_mask.append(all_masks[i].tolist())
+
+    assert set(train_langs).isdisjoint(set(val_langs)), "The lists have overlapping elements!"
+
+    # Flatten the first two dimensions (3D to 2D)
+    train_data = torch.tensor(list(chain.from_iterable(train_data)))
+    val_data = torch.tensor(list(chain.from_iterable(val_data)))
+    train_mask = torch.tensor(list(chain.from_iterable(train_mask)))
+    val_mask = torch.tensor(list(chain.from_iterable(val_mask)))
+
+    # if args.split_type == 'task_gen':
         # for scene in scenes:   
         #     scene_ids = copy(scene_to_ids[scene])
         #     mask_ids = copy(scene_to_masks[scene])
@@ -415,78 +450,51 @@ if __name__ == "__main__":
         #     train_mask += mask_ids[:split_idx]
         #     val_mask += mask_ids[split_idx:split_idx2]
         #     # test_mask += mask_ids[split_idx2:]
-        
-
-        with open('train_cmds_task_gen.pkl', 'rb') as file:
-            train_cmds_task_gen = pickle.load(file)
-        with open('val_cmds_task_gen.pkl', 'rb') as file:
-            val_cmds_task_gen = pickle.load(file)
-
-        # Iterate through train_cmds_task_gen to find matching elements and their indices
-        for cmd in train_cmds_task_gen:
-            for i, lang_group in enumerate(all_lang):
-                if cmd == lang_group[0]:  # Match only the first element of each inner list
-                    train_langs.append(lang_group[0])
-                    train_data.append(all_token_ids[i].tolist())
-                    train_mask.append(all_masks[i].tolist())
-        # Iterate through val_cmds_task_gen to find matching elements and their indices
-        for cmd in val_cmds_task_gen:
-            for i, lang_group in enumerate(all_lang):
-                if cmd == lang_group[0]:  # Match only the first element of each inner list
-                    val_langs.append(lang_group[0])
-                    val_data.append(all_token_ids[i].tolist())
-                    val_mask.append(all_masks[i].tolist())
-
-        assert set(train_langs).isdisjoint(set(val_langs)), "The lists have overlapping elements!"
-
-        # Flatten the first two dimensions (3D to 2D)
-        train_data = torch.tensor(list(chain.from_iterable(train_data)))
-        val_data = torch.tensor(list(chain.from_iterable(val_data)))
-        train_mask = torch.tensor(list(chain.from_iterable(train_mask)))
-        val_mask = torch.tensor(list(chain.from_iterable(val_mask)))
-    else:
-        assert(args.test_scene < len(scenes), "Error: input test scene is out of index space")
+    # else:
+    #     assert(args.test_scene < len(scenes), "Error: input test scene is out of index space")
 
         # Iterate through all scenes except the test scene
-        for x in range(len(scenes)):
-            if x != args.test_scene:
-                scene_ids = scene_to_ids[scenes[x]]
-                scene_masks = scene_to_masks[scenes[x]] 
+        # for x in range(len(scenes)):
+        #     if x != args.test_scene:
+        #         scene_ids = scene_to_ids[scenes[x]]
+        #         scene_masks = scene_to_masks[scenes[x]] 
 
-                np.random.shuffle(scene_ids)
-                np.random.shuffle(scene_masks)
+        #         np.random.shuffle(scene_ids)
+        #         np.random.shuffle(scene_masks)
 
 
-                # Stratified split: use 80% for training and 20% for validation
-                split_idx = int(train_split * len(scene_ids))
+        #         # Stratified split: use 80% for training and 20% for validation
+        #         split_idx = int(train_split * len(scene_ids))
                 
-                train_data += scene_ids[:split_idx]
-                val_data += scene_ids[split_idx:]
+        #         train_data += scene_ids[:split_idx]
+        #         val_data += scene_ids[split_idx:]
                 
-                train_mask += scene_masks[:split_idx]
-                val_mask += scene_masks[split_idx:]
+        #         train_mask += scene_masks[:split_idx]
+        #         val_mask += scene_masks[split_idx:]
 
         # The test set is assigned manually based on the test_scene input
         # test_data = scene_to_ids[scenes[args.test_scene]]
         # test_mask = scene_to_masks[scenes[args.test_scene]]
 
-
+ 
         # Flatten the first two dimensions (3D to 2D)
-        train_data = torch.tensor(list(chain.from_iterable(train_data)))
-        val_data = torch.tensor(list(chain.from_iterable(val_data)))
-        train_mask = torch.tensor(list(chain.from_iterable(train_mask)))
-        val_mask = torch.tensor(list(chain.from_iterable(val_mask)))
+        # train_data = torch.tensor(list(chain.from_iterable(train_data)))
+        # val_data = torch.tensor(list(chain.from_iterable(val_data)))
+        # train_mask = torch.tensor(list(chain.from_iterable(train_mask)))
+        # val_mask = torch.tensor(list(chain.from_iterable(val_mask)))
 
     DATA= {} 
 
     DATA['train_data'] = train_data
-    DATA['valid_data'] = valid_data
+    DATA['valid_data'] = val_data
     DATA['train_mask'] = train_mask
-    DATA['valid_mask'] = valid_mask
+    DATA['valid_mask'] = val_mask
 
-    print(train_data.shape, train_mask.shape ,valid_mask.shape ,valid_data.shape)
+    print(train_data.shape, train_mask.shape ,val_mask.shape ,val_data.shape)
 
-    tokenizer.save_pretrained("lambda_tokenizer/lambda_task_gen")
+    tokenizer.save_pretrained(f"lambda_tokenizer/lambda_{args.split_type}_{args.test_scene}")
 
-    with open("train_data_lambda/lambda_task_gen.pkl", "wb") as f:
+    with open(f"tokenized_pickles/lambda_{args.split_type}_{args.test_scene}.pkl", "wb") as f:
         pickle.dump(DATA , f)
+    
+    print("FINISHED!")
