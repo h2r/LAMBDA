@@ -345,45 +345,28 @@ if __name__ == "__main__":
     
     img_token_model = load_img_tokenizer()
 
+    if os.path.isdir("semi_processed_data"):
+        with open('all_imgs.pkl', 'rb') as file:
+            all_img = pickle.load(file)
+        with open('all_text.pkl', 'rb') as file:
+            all_text = pickle.load(file)
+        with open('all_lang_instruct.pkl', 'rb') as file:
+            all_lang = pickle.load(file)
+        with open('all_scenes.pkl', 'rb') as file:
+            all_scenes = pickle.load(file)
+        with open('all_masks.pkl', 'rb') as file:
+            all_masks = pickle.load(file)
+        with open('all_tokens_ids.pkl', 'rb') as file:
+            all_token_ids = pickle.load(file)
+    else:
+        all_img, text_strings , all_lang, all_scenes = load_traj()
+        all_token_ids, all_masks = tokenize_images()
 
-    with open('all_imgs.pkl', 'rb') as file:
-        all_img = pickle.load(file)
-    with open('all_text.pkl', 'rb') as file:
-        all_text = pickle.load(file)
-    with open('all_lang_instruct.pkl', 'rb') as file:
-        all_lang = pickle.load(file)
-    with open('all_scenes.pkl', 'rb') as file:
-        all_scenes = pickle.load(file)
-    with open('all_masks.pkl', 'rb') as file:
-        all_masks = pickle.load(file)
-    with open('all_tokens_ids.pkl', 'rb') as file:
-        all_token_ids = pickle.load(file)
-
-    
-    # all_img, text_strings , all_lang, all_scenes = load_traj()
-
-    # all_token_ids, all_masks = tokenize_images()
-
-    print(len(all_token_ids) , len(all_masks))
+    print("Length of all_token_ids:", len(all_token_ids))
+    print("Length of all_masks:", len(all_masks))
 
     num_traj = len(all_token_ids)
     assert len(all_token_ids) == len(all_masks)
-
-    # all_train, all_valid= [] , [] 
-    # all_train_mask, all_valid_mask = [], []
-
-
-    # if os.path.exists("scene_to_ids.json") and os.path.exists("scene_to_masks.json") and os.path.exists("scene_to_langs.json"):
-    #     with open("scene_to_ids.json", "r") as file:
-    #         scene_to_ids = json.load(file)
-    #     with open("scene_to_masks.json", "r") as file:
-    #         scene_to_masks = json.load(file)
-    #     with open("scene_to_langs.json", "r") as file:
-    #         scene_to_langs = json.load(file)
-    # else:
-    #     scene_to_ids, scene_to_masks, scene_to_langs = split_by_scene(all_token_ids, all_masks, all_scenes, all_lang)
-
-    # scenes = list(sorted(list(scene_to_ids.keys())))
     
     train_langs = []
     val_langs = []
@@ -397,14 +380,14 @@ if __name__ == "__main__":
     # test_mask = []
 
     if args.split_type == "task_gen":
-        with open('train_cmds_task_gen.pkl', 'rb') as file:
+        with open('rt1_cmds_order/train_cmds_task_gen.pkl', 'rb') as file:
             train_cmds_subset = pickle.load(file)
-        with open('val_cmds_task_gen.pkl', 'rb') as file:
+        with open('rt1_cmds_order/val_cmds_task_gen.pkl', 'rb') as file:
             val_cmds_subset = pickle.load(file)
     else:
-        with open(f'train_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
+        with open(f'rt1_cmds_order/train_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
             train_cmds_subset = pickle.load(file)
-        with open(f'val_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
+        with open(f'rt1_cmds_order/val_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
             val_cmds_subset = pickle.load(file)
 
     # Iterate through train_cmds_task_gen to find matching elements and their indices
@@ -429,59 +412,6 @@ if __name__ == "__main__":
     val_data = torch.tensor(list(chain.from_iterable(val_data)))
     train_mask = torch.tensor(list(chain.from_iterable(train_mask)))
     val_mask = torch.tensor(list(chain.from_iterable(val_mask)))
-
-    # if args.split_type == 'task_gen':
-        # for scene in scenes:   
-        #     scene_ids = copy(scene_to_ids[scene])
-        #     mask_ids = copy(scene_to_masks[scene])
-            
-        #     # indices = np.arange(len(scene_ids))
-        #     # np.random.shuffle(indices)
-        #     # scene_ids = scene_ids[indices]
-        #     # mask_ids = mask_ids[indices]
-
-        #     split_idx = int(len(scene_ids)*(train_split))
-        #     split_idx2 = int(len(scene_ids)*(train_split+val_split))
-            
-        #     train_data += scene_ids[:split_idx]
-        #     val_data += scene_ids[split_idx:split_idx2]
-        #     # test_data += scene_ids[split_idx2:]
-
-        #     train_mask += mask_ids[:split_idx]
-        #     val_mask += mask_ids[split_idx:split_idx2]
-        #     # test_mask += mask_ids[split_idx2:]
-    # else:
-    #     assert(args.test_scene < len(scenes), "Error: input test scene is out of index space")
-
-        # Iterate through all scenes except the test scene
-        # for x in range(len(scenes)):
-        #     if x != args.test_scene:
-        #         scene_ids = scene_to_ids[scenes[x]]
-        #         scene_masks = scene_to_masks[scenes[x]] 
-
-        #         np.random.shuffle(scene_ids)
-        #         np.random.shuffle(scene_masks)
-
-
-        #         # Stratified split: use 80% for training and 20% for validation
-        #         split_idx = int(train_split * len(scene_ids))
-                
-        #         train_data += scene_ids[:split_idx]
-        #         val_data += scene_ids[split_idx:]
-                
-        #         train_mask += scene_masks[:split_idx]
-        #         val_mask += scene_masks[split_idx:]
-
-        # The test set is assigned manually based on the test_scene input
-        # test_data = scene_to_ids[scenes[args.test_scene]]
-        # test_mask = scene_to_masks[scenes[args.test_scene]]
-
- 
-        # Flatten the first two dimensions (3D to 2D)
-        # train_data = torch.tensor(list(chain.from_iterable(train_data)))
-        # val_data = torch.tensor(list(chain.from_iterable(val_data)))
-        # train_mask = torch.tensor(list(chain.from_iterable(train_mask)))
-        # val_mask = torch.tensor(list(chain.from_iterable(val_mask)))
 
     DATA= {} 
 
