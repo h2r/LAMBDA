@@ -23,6 +23,7 @@ from sklearn.cluster import AgglomerativeClustering, DBSCAN
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 from collections import defaultdict
+import pickle as pk
 
 np.random.seed(47)
 
@@ -299,8 +300,40 @@ class DatasetManager(object):
             assert(len(set(train_keys) & set(test_keys)) == 0), "Error: Train and Test sets overlap"
             assert(len(set(val_keys) & set(test_keys)) == 0), "Error: Val and Test sets overlap"
 
-        elif split_style == 'task_split':
+            if not os.path.isfile('train_cmds_scene_gen_{test_scene}.pkl') and not os.path.isfile(f'val_cmds_scene_gen_{test_scene}.pkl'):
+                hdf = h5py.File(DATASET_PATH, 'r')
+                train_cmds = []
+                for key in train_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
 
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    train_cmds.append(nl_command)
+                
+                val_cmds = []
+                for key in val_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
+
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    val_cmds.append(nl_command)
+                
+                
+                with open(f'train_cmds_scene_gen_{test_scene}.pkl', 'wb') as file:
+                    pk.dump(train_cmds, file)
+                with open(f'val_cmds_scene_gen_{test_scene}.pkl', 'wb') as file:
+                    pk.dump(val_cmds, file)
+        elif split_style == 'task_split':
             train_keys = []
             val_keys = []
             test_keys = []
@@ -320,6 +353,45 @@ class DatasetManager(object):
                 val_keys += scene_keys[split_idx:split_idx2]
                 test_keys += scene_keys[split_idx2:]
 
+                        # Ensure no overlap between train, val, and test sets
+            assert(len(set(train_keys) & set(val_keys)) == 0), "Error: Train and Val sets overlap"
+            assert(len(set(train_keys) & set(test_keys)) == 0), "Error: Train and Test sets overlap"
+            assert(len(set(val_keys) & set(test_keys)) == 0), "Error: Val and Test sets overlap"
+
+
+            if not os.path.isfile('train_cmds_task_gen.pkl') and not os.path.isfile('val_cmds_task_gen.pkl'):
+                hdf = h5py.File(DATASET_PATH, 'r')
+                train_cmds = []
+                for key in train_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
+
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    train_cmds.append(nl_command)
+                
+                val_cmds = []
+                for key in val_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
+
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    val_cmds.append(nl_command)
+                
+                
+                with open('train_cmds_task_gen.pkl', 'wb') as file:
+                    pk.dump(train_cmds, file)
+                with open('val_cmds_task_gen.pkl', 'wb') as file:
+                    pk.dump(val_cmds, file)
 
 ####################################################################################
             # import pickle
@@ -393,11 +465,6 @@ class DatasetManager(object):
             # breakpoint()
 
 ######################################################################################
-            
-            # Ensure no overlap between train, val, and test sets
-            assert(len(set(train_keys) & set(val_keys)) == 0), "Error: Train and Val sets overlap"
-            assert(len(set(train_keys) & set(test_keys)) == 0), "Error: Train and Test sets overlap"
-            assert(len(set(val_keys) & set(test_keys)) == 0), "Error: Val and Test sets overlap"
 
         elif split_style == 'diversity_ablation':
             assert(diversity_scenes < len(self.scene_to_keys.keys()), "Error: number of train scenes for diversity ablations cannot be {}".format(len(self.scene_to_keys.keys())))

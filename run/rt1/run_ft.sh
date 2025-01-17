@@ -13,10 +13,10 @@ conda activate rt1
 
 cd ../../models/main_models/rt1
 
-HP=3
-SPLIT_TYPE="task_split"
-SUBSET_AMT='75'
-TEST_SCENE=''
+HP=9
+SPLIT_TYPE="k_fold_scene"
+SUBSET_AMT=''
+TEST_SCENE=4
 # LOAD_CHECKPOINT='/mnt/ahmed/rt1/pretrain_ckpts/checkpoint_best.pt'
 LOAD_CHECKPOINT="/users/ajaafar/data/shared/lanmp/pretrained_rt1_ckpt/checkpoint_best.pt"
 CHECKPOINT_DIR="results/checkpoints/train-rt1-nodist-${SPLIT_TYPE}-${SUBSET_AMT}-scene${TEST_SCENE}-HP${HP}"
@@ -35,4 +35,4 @@ GAMMA=0.8
 PATIENCE=1
 # LOW_DIV='--low_div' $LOW_DIV
 
-python main_ft.py --split-type "$SPLIT_TYPE" --epochs "$EPOCHS" --checkpoint-dir "$CHECKPOINT_DIR" --eval-freq "$EVAL_FREQ" --val_loss_dir "$VAL_LOSS_DIR" --wandb --checkpoint-freq "$CHECKPOINT_FREQ" --train-batch-size "$TRAIN_BATCH" --eval-batch-size "$EVAL_BATCH" --lr "$LR" --lr_sched "$LR_SCHED" --gamma "$GAMMA" --factor "$FACTOR" --patience "$PATIENCE" --train-subbatch "$TRAIN_SUBBATCH" --eval-subbatch "$EVAL_SUBBATCH" --test-scene "$TEST_SCENE" --subset-amt "$SUBSET_AMT" #--load-checkpoint "$LOAD_CHECKPOINT" #--freeze #--use-dist 
+python main_ft.py --split-type "$SPLIT_TYPE" --epochs "$EPOCHS" --checkpoint-dir "$CHECKPOINT_DIR" --eval-freq "$EVAL_FREQ" --val_loss_dir "$VAL_LOSS_DIR" --wandb --checkpoint-freq "$CHECKPOINT_FREQ" --train-batch-size "$TRAIN_BATCH" --eval-batch-size "$EVAL_BATCH" --lr "$LR" --lr_sched "$LR_SCHED" --gamma "$GAMMA" --factor "$FACTOR" --patience "$PATIENCE" --train-subbatch "$TRAIN_SUBBATCH" --eval-subbatch "$EVAL_SUBBATCH" --test-scene "$TEST_SCENE" # --subset-amt "$SUBSET_AMT" #--load-checkpoint "$LOAD_CHECKPOINT" #--freeze #--use-dist 
