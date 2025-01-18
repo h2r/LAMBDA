@@ -294,6 +294,10 @@ class DatasetManager(object):
 
             # The test set is assigned manually based on the test_scene input
             test_keys = self.scene_to_keys[self.scenes[int(test_scene)]]
+            print(len(train_keys))
+            print(len(val_keys))
+            print(len(test_keys))
+            breakpoint()
 
             # Ensure no overlap between train, val, and test sets
             assert(len(set(train_keys) & set(val_keys)) == 0), "Error: Train and Val sets overlap"
