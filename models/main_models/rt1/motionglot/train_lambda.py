@@ -49,7 +49,7 @@ def process_data():
 def trainer_args():
     
     return TrainingArguments(
-    output_dir="pick_place_manip1",
+    output_dir=args.output_dir,
     overwrite_output_dir=True,
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
@@ -75,6 +75,7 @@ if __name__ == "__main__":
     parser.add_argument("--tokenizer_path", help=" path to folder with tokenizer " , default= "lambda_tokenizer/lambda_task_gen", type= str ) 
     parser.add_argument("--dataset", help=" path to dataset " , default= "tokenized_dataset_pickles/lambda_task_gen.pkl", type= str ) 
     parser.add_argument("--device", help=" set device  " , default= "cuda", type= str )
+    parser.add_argument("--output_dir", help=" output dir  " , default= "", type= str )
     parser.add_argument("--pre_train_model", help=" set path to pre train model " , default= "gpt2" , type= str )
 
     args = parser.parse_args()
