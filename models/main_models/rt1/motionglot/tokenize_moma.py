@@ -115,7 +115,7 @@ def detokenize_action(discrete_action, index):
     eef_y = [-0.2999999523162842, 0.15000009536743164]
     eef_z = [-0.23398804664611816, 0.26000285148620605]
     
-    num_bins = 128
+    num_bins = 256
 
     if discrete_action in ["MoveArm", "MoveArmBase"]:
         # if discrete_action == "MoveArmBase":
@@ -130,8 +130,6 @@ def detokenize_action(discrete_action, index):
     
 
 def load_traj():
-    print('AHHHHHHHHHHH!!!!')
-    breakpoint()
     all_files = os.listdir(args.dataset_path )
     yaw, eef_x, eef_y, eef_z = get_max_min_ranges()
 

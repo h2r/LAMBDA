@@ -109,12 +109,12 @@ def parse_args():
     )
     parser.add_argument("--checkpoint_path",
         help="point to the file with the name of all files",
-        default= "results/checkpoints/motionglot-nodist-task_split" ,
+        default= "motionglot/pick_place_manip2/checkpoint-55400" ,
         type=str
     )
     parser.add_argument("--tokenizer_path", 
         help=" path to folder with tokenizer " , 
-        default= "motionglot/lambda_tokenizer/moma", 
+        default= "motionglot/lambda_tokenizer/lambda_scene_gen_0", 
         type= str 
     ) 
     return parser.parse_args()
@@ -273,7 +273,7 @@ def main():
             a = dict(action="MoveArmBase",y=i,speed=1,returnToStart=False,fixedDeltaTime=fixedDeltaTime)
         elif word_action in ['MoveArm']:
             a = dict(action='MoveArm',position=dict(x=state_action['arm_position'][0], y=state_action['arm_position'][1], z=state_action['arm_position'][2]),coordinateSpace="world",restrictMovement=False,speed=1,returnToStart=False,fixedDeltaTime=fixedDeltaTime)
-        elif word_action in ['stop']:
+        elif word_action in ['Done']:
             a = dict(action="Done")
         try:
             if word_action == "LookDown":
@@ -324,15 +324,15 @@ def main():
     else:
         iterable_keys = test_dataloader.dataset.dataset_keys
 
-    results_path = f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/results.csv'
+    results_path = f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/results.csv'
     if os.path.isfile(results_path):
         results_df = pd.read_csv(results_path)
     else:
         results_df = pd.DataFrame(columns=['scene', 'nl_cmd', 'nav_to_target', 'grasped_target_obj', 'nav_to_target_with_obj', 'place_obj_at_goal', 'complete_traj'])
         os.makedirs(os.path.dirname(results_path), exist_ok=True)
 
-    if os.path.exists(f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl'):
-        with open(f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl', 'rb') as f:
+    if os.path.exists(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/trajs_done.pkl'):
+        with open(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/trajs_done.pkl', 'rb') as f:
             completed_dict = pickle.load(f)
     else:
         completed_dict = {}
@@ -340,7 +340,7 @@ def main():
     if args.eval_set == 'train':
         iterable_keys = np.random.choice(np.array(iterable_keys), size=len(test_dataloader.dataset.dataset_keys), replace=False)
 
-    for task in tqdm(iterable_keys[30:]):   
+    for task in tqdm(iterable_keys):   
 
         traj_group = train_dataloader.dataset.hdf[task]
         
@@ -451,7 +451,7 @@ def main():
         print("\n")
         time.sleep(1)
         pickedup = False
-        while (action_discrete != 'Done' or is_terminal) and num_steps < 400:
+        while (action_discrete != 'Done' or is_terminal) and num_steps < 100:
             
             #provide the current observation to the model
             # if args.use_dist:
@@ -470,19 +470,30 @@ def main():
             # generated_action_tokens = rt1_model_policy.act(curr_observation)
             mg_tokens = get_actions(curr_image, nl_cmd, args.tokenizer_path, args.image_token_model, args.checkpoint_path)
             print(f'mg: {mg_tokens}')
+            num_steps +=1
+
             action_discrete, action_cont_idx = _extract_actions(mg_tokens)
             #skips nonsense motionglot predictions that are not real actions
-            if action_discrete not in ["Done", "MoveArm", "LookUp", "LookDown", "RotateAgent", "MoveAhead", "MoveArmBase", "PickUp", "Release", "MoveBack", "MoveLeft", "MoveRight"]:
+            if action_discrete not in ["Done", "MoveArm", "LookUp", "LookDown", "RotateAgent", "MoveAhead", "MoveArmBase", "PickUpObject", "ReleaseObject", "MoveBack", "MoveLeft", "MoveRight"]:
                 # print(f"Skipped {action_discrete}")
                 continue
-            if action_discrete == "MoveArmBase":
-                breakpoint()
-                print("Skipped MoveArmBase")
+            flag = False
+            if action_cont_idx:
+                for i in action_cont_idx:
+                    if not isinstance(i, int):
+                        flag = True
+            if flag:
                 continue
             if action_discrete in ['MoveArm', 'MoveArmBase']:
+                if not action_cont_idx:
+                    continue
+                if action_discrete == "MoveArm" and len(action_cont_idx) != 3:
+                    continue
                 action_delta_arm = detokenize_action(action_discrete, action_cont_idx)
                 action_delta_rot = 0
             elif action_discrete in ['RotateAgent']:
+                if not action_cont_idx:
+                    continue
                 action_delta_rot = detokenize_action(action_discrete, action_cont_idx)
                 action_delta_arm = [0,0,0]
             else:
@@ -548,8 +559,6 @@ def main():
             # visual_observation = visual_observation[:,1:,:,:,:]
             # visual_observation = np.concatenate((visual_observation, curr_image), axis=1)
             
-            num_steps +=1
-
             curr_arm_coordinate = np.array(list(last_event.metadata["arm"]["joints"][3]['position'].values()))
             
             time.sleep(0.1)
@@ -592,7 +601,7 @@ def main():
         results_df.to_csv(results_path, index=False)
         
         completed_dict[traj_json_dict['nl_command']] = 1
-        with open(f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl', 'wb') as f:
+        with open(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/trajs_done.pkl', 'wb') as f:
             pickle.dump(completed_dict, f)
         
 if __name__ == "__main__":
