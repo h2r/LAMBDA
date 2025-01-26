@@ -10,10 +10,10 @@ from datasets import Dataset, DatasetDict
 from transformers import Trainer, TrainingArguments
 import argparse
 import pickle 
-from transformers import Trainer, TrainingArguments
 import random 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
+from transformers import TrainerCallback
 
 def get_tokenizer():
     tokenizer = GPT2Tokenizer.from_pretrained(args.tokenizer_path )
@@ -53,20 +53,59 @@ def trainer_args():
     overwrite_output_dir=True,
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
-    evaluation_strategy="steps",
-    eval_steps=50,
+    evaluation_strategy="steps",  # Evaluate regularly during training.
+    eval_steps=50,  # Evaluate every 50 steps.
     logging_steps=1,
     gradient_accumulation_steps=2,
-    num_train_epochs=600, #38
+    num_train_epochs=600,
     weight_decay=0.1,
-    warmup_steps=500, 
+    warmup_steps=500,
     lr_scheduler_type="cosine",
-    learning_rate= 5e-4, ## decrase this to 2e-4 
-    save_steps=100,
+    learning_rate=5e-4,
+    save_steps=100,  # Save checkpoints every 100 steps.
+    save_strategy="steps",  # Save strategy for regular checkpoints.
+    save_total_limit=5,
+    metric_for_best_model="eval_loss",  # Metric to determine the best model.
+    greater_is_better=False,  # Lower eval_loss is better.
+    load_best_model_at_end=True,  # Ensure best model is loaded at the end.
     push_to_hub=False,
-    save_total_limit=8,
-    report_to ="wandb"
-    )
+    report_to="wandb"
+)
+
+
+class SaveBestModelCallback(TrainerCallback):
+    def __init__(self, trainer, metric_name="eval_loss", greater_is_better=False):
+        self.trainer = trainer
+        self.metric_name = metric_name
+        self.greater_is_better = greater_is_better
+        self.best_metric = None
+
+    def on_evaluate(self, args, state, control, metrics, **kwargs):
+        current_metric = metrics.get(self.metric_name)
+        if current_metric is not None:
+            if (
+                self.best_metric is None or
+                (self.greater_is_better and current_metric > self.best_metric) or
+                (not self.greater_is_better and current_metric < self.best_metric)
+            ):
+                self.best_metric = current_metric
+                print(f"New best model found: {self.metric_name} = {self.best_metric}")
+                
+                # Save model
+                self.trainer.save_model(output_dir=f"{args.output_dir}/checkpoint-best")
+                
+                # Save trainer state
+                self.trainer.state.save_to_json(os.path.join(f"{args.output_dir}/checkpoint-best", "trainer_state.json"))
+                
+                # Save optimizer state
+                torch.save(self.trainer.optimizer.state_dict(), os.path.join(f"{args.output_dir}/checkpoint-best", "optimizer.pt"))
+                
+                # Save scheduler state
+                torch.save(self.trainer.lr_scheduler.state_dict(), os.path.join(f"{args.output_dir}/checkpoint-best", "scheduler.pt"))
+                
+                # Save RNG state
+                torch.save(torch.get_rng_state(), os.path.join(f"{args.output_dir}/checkpoint-best", "rng_state.pth"))
+
 
 
 if __name__ == "__main__":
@@ -94,12 +133,23 @@ if __name__ == "__main__":
 
     train_args = trainer_args()
 
+    # Initialize the Trainer
     trainer = Trainer(
-        model=GPT,
+        model=GPT,  
         args=train_args,
         data_collator=data_collator,
-        train_dataset=tokenized_datset["train"],
-        eval_dataset=tokenized_datset["valid"],
+        train_dataset=tokenized_datset["train"], 
+        eval_dataset=tokenized_datset["valid"],  
     )
 
-    trainer.train() #give path to model here to resume training "results/checkpoints/motionglot-nodist-task_split"
+    # Attach the SaveBestModelCallback
+    save_best_callback = SaveBestModelCallback(
+        trainer=trainer,
+        metric_name="eval_loss",  # Replace with the metric you're tracking (e.g., accuracy).
+        greater_is_better=False  # Use True if higher metric values are better.
+    )
+
+    # Add the callback to the trainer
+    trainer.add_callback(save_best_callback)
+
+    trainer.train()
