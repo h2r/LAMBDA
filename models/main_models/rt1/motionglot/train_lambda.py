@@ -21,7 +21,7 @@ def get_tokenizer():
 
     return tokenizer 
 
-def GPT_model():
+def GPT_model(freeze_all=False, unfreeze_head=False):
     
     config = GPT2Config.from_pretrained(args.pre_train_model)
 
@@ -34,7 +34,14 @@ def GPT_model():
     model = GPT2LMHeadModel.from_pretrained(args.pre_train_model , state_dict=None)
     model.init_weights()
     model.resize_token_embeddings( len(tokenizer) )
-    
+
+    if freeze_all:
+        for param in model.parameters():
+            param.requires_grad = False
+        if unfreeze_head:
+            for param in model.lm_head.parameters():
+                param.requires_grad = True
+
     return model 
 
 def process_data():
@@ -51,8 +58,8 @@ def trainer_args():
     return TrainingArguments(
     output_dir=args.output_dir,
     overwrite_output_dir=True,
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=4,
+    per_device_train_batch_size=3,
+    per_device_eval_batch_size=3,
     evaluation_strategy="steps",  # Evaluate regularly during training.
     eval_steps=50,  # Evaluate every 50 steps.
     logging_steps=1,
@@ -116,6 +123,8 @@ if __name__ == "__main__":
     parser.add_argument("--device", help=" set device  " , default= "cuda", type= str )
     parser.add_argument("--output_dir", help=" output dir  " , default= "", type= str )
     parser.add_argument("--pre_train_model", help=" set path to pre train model " , default= "gpt2" , type= str )
+    parser.add_argument("--freeze_all", action="store_true", help="freeze the gpt-2 model")
+    parser.add_argument("--unfreeze_head", action="store_true", help="unfreeze the gpt-2 head")
 
     args = parser.parse_args()
 
@@ -126,7 +135,7 @@ if __name__ == "__main__":
     
     tokenizer = get_tokenizer()
 
-    GPT = GPT_model()
+    GPT = GPT_model(args.freeze_all, args.unfreeze_head)
     tokenized_datset =  process_data()
 
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False )
@@ -151,5 +160,7 @@ if __name__ == "__main__":
 
     # Add the callback to the trainer
     trainer.add_callback(save_best_callback)
+
+    torch.cuda.empty_cache()
 
     trainer.train()

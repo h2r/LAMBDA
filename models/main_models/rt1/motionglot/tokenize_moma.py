@@ -345,22 +345,22 @@ if __name__ == "__main__":
     
     img_token_model = load_img_tokenizer()
 
-    if os.path.isdir("semi_processed_data"):
-        with open('all_imgs.pkl', 'rb') as file:
-            all_img = pickle.load(file)
-        with open('all_text.pkl', 'rb') as file:
-            all_text = pickle.load(file)
-        with open('all_lang_instruct.pkl', 'rb') as file:
-            all_lang = pickle.load(file)
-        with open('all_scenes.pkl', 'rb') as file:
-            all_scenes = pickle.load(file)
-        with open('all_masks.pkl', 'rb') as file:
-            all_masks = pickle.load(file)
-        with open('all_tokens_ids.pkl', 'rb') as file:
-            all_token_ids = pickle.load(file)
-    else:
-        all_img, text_strings , all_lang, all_scenes = load_traj()
-        all_token_ids, all_masks = tokenize_images()
+    # if os.path.isdir("semi_processed_data"):
+    #     with open('all_imgs.pkl', 'rb') as file:
+    #         all_img = pickle.load(file)
+    #     with open('all_text.pkl', 'rb') as file:
+    #         all_text = pickle.load(file)
+    #     with open('all_lang_instruct.pkl', 'rb') as file:
+    #         all_lang = pickle.load(file)
+    #     with open('all_scenes.pkl', 'rb') as file:
+    #         all_scenes = pickle.load(file)
+    #     with open('all_masks.pkl', 'rb') as file:
+    #         all_masks = pickle.load(file)
+    #     with open('all_tokens_ids.pkl', 'rb') as file:
+    #         all_token_ids = pickle.load(file)
+    # else:
+    all_img, text_strings , all_lang, all_scenes = load_traj()
+    all_token_ids, all_masks = tokenize_images()
 
     print("Length of all_token_ids:", len(all_token_ids))
     print("Length of all_masks:", len(all_masks))
