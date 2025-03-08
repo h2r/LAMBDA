@@ -208,6 +208,7 @@ models/main_models/rt1_ft_env
 models/main_models/spoc-robot-training/
 models/main_models/rt1/src/
 models/main_models/rt1/val_losses/
+models/main_models/rt1/traj_rollouts
 /modespot/
 Trajectories/
 sim_commands.npy
@@ -220,3 +221,18 @@ run/rt1/run_pretrain5.sh
 run/rt1/run_pretrain6.sh
 run/rt1/finetune.sbatch
 run/rt1/pretrain.sbatch
+models/main_models/rt1/train_cmds_scene_gen_0.pkl
+models/main_models/rt1/train_cmds_scene_gen_1.pkl
+models/main_models/rt1/train_cmds_scene_gen_2.pkl
+models/main_models/rt1/train_cmds_scene_gen_3.pkl
+models/main_models/rt1/train_cmds_scene_gen_4.pkl
+models/main_models/rt1/train_cmds_task_gen.pkl
+models/main_models/rt1/val_cmds_scene_gen_0.pkl
+models/main_models/rt1/val_cmds_scene_gen_1.pkl
+models/main_models/rt1/val_cmds_scene_gen_2.pkl
+models/main_models/rt1/val_cmds_scene_gen_3.pkl
+models/main_models/rt1/val_cmds_scene_gen_4.pkl
+models/main_models/rt1/val_cmds_task_gen.pkl
+run_mg/
+models/main_models/rt1/motionglot/
+models/main_models/rt1/radarplot.py

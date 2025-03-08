@@ -187,7 +187,7 @@ def main():
     else:
         freeze = "unfrozen" 
     if args.wandb:
-        wandb.init(project=f"rt1-{train_type}-{freeze}-{dist}-{args.split_type}-{args.subset_amt}-{args.test_scene}", config=vars(args))
+        wandb.init(project=f"mamba-{train_type}-{freeze}-{dist}-{args.split_type}-{args.subset_amt}-{args.test_scene}", config=vars(args))
 
     os.makedirs(args.checkpoint_dir, exist_ok=True)
 

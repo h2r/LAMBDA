@@ -297,7 +297,6 @@ class DatasetManager(object):
             print(len(train_keys))
             print(len(val_keys))
             print(len(test_keys))
-            breakpoint()
 
             # Ensure no overlap between train, val, and test sets
             assert(len(set(train_keys) & set(val_keys)) == 0), "Error: Train and Val sets overlap"
@@ -346,18 +345,20 @@ class DatasetManager(object):
                 
                 scene_keys = copy(self.scene_to_keys[scene])
                 np.random.shuffle(scene_keys)
-                if subset_amt is not None:
-                    num_samples = int(len(scene_keys) * (int(subset_amt) / 100))
-                    scene_keys = np.random.choice(scene_keys, size=num_samples, replace=False).tolist()
                     
                 split_idx = int(len(scene_keys)*(train_split))
                 split_idx2 = int(len(scene_keys)*(train_split+val_split))
                 
-                train_keys += scene_keys[:split_idx]
+                if subset_amt is not None:
+                    train_keys_temp = scene_keys[:split_idx]
+                    num_samples = int(np.ceil(len(train_keys_temp) * (int(subset_amt) / 100)))
+                    train_keys += np.random.choice(train_keys_temp, size=num_samples, replace=False).tolist()
+                else:
+                    train_keys += scene_keys[:split_idx]
                 val_keys += scene_keys[split_idx:split_idx2]
                 test_keys += scene_keys[split_idx2:]
 
-                        # Ensure no overlap between train, val, and test sets
+            # Ensure no overlap between train, val, and test sets
             assert(len(set(train_keys) & set(val_keys)) == 0), "Error: Train and Val sets overlap"
             assert(len(set(train_keys) & set(test_keys)) == 0), "Error: Train and Test sets overlap"
             assert(len(set(val_keys) & set(test_keys)) == 0), "Error: Val and Test sets overlap"

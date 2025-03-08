@@ -42,7 +42,7 @@ def parse_args():
     parser.add_argument(
         "--checkpoint-file-path",
         type=str,
-        default="/oscar/data/stellex/ajaafar/LaNMP-Dataset/models/main_models/rt1/results/checkpoints/ft_frozen_rt1-nodist-task_split-scene-HP2/checkpoint_best.pt", #NOTE: change according to checkpoint file that is to be loaded
+        default="/users/ajaafar/data/ajaafar/LaNMP-Dataset/models/main_models/rt1/results/checkpoints/train-mamba-nodist-task_split--scene-HP1/checkpoint_best.pt", #NOTE: change according to checkpoint file that is to be loaded
         help="directory to save checkpoints",
     )
     parser.add_argument(
@@ -97,6 +97,11 @@ def parse_args():
         help='use distance input if true, not if false', 
         action='store_true'
     )
+    parser.add_argument(
+        "--rand-agent",
+        help='use random agent if true, not if false', 
+        action='store_true'
+    )
     return parser.parse_args()
 
 
@@ -111,7 +116,7 @@ def main():
     else:
         dist='nodist'
     if args.wandb:
-        wandb.init(project=f"rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen", config=vars(args))
+        wandb.init(project=f"rt1-rollout-{dist}-{args.split_type}-{args.test_scene}-subset25", config=vars(args))
 
 
     os.makedirs(args.trajectory_save_path, exist_ok=True)
@@ -304,15 +309,15 @@ def main():
     else:
         iterable_keys = test_dataloader.dataset.dataset_keys
 
-    results_path = f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/results.csv'
+    results_path = f'traj_rollouts/mamba-rollout-{dist}-{args.split_type}-{args.test_scene}-vid/results.csv'
     if os.path.isfile(results_path):
         results_df = pd.read_csv(results_path)
     else:
         results_df = pd.DataFrame(columns=['scene', 'nl_cmd', 'nav_to_target', 'grasped_target_obj', 'nav_to_target_with_obj', 'place_obj_at_goal', 'complete_traj'])
         os.makedirs(os.path.dirname(results_path), exist_ok=True)
 
-    if os.path.exists(f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl'):
-        with open(f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl', 'rb') as f:
+    if os.path.exists(f'traj_rollouts/mamba-rollout-{dist}-{args.split_type}-{args.test_scene}-vid/trajs_done.pkl'):
+        with open(f'traj_rollouts/mamba-rollout-{dist}-{args.split_type}-{args.test_scene}-vid/trajs_done.pkl', 'rb') as f:
             completed_dict = pickle.load(f)
     else:
         completed_dict = {}
@@ -383,6 +388,32 @@ def main():
             
             return dist_to_goal, ee_dist_to_obj
 
+        def _get_rand_action():
+            word_actions = ['MoveAhead', 'MoveBack', 'MoveRight', 'MoveLeft', 'PickupObject','ReleaseObject', 'LookUp', 'LookDown', 'RotateAgent', 'MoveArmBase', 'MoveArm', 'stop']
+
+            rand_word_action = np.random.choice(word_actions)
+            rand_yaw = 0.0
+            rand_x = 0.0
+            rand_y = 0.0
+            rand_z = 0.0
+
+            if rand_word_action == 'RotateAgent':
+                rand_yaw = np.random.uniform(-346.2767677307129, 353.14554023742676)
+            elif rand_word_action == 'MoveArmBase':
+                rand_y = np.random.uniform(-0.2999999523162842, 0.15000009536743164)
+            elif rand_word_action == 'MoveArm':
+                rand_x = np.random.uniform(-0.22499990463256836, 0.3750004768371582)
+                rand_y = np.random.uniform(-0.2999999523162842, 0.15000009536743164)
+                rand_z = np.random.uniform(-0.23398804664611816, 0.26000285148620605)
+            
+            generated_action_tokens = {
+                "control_mode": rand_word_action,
+                'body_yaw_delta': rand_yaw,
+                'arm_position_delta': np.array([rand_x, rand_y, rand_z])
+            }
+
+            return generated_action_tokens
+
         #extract distances from the environment
         if args.use_dist:
             dist_to_goal, ee_dist_to_obj = _get_distances(True)
@@ -402,7 +433,7 @@ def main():
         print("\n")
         time.sleep(1)
         pickedup = False
-        while (curr_mode != 'stop' or is_terminal) and num_steps < 400:
+        while (curr_mode != 'stop' or is_terminal) and num_steps < 150:
             
             #provide the current observation to the model
             if args.use_dist:
@@ -418,25 +449,31 @@ def main():
                     'context': language_command_embedding
                 }
             
-            generated_action_tokens = rt1_model_policy.act(curr_observation)
-
-            #de-tokenize the generated actions from RT1
-            curr_mode = train_dataloader.dataset.detokenize_mode(generated_action_tokens['control_mode'][0])
-            # print(curr_mode)
+            if args.rand_agent:
+                generated_action_tokens = _get_rand_action()
+            else:
+                generated_action_tokens = rt1_model_policy.act(curr_observation)
 
             # terminate_episode = generated_action_tokens['terminate_episode'][0] #not needed for actual rolling out
 
-            continuous_variables = {
-                'body_yaw_delta': generated_action_tokens['body_yaw_delta'],
-                'arm_position_delta': generated_action_tokens['arm_position_delta'],
-                'curr_mode': curr_mode
-            }
+            if not args.rand_agent:
+                curr_mode = train_dataloader.dataset.detokenize_mode(generated_action_tokens['control_mode'][0])
 
-            continuous_variables = train_dataloader.dataset.detokenize_continuous_data(continuous_variables)
-            body_yaw_delta = continuous_variables['body_yaw_delta'][0][0]
-            arm_position_delta = np.squeeze(continuous_variables['arm_position_delta'])
-            curr_action = train_dataloader.dataset.detokenize_action(curr_mode, body_yaw_delta, arm_position_delta)
-
+                continuous_variables = {
+                    'body_yaw_delta': generated_action_tokens['body_yaw_delta'],
+                    'arm_position_delta': generated_action_tokens['arm_position_delta'],
+                    'curr_mode': curr_mode
+                }
+                continuous_variables = train_dataloader.dataset.detokenize_continuous_data(continuous_variables)
+                body_yaw_delta = continuous_variables['body_yaw_delta'][0][0]
+                arm_position_delta = np.squeeze(continuous_variables['arm_position_delta'])
+                curr_action = train_dataloader.dataset.detokenize_action(curr_mode, body_yaw_delta, arm_position_delta)
+            else:
+                body_yaw_delta = generated_action_tokens['body_yaw_delta']
+                arm_position_delta = generated_action_tokens['arm_position_delta']
+                curr_mode = generated_action_tokens['control_mode']
+                curr_action = curr_mode
+            
             #update the tracked coordinate data based on model output
             curr_arm_coordinate += arm_position_delta
 
@@ -520,7 +557,7 @@ def main():
         results_df.to_csv(results_path, index=False)
         
         completed_dict[traj_json_dict['nl_command']] = 1
-        with open(f'traj_rollouts/rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl', 'wb') as f:
+        with open(f'traj_rollouts/mamba-rollout-{dist}-{args.split_type}-{args.test_scene}-vid/trajs_done.pkl', 'wb') as f:
             pickle.dump(completed_dict, f)
         
 if __name__ == "__main__":
