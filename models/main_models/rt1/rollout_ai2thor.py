@@ -109,12 +109,12 @@ def parse_args():
     )
     parser.add_argument("--checkpoint_path",
         help="point to the file with the name of all files",
-        default= "motionglot/pick_place_manip2/checkpoint-55400" ,
+        default= "/users/ajaafar/data/ajaafar/LaNMP-Dataset/models/main_models/rt1/motionglot/task_gen_ft/checkpoint-best" ,
         type=str
     )
     parser.add_argument("--tokenizer_path", 
         help=" path to folder with tokenizer " , 
-        default= "motionglot/lambda_tokenizer/lambda_scene_gen_0", 
+        default= "motionglot/lambda_tokenizer/lambda_task_gen_0", 
         type= str 
     ) 
     return parser.parse_args()
@@ -324,15 +324,15 @@ def main():
     else:
         iterable_keys = test_dataloader.dataset.dataset_keys
 
-    results_path = f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/results.csv'
+    results_path = f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/results.csv'
     if os.path.isfile(results_path):
         results_df = pd.read_csv(results_path)
     else:
         results_df = pd.DataFrame(columns=['scene', 'nl_cmd', 'nav_to_target', 'grasped_target_obj', 'nav_to_target_with_obj', 'place_obj_at_goal', 'complete_traj'])
         os.makedirs(os.path.dirname(results_path), exist_ok=True)
 
-    if os.path.exists(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/trajs_done.pkl'):
-        with open(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/trajs_done.pkl', 'rb') as f:
+    if os.path.exists(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl'):
+        with open(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl', 'rb') as f:
             completed_dict = pickle.load(f)
     else:
         completed_dict = {}
@@ -451,7 +451,7 @@ def main():
         print("\n")
         time.sleep(1)
         pickedup = False
-        while (action_discrete != 'Done' or is_terminal) and num_steps < 100:
+        while (action_discrete != 'Done' or is_terminal) and num_steps < 75:
             
             #provide the current observation to the model
             # if args.use_dist:
@@ -485,6 +485,8 @@ def main():
             if flag:
                 continue
             if action_discrete in ['MoveArm', 'MoveArmBase']:
+                if len(action_cont_idx) == 1:
+                    continue
                 if not action_cont_idx:
                     continue
                 if action_discrete == "MoveArm" and len(action_cont_idx) != 3:
@@ -601,7 +603,7 @@ def main():
         results_df.to_csv(results_path, index=False)
         
         completed_dict[traj_json_dict['nl_command']] = 1
-        with open(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}/trajs_done.pkl', 'wb') as f:
+        with open(f'traj_rollouts/mg-rollout-{dist}-{args.split_type}-{args.test_scene}-ft-seen/trajs_done.pkl', 'wb') as f:
             pickle.dump(completed_dict, f)
         
 if __name__ == "__main__":
