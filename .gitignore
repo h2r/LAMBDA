@@ -222,3 +222,5 @@ run/rt1/run_pretrain5.sh
 run/rt1/run_pretrain6.sh
 run/rt1/finetune.sbatch
 run/rt1/pretrain.sbatch
+/users/ajaafar/data/ajaafar/LaNMP-Dataset/run_mg/train_outputs/*
+/users/ajaafar/data/ajaafar/LaNMP-Dataset/run_mg/train_outputs_ft/*
