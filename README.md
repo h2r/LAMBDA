@@ -263,3 +263,16 @@ When running any of the finetuning or pretraining scripts, please ensure the fol
 6. Ensure the `action_order` and `action_space` in lines 61 and 62 of `action_tokenizer.py` fetch from `lanmp_keys` defined in line 56
 7. Run `python3 main_ft_eval.py` with all arguments input as required
 8. Evaluation loss logs should be reported on weights and biases as well as printed (mean ± std dev) on the terminal -->
+
+### BibTeX
+```
+   @misc{lambdabenchmark,
+      title={{\lambda}: A Benchmark for Data-Efficiency in Long-Horizon Indoor Mobile Manipulation Robotics}, 
+      author={Ahmed Jaafar and Shreyas Sundara Raman and Yichen Wei and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
+      year={2025},
+      eprint={2412.05313},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2412.05313}, 
+    }
+```
