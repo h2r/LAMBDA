@@ -5,16 +5,16 @@
   <br>
   <a href="https://lambdabenchmark.github.io/">Website</a> |
   <a href="https://arxiv.org/abs/2412.05313">arXiv</a> |
-  <a href="">Model Checkpoints</a> |
+  <!-- <a href="">Model Checkpoints</a> | -->
   <a href="https://www.dropbox.com/scl/fo/c1q9s420pzu1285t1wcud/AGMDPvgD5R1ilUFId0i94KE?rlkey=7lwmxnjagi7k9kgimd4v7fwaq&dl=0">Dataset</a> |
-  <a href="https://github.com/h2r/LaNPM-Dataset/blob/main/DataCard.md">Model Card</a>
+  <a href="https://github.com/h2r/LaNPM-Dataset/blob/main/DataCard.md">Data Card</a>
 </p>
 
 ##
 
-![Sequential timesteps of images from sim and real collected robot trajectories along with the natural language command describing the task.](./media/Trajectories-Figure.png "Sim and real trajectories")
+![Sequential timesteps of images from sim and real collected robot trajectories along with the natural language command describing the task.](./media/lambda_splash.png "Sim and real trajectories")
 
-As robots that follow natural language become more capable and prevalent, we need a benchmark to holistically develop and evaluate their ability to solve long-horizon mobile manipulation tasks in large, diverse environments. Robots must use visual and language understanding, navigation, and manipulation capabilities to tackle this challenge. Existing datasets do not integrate all these aspects, restricting their efficacy as benchmarks. To address this gap, we present the Language, Navigation, Manipulation, Perception (LaNMP) dataset and demonstrate the benefits of integrating these four capabilities and various modalities. LaNMP comprises 574 trajectories across eight simulated and real-world environments for long-horizon room-to-room pick-and-place tasks specified by natural language. Every trajectory consists of over 20 attributes, including RGB-D images, segmentations, and the poses of the robot body, end-effector, and grasped objects. We fine-tuned and tested two models in simulation and on a physical robot to demonstrate its efficacy in development and evaluation. The models perform suboptimally compared to humans across various metrics, indicating significant room for developing better multimodal mobile manipulation models using our benchmark.
+Learning to execute long-horizon mobile manipulation tasks is crucial for advancing robotics in household and workplace settings. However, current approaches are typically data-inefficient, underscoring the need for improved models that require realistically sized benchmarks to evaluate their efficiency. To address this, we introduce the LAMBDA (λ) benchmark––Long-horizon Actions for Mobile-manipulation Benchmarking of Directed Activities––which evaluates the data efficiency of models on language-conditioned, long-horizon, multi-room, multi-floor, pick-and-place tasks using a dataset of manageable size, more feasible for collection. Our benchmark includes 571 human-collected demonstrations that provide realism and diversity in simulated and real-world settings. Unlike planner-generated data, these trajectories offer natural variability and replay-verifiability, ensuring robust learning and evaluation. We leverage LAMBDA to benchmark current end-to-end learning methods and a modular neuro-symbolic approaches that combines foundation models with task and motion planning. We find that end-to-end methods—even when pretrained—yield lower success rates, while neuro-symbolic methods perform significantly better and require less data.
 
 ## Dataset Format
 More detailed dataset information can be found in the dataset card [DataCard.md](https://github.com/h2r/LaNPM-Dataset/blob/main/DataCard.md#lanmp).
@@ -160,7 +160,7 @@ Use the following keys to move in the simulator:
 3. Create a map using ```python record_env_graph.py```. See [this](https://dev.bostondynamics.com/python/examples/graph_nav_command_line/readme#recording-service-command-line) for more details on how to record the map.
 4. Collect data using the map ```python collect_spot_data.py -u <map folder> -t "<natural language command>"```
 
-## RT-1
+<!-- ## RT-1
 The RT-1 model from the paper ["RT-1: Robotics Transformer for Real-World Control at Scale"](https://www.roboticsproceedings.org/rss19/p025.pdf) by _Brohan et al._ was modified and fine-tuned on LaNMP. This model was trained and run on an NVIDIA 3090 GPU.
 
 <img src="./models/main_models/rt1/figures/rt1.png" width="450px"></img>
@@ -262,61 +262,4 @@ When running any of the finetuning or pretraining scripts, please ensure the fol
 5. Navigate to `LaNMP-Dataset/models/main_models/rt1/rt1_pytorch/tokenizers/action_tokenizer.py`
 6. Ensure the `action_order` and `action_space` in lines 61 and 62 of `action_tokenizer.py` fetch from `lanmp_keys` defined in line 56
 7. Run `python3 main_ft_eval.py` with all arguments input as required
-8. Evaluation loss logs should be reported on weights and biases as well as printed (mean ± std dev) on the terminal
-
-## ALFRED Seq2Seq
-The ALFRED Seq2Seq model from the paper ["ALFRED A Benchmark for Interpreting Grounded Instructions for Everyday Tasks"](https://openaccess.thecvf.com/content_CVPR_2020/papers/Shridhar_ALFRED_A_Benchmark_for_Interpreting_Grounded_Instructions_for_Everyday_Tasks_CVPR_2020_paper.pdf) by _Shridhar et al._ was modified and fine-tuned on LaNMP.
-This model was trained and ran on an NVIDIA 3090 GPU, so some of the following instructions assume the use of that GPU.
-
-**Preliminary:**
-
-1. Create a Python virtual environment using Python 3.9: `python3.9 -m venv alfred-env`
-2. Activate the virtual environment `source alfred-env/bin/activate`
-2. Install and load **CUDA Toolkit 11.8** and **cuDNN 8.7**
-3. `cd LaNMP-Dataset/models/main_models`
-4. `export ALFRED_ROOT=$(pwd)/alfred`
-5. `cd alfred`
-6. Install all dependencies: `pip install -r requirements.txt`
-7. Download the dataset from the [DropBox](https://www.dropbox.com/scl/fo/c1q9s420pzu1285t1wcud/AGMDPvgD5R1ilUFId0i94KE?rlkey=7lwmxnjagi7k9kgimd4v7fwaq&dl=0)
-8. Place the zipped dataset files in `LaNMP-Dataset/dataset`
-9. Unzip the datasets `gunzip *.gz`
-
-
-**Running training:**
-
-The original pretrained model used for fine-tuning can be downloaded from this [Google Drive Folder](https://drive.google.com/drive/folders/12cXF86BgWhWWaMK2EFLbujP2plN4u1ds?usp=sharing). 
-
-1. Place the model in `LaNMP-Dataset/models/main_models/alfred/pretrained`
-2. `cd LaNMP-Dataset/models/main_models/alfred`
-3. Extract the image features using the ResNet and save them to disk:
-```
-python models/utils/extract_resnet.py --gpu
-```
-4. Fine-tune:
-```
-python models/train/train_seq2seq.py --model seq2seq_im_mask --dout exp/model:{model}_discrete_relative_fold1 --gpu --batch 8 --pm_aux_loss_wt 0.1 --subgoal_aux_loss_wt 0.1 --pp_data 'data/feats_discrete_relative_fold1' --split_keys 'data/splits/split_keys_discrete_relative_fold1.json --class_mode --relative --preprocess'
-```
-
-* `--class_mode` puts the model into classification mode to use cross-entropy loss and output discrete actions
-* `--relative` makes the model produce relative (delta between current step and next step) actions rather than global actions
-* `--preprocess` preprocesses the data and saves it on disk to be used for the training down the pipeline. This only needs to be ran once. It can be removed after the first time to only run the training.
-* More details on all the command-line arguments can be found at `LaNMP-Dataset/models/main_models/train/train_seq2seq.py`
-
-**Running inference:**
-
-The simulated fine-tuned models can be downloaded from this [Google Drive folder](https://drive.google.com/drive/folders/1Cy1vR64jaYEO5whRO9A2yeQzXyplz1Io?usp=sharing).
-
-The simulated extracted ResNet visual features can be downloaded from this [Google Drive folder](https://drive.google.com/drive/folders/1PqZYFZrt-k0ylXKm_y_2skMeccI4deiN?usp=sharing).
-
-
-1. Place the model pth files in `LaNMP-Dataset/models/main_models/alfred/exp`
-2. Place the zipped vision features file in `LaNMP-Dataset/models/main_models/alfred/data/vis_feats`
-3. Unzip and extract the file `tar -xzvf vis_feats.tar.gz`
-4. `cd LaNMP-Dataset/models/main_models/alfred`
-5. Run inference using fold1's fine-tuned model:
-```
-python models/eval/eval_seq2seq.py --model_path exp/best_test_fold1.pth --gpu --model models.model.seq2seq_im_mask --pp_data data/feats_discrete_relative_fold1 --split_keys 'data/splits/split_keys_discrete_relative_fold1.json'
-```
-* The command assumes it is run on a machine with a GUI in order to run the AI2THOR simulator, i.e. not on a headless machine.
-* To run other models instead of the "fold1" model, change any part that has "fold1" in the command to the desired model, e.g. "task" for the "best_test_task.pth" model.
-* More details on all the command-line arguments can be found at `LaNMP-Dataset/models/main_models/eval/eval_seq2seq.py`.
+8. Evaluation loss logs should be reported on weights and biases as well as printed (mean ± std dev) on the terminal -->

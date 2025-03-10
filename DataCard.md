@@ -1,6 +1,6 @@
-# LaNMP
+# LAMBDA
 
-LaNMP is a mobile manipulation robot dataset comprised of Natural Language, Navigation, Manipulation, and Perception (LaNMP) data. The dataset is collected in both simulated and real-world environments. The environments are multi-room, ensuring the tasks are long-horizon in nature. The tasks are pick-and-place described by humans to a robot in natural language. The trajectories, which are collected from robots via human teleoperation, contain LaNMP data at every timestep. There are 524 simulated and 50 real trajectories, totalling to 574 trajectories.
+A benchmark consisting of language-conditioned long-horizon (room-to-room and floor-to-floor navigation) MoMa tasks that are paired with human-collected expert demonstrations from both simulated and real-world environments. There are 521 simulated and 50 real trajectories, totalling to 571 trajectories.
 
 #### Dataset Link
 <!-- info: Provide a link to the dataset: -->
@@ -42,7 +42,7 @@ organizations belong: -->
 - **Publishing POC:** Ahmed Jaafar
 - **Affiliation:** Brown University
 - **Contact:** ahmed_jaafar@brown.edu
-- **Website:** https://lanmpdataset.github.io/
+- **Website:** https://lambdabenchmark.github.io/
 
 #### Author(s)
 <!-- scope: microscope -->
@@ -53,8 +53,10 @@ institutions or multiple affiliations.) -->
 - Ahmed Jaafar, Brown University
 - Shreyas Sundara Raman, Brown University
 - Yichen Wei, Brown University
+- Sudarshan Harithas, Brown University
 - Sofia Juliani, Rutgers University
 - Anneke Wernerfelt, University of Pennsylvania
+- Benedict Quartey, Brown University
 - Ifrah Idrees, Brown University
 - Jason Xinyu Liu, Brown University
 - Stefanie Tellex, Associate Professor, Brown University
@@ -100,10 +102,10 @@ more detailed breakdowns.) -->
 Category | Data
 --- | ---
 Size of Dataset | 288400 MB
-Number of Instances | 574
-Human Labels | 574
+Number of Instances | 571
+Human Labels | 571
 Capabilities | 4
-Avg. Trajectory Length | 247
+Avg. Trajectory Length | 496 (sim)
 Number of environments | 8
 Number of rooms | 30
 Number of actions | 12
@@ -134,11 +136,11 @@ strings. -->
 
 Statistic | Simulation Trajectories | Real Trajectories 
 --- | --- | --- 
-count | 524 | 50
-mean |172| 323
-std | 71 | 187
-min | 52 | 123
-max | 594 | 733
+count | 521 | 50
+mean |496| 323
+std | - | 187
+min | - | 123
+max | - | 733
 
 **Above:** The mean, std, min, and max of the trajectories refers to their lengths.
 
@@ -175,9 +177,9 @@ updates to the data.
 #### Version Details
 <!-- scope: periscope -->
 <!-- info: Provide details about **this** version of the dataset: -->
-**Current Version:** 1.0
+**Current Version:** 2.0
 
-**Last Updated:** 06/2024
+**Last Updated:** 03/2025
 
 **Release Date:** 06/2024
 
@@ -411,7 +413,7 @@ been designed for:<br><br>(Usage Note: Use comma-separated keywords.) -->
 (Usage Note: use this to describe the problem space and corresponding
 motivations for the dataset.) -->
 
-There have been recent advances in robotic mobile manipulation, however the field as a whole is still lagging behind. We feel one reason behind this is a lack of useful and difficult benchmarks for mobile manipulation models. In particular, there were no benchmarks that have data for long-horizon room-to-room pick-and-place tasks comprised of natural langauge, navigation, manipulation, and perception in both simulation and the real-world, including a quadruped.
+<!-- There have been recent advances in robotic mobile manipulation, however the field as a whole is still lagging behind. We feel one reason behind this is a lack of useful and difficult benchmarks for mobile manipulation models. In particular, there were no benchmarks that have data for long-horizon room-to-room pick-and-place tasks comprised of natural langauge, navigation, manipulation, and perception in both simulation and the real-world, including a quadruped. -->
 
 ### Intended Use
 #### Dataset Use(s)
@@ -425,7 +427,7 @@ There have been recent advances in robotic mobile manipulation, however the fiel
 
 Use additional notes to capture any specific patterns that readers should
 look out for, or other relevant information or considerations. -->
-**Suitable Use Case:** Training and testing behavior cloning models.
+**Suitable Use Case:** Training and testing behavior cloning models for data efficiency.
 
 **Suitable Use Case:** Learning reward functions via inverse reinforcement learning.
 
@@ -440,7 +442,7 @@ look out for, or other relevant information or considerations. -->
 <!-- scope: periscope -->
 <!-- info: Provide a description of the specific problem space that this
 dataset intends to address. -->
-This dataset intendes to serve as a benchmark addressing the gap of the integration of natural language, navigation, manipulation, and perception for pick-and-place mobile manipulation tasks that span room-to-room and floor-to-floor in both simulated and real environments. Mobile manipulation is lagging behind overall, and we believe one of the reasons behind that is a lack of difficult comprehensive benchmarks that models in developement can be tested against. LaNMP is here to fill this gap.
+<!-- This dataset intendes to serve as a benchmark addressing the gap of the integration of natural language, navigation, manipulation, and perception for pick-and-place mobile manipulation tasks that span room-to-room and floor-to-floor in both simulated and real environments. Mobile manipulation is lagging behind overall, and we believe one of the reasons behind that is a lack of difficult comprehensive benchmarks that models in developement can be tested against. LaNMP is here to fill this gap. -->
 
 #### Citation Guidelines
 <!-- scope: microscope -->
@@ -449,11 +451,19 @@ and/or production.
 
 Use additional notes to capture any specific patterns that readers should look
 out for, or other relevant information or considerations. -->
-**Guidelines & Steps:** As simple as referncing the BiBTeX below.
+**Guidelines & Steps:** Referncing the BiBTeX below.
 
 **BiBTeX:**
 ```
-Coming soon!
+ @misc{lambdabenchmark,
+      title={{\lambda}: A Benchmark for Data-Efficiency in Long-Horizon Indoor Mobile Manipulation Robotics}, 
+      author={Ahmed Jaafar and Shreyas Sundara Raman and Yichen Wei and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
+      year={2025},
+      eprint={2412.05313},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2412.05313}, 
+    }
 ```
 
 ## Access
@@ -468,7 +478,7 @@ Coming soon!
 <!-- info: Provide links that describe documentation to access this
 dataset: -->
 - Dataset Website URL: https://www.dropbox.com/scl/fo/c1q9s420pzu1285t1wcud/AGMDPvgD5R1ilUFId0i94KE?rlkey=7lwmxnjagi7k9kgimd4v7fwaq&dl=0
-- GitHub URL: https://github.com/h2r/LaNPM-Dataset/
+- GitHub URL: https://github.com/h2r/LAMBDA/
 
 
 ## Provenance
@@ -520,7 +530,7 @@ type.) -->
 
 **Is this source considered sensitive or high-risk?** No
 
-**Dates of Collection:** [03 2024 - 04 2024]
+**Dates of Collection:** [09 2024]
 
 **Primary modality of collection data:**
 
@@ -822,14 +832,14 @@ Include links to servers where readers can explore the data on their own. -->
 Use additional notes to capture any other
 relevant information or considerations. -->
 
-Set | Number of data points
+<!-- Set | Number of data points
 --- | ---
 Train | 446
 Test | 78
 
 **Above:** We don't hyperparameter tune so we only use train and test splits. 85% and 15% respectively. This is only for the simulation data.
 
-**Additional Notes:** This split was only used during the task generalization experiment. More details in the paper.
+**Additional Notes:** This split was only used during the task generalization experiment. More details in the paper. -->
 
 #### Split Statistics
 <!-- scope: periscope -->
@@ -837,12 +847,12 @@ Test | 78
 <!-- info: Provide the sizes of each split. As appropriate, provide any
 descriptive statistics for features. -->
 
-Statistic | Train | Test 
+<!-- Statistic | Train | Test 
 --- | --- | --- 
 Count | 446 | 78 
 
 
-**Above:** We don't hyperparameter tune so we only use train and test splits. 85% and 15% respectively. This is only for the simulation data.
+**Above:** We don't hyperparameter tune so we only use train and test splits. 85% and 15% respectively. This is only for the simulation data. -->
 
 
 ## Transformations
@@ -957,8 +967,8 @@ Number of annotators per example | 1
 
 **Crowdsourcing** | **Number**
 --- | ---
-Number of unique annotations | 524
-Total number of annotations | 524
+Number of unique annotations | 521
+Total number of annotations | 521
 Average annotations per example | 1
 Number of annotators | 41
 Number of annotators per example | 1
@@ -1235,23 +1245,6 @@ following for each model.) -->
 
 **Model Card:** In page 21 of the [paper](https://robotics-transformer.github.io/assets/rt1.pdf).
 
-
-**ALFRED Seq2Seq**
-
-**Model Card:** No card available. Please refer to the [GitHub repo](https://github.com/askforalfred/alfred) instead.
-
-
-**Evaluation Results**
-| Model               | SR  | Length            | Grasp SR | RMSE v.s. GT | Weighted $\Delta_\text{xyz}$ | CLIP EMA Score | End Goal Dist | CE Loss         |
-|---------------------|-----|-------------------|----------|--------------|------------------------------|----------------|---------------|-----------------|
-| **Cross-Scene**     |     |                   |          |              |                              |                |               |                 |
-| --- ALFRED Seq2Seq  | 0.0 | 655.09 ± 450.52   | 0.0      | 3.11 ± 0.63  | 0.0026 ± 0.0035              | 0.1614 ± 0.0120 | 12.42 ± 5.44  | 286.77 ± 20.31  |
-| --- RT-1            | 0.0 | 205.03 ± 27.36    | 0.0      | 9.50 ± 0.27  | 1.3423 ± 0.1133              | 0.1521 ± 0.0065 | 12.56 ± 6.67  | 80.98 ± 4.68    |
-| **Task Generalization** |     |                   |          |              |                              |                |               |                 |
-| --- ALFRED Seq2Seq  | 0.0 | 501.60 ± 578.62   | 0.0      | 3.01 ± 1.18  | 0.0008 ± 0.0014              | 0.1681 ± 0.0327 | 12.83 ± 11.12 | 286.66 ± 398.80 |
-| --- RT-1            | 0.0 | 199.56 ± 106.11   | 0.0      | 9.74 ± 1.67  | 1.3980 ± 0.5834              | 0.1488 ± 0.0243 | 12.40 ± 12.20 | 82.61 ± 1.81    |
-| **Ground Truth**    | 1.0 | 171.69 ± 70.80    | 1.0      | ---          | 0.5576 ± 0.1751              | 0.2067 ± 0.0311 | ---           | ---             |
-
 **Additional Notes:** These results are from the simulation data only.
 
 #### Evaluation Process(es)
@@ -1268,31 +1261,8 @@ information or considerations.
 for each model and method used.) -->
 
 **[Metrics used]:**
-- **Task Success** (GTR): a binary value measuring whether an agent achieves the goal/completes the task specified in the command.
-- **Distance From Goal** (GTR): the spatial distance between the agent's final position after executing a learned trajectory and the designated gold goal state.
-    ```
-    d = 1/2 (sqrt{x_{gt_body,n}^2 - x_{eval_body,n}^2} + sqrt{x_{gt_ee,n}^2 - x_{eval_ee,n}^2})
-    ```
-- **Grasp Success Rate** (GTR): the efficacy of the agent's attempts to grasp objects in the scene. Specifically, the percentage of attempts that result in successful object acquisition.
-- **Average RMSE** (GTR): the average root-mean-square error of the agent's body and end-effector coordinates between the generated trajectory and the ground truth. It reports a weighted average between body and end-effector errors normalized across the maximum length of both trajectories.
-    ```
-    RMSE = sum_{i=0}^n 1/2 (sqrt{x_{gt_body,i}^2 - x_{eval_body,i}^2} + sqrt{x_{gt_ee,i}^2 - x_{eval_ee,i}^2})
-    ```
-- **Average Number of Steps** (GTR): the total number of actions an agent takes. It serves to evaluate a model's ability to replicate efficient human navigation.
-- **Mean and Standard Deviation in State Differences** (GTI): the standard deviation in positional differences between successive timesteps in a trajectory. It assesses the control smoothness exhibited by the agent to compare learned trajectories against the fluidity and naturalness of the ground-truth trajectories.
-    ```
-    Delta = sum_{i=1}^n 1/2 (sqrt{x_{eval_body,i}^2 - x_{eval_body,(i-1)}^2} + sqrt{x_{eval_ee,i}^2 - x_{eval_ee,(i-1)}^2})
-    ```
-- **CLIP Embedding Reward** (GTI): the exponential moving average of CLIP text-image correlation scores for all steps of a trajectory. Natural language task specification can be ambiguous and difficult to formulate into a structured goal condition. Inspired by previous works using CLIP for RL rewards, we propose this metric to capture complex semantic correlations between the trajectory and task specification. That is understanding, reasoning, the grounding of a task using the CLIP embedding space. This provides a measure of the agent's task comprehension and execution fidelity.
-    ```
-    EMA_i = alpha EMA_{i-1} + (1-alpha)r_i
-    ```
-    where
-    ```
-    r_i := CLIP(task,img_i)
-    ```
 
-**Additional Notes:** For robust evaluation, we consider two categories of metrics for cross-scene and task generalization experiments: ``ground truth relative" (GTR) metrics that compare against trajectories in LaNMP as standards and "ground truth independent" (GTI) metrics that evaluate a trajectory (ground-truth or generated) on task understanding or smoothness.
+**Additional Notes:** 
 
 #### Description(s) and Statistic(s)
 <!-- scope: periscope -->
@@ -1316,14 +1286,6 @@ demonstrations annotated with detailed instructions.
 
 - Model Size: 35M (params)
 
-**ALFRED Seq2Seq**
-
-**Model Card:** No card available. Please refer to the [GitHub repo](https://github.com/askforalfred/alfred) instead.
-
-**Model Description:** The ALFRED paper introduces a Sequence-to-Sequence model leveraging a CNN-LSTM architecture with an attention mechanism for task execution. It encodes visual inputs via ResNet-18 and processes language through a bidirectional LSTM. A decoder leverages these multimodal inputs along with historical action data to iteratively predict subsequent actions and generate pixelwise interaction masks, enhancing precise object manipulation capabilities within the given environment.
-
-- Model Size: 35M (params)
-
 
 #### Expected Performance and Known Caveats
 <!-- scope: microscope -->
@@ -1336,6 +1298,6 @@ information or considerations.
 (Usage Note: Duplicate and complete the following
 for each model.) -->
 
-**Expected Performance:** We expected RT-1 to perform better than ALFRED Seq2Seq due to it being more recent and more advanced. We expected both models to perform poorly, especially on the Task Success metric.
+**Expected Performance:** 
 
-**Known Caveats:** The model architectures had to be modified to make them work for LaNMP. RT-1 had to be pretrained by us instead of using the provided pretrained checkpoint. There were some simulator issues during real-time evaluation.
+**Known Caveats:** 
