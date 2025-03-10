@@ -19,9 +19,9 @@ class RT1Policy:
         action_space: gym.spaces.Dict,
         arch: str = "efficientnet_b3",
         action_bins=256,
-        num_layers=8, #4
+        num_layers=10,
         num_heads=8,
-        feed_forward_size=512, #256
+        feed_forward_size=512,
         dropout_rate=0.1,
         time_sequence_length=6,
         embedding_dim=512,

@@ -267,8 +267,6 @@ def main():
             pickup_release = val_dataloader.dataset.detokenize_pickup_release(generated_action_tokens['pickup_release'][0])
             body_pitch = val_dataloader.dataset.detokenize_head_pitch(generated_action_tokens['body_pitch_delta'][0])
             curr_mode = val_dataloader.dataset.detokenize_mode(generated_action_tokens['control_mode'][0])
-
-            
             
 
             terminate_episode = generated_action_tokens['terminate_episode'][0]
@@ -355,12 +353,6 @@ def main():
         #close the old GUI for AI2Thor after trajectory finishes
         ai2thor_env.controller.stop()
         time.sleep(0.5)
-
-        
-
-
-    
    
-
 if __name__ == "__main__":
     main()

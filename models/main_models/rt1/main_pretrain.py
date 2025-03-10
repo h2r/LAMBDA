@@ -114,8 +114,8 @@ def parse_args():
     parser.add_argument(
         "--checkpoint-freq",
         type=int,
-        default=200,
-        help="checkpoint frequency in number of batches; defaults to None",
+        default=0,
+        help="checkpoint frequency in number of batches; defaults to None. If 0, then saves at best val scores",
     )
     parser.add_argument(
         "--checkpoint-dir",
@@ -290,6 +290,11 @@ def main():
             if eval_loss < best_val_loss:
                 best_val_loss = eval_loss
                 val_dic['best_val_loss'] = eval_loss
+                if args.checkpoint_freq == 0:
+                    os.makedirs(args.checkpoint_dir, exist_ok=True)
+                    checkpoint_path = (f"{args.checkpoint_dir}/checkpoint_best.pt")
+                    torch.save(policy.model.state_dict(), checkpoint_path)
+                    print(f"Saved checkpoint to {checkpoint_path}")
             else:
                 val_dic['best_val_loss'] = best_val_loss
             val_dic['curr_val_loss'] = eval_loss
@@ -307,7 +312,12 @@ def main():
             )
             torch.save(policy.model.state_dict(), checkpoint_path)
             print(f"Saved checkpoint to {checkpoint_path}")
-    print("finished training")
+
+    
+    checkpoint_path = f"{args.checkpoint_dir}/checkpoint_last.pt"
+    torch.save(policy.model.state_dict(), checkpoint_path)
+    print(f"Saved checkpoint to {checkpoint_path}")
+    print("Finished Training!")
 
 if __name__ == "__main__":
     main()
