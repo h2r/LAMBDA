@@ -268,7 +268,7 @@ When running any of the finetuning or pretraining scripts, please ensure the fol
 ```
    @misc{lambdabenchmark,
       title={{\lambda}: A Benchmark for Data-Efficiency in Long-Horizon Indoor Mobile Manipulation Robotics}, 
-      author={Ahmed Jaafar and Shreyas Sundara Raman and Yichen Wei and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
+      author={Ahmed Jaafar and Shreyas Sundara Raman and Yichen Wei and Sudarshan Harithas and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
       year={2025},
       eprint={2412.05313},
       archivePrefix={arXiv},
