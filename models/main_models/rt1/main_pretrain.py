@@ -8,6 +8,7 @@ import torch
 import wandb
 from sentence_transformers import SentenceTransformer
 from torch.optim import Adam
+from torch.optim.lr_scheduler import ExponentialLR, ReduceLROnPlateau
 from tqdm import tqdm
 from data import create_dataset
 from rt1_pytorch.rt1_policy import RT1Policy
@@ -44,6 +45,29 @@ def parse_args():
         type=float,
         default=1e-4,
         help="learning rate",
+    )
+    parser.add_argument(
+        "--lr_sched",
+        default = None,
+        choices = ['exponential', 'plateau'],
+    )
+    parser.add_argument(
+        "--factor",
+        type=float,
+        default=0.95,
+        help="plateau scheduler reduction factor",
+    )
+    parser.add_argument(
+        "--patience",
+        type=int,
+        default= 25,
+        help="plateau scheduler batch patience",
+    )
+    parser.add_argument(
+        "--gamma",
+        type=float,
+        default=0.95,
+        help="exponential scheduler step size",
     )
     parser.add_argument(
         "--train-batch-size",
@@ -90,8 +114,8 @@ def parse_args():
     parser.add_argument(
         "--checkpoint-freq",
         type=int,
-        default=200,
-        help="checkpoint frequency in number of batches; defaults to None",
+        default=0,
+        help="checkpoint frequency in number of batches; defaults to None. If 0, then saves at best val scores",
     )
     parser.add_argument(
         "--checkpoint-dir",
@@ -175,6 +199,10 @@ def main():
     
     policy.model.train()
     optimizer = Adam(policy.model.parameters(), lr=args.lr)
+    if args.lr_sched == "exponential":
+        scheduler = ExponentialLR(optimizer, gamma=args.gamma)
+    elif args.lr_sched == "plateau":
+	    scheduler = ReduceLROnPlateau(optimizer, mode='min', patience=args.patience, factor=args.factor, verbose=False)
     text_embedding_model = (
         SentenceTransformer(args.sentence_transformer)
         if args.sentence_transformer
@@ -234,6 +262,8 @@ def main():
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        if args.lr_sched == "exponential":
+            scheduler.step()
 
         if args.eval_freq and num_batches % args.eval_freq == 0:
             print("Evaluating...")
@@ -248,6 +278,9 @@ def main():
                 eval_loss, eval_loss_std = policy.loss(observations, actions)
             eval_loss = eval_loss.item()
 
+            if args.lr_sched == "plateau":
+                scheduler.step(eval_loss)
+
             wandb.log(
                 {"eval_loss": eval_loss, "eval_loss_std": eval_loss_std.item()},
                 step=num_batches * args.train_batch_size,
@@ -257,6 +290,11 @@ def main():
             if eval_loss < best_val_loss:
                 best_val_loss = eval_loss
                 val_dic['best_val_loss'] = eval_loss
+                if args.checkpoint_freq == 0:
+                    os.makedirs(args.checkpoint_dir, exist_ok=True)
+                    checkpoint_path = (f"{args.checkpoint_dir}/checkpoint_best.pt")
+                    torch.save(policy.model.state_dict(), checkpoint_path)
+                    print(f"Saved checkpoint to {checkpoint_path}")
             else:
                 val_dic['best_val_loss'] = best_val_loss
             val_dic['curr_val_loss'] = eval_loss
@@ -274,7 +312,12 @@ def main():
             )
             torch.save(policy.model.state_dict(), checkpoint_path)
             print(f"Saved checkpoint to {checkpoint_path}")
-    print("finished training")
+
+    
+    checkpoint_path = f"{args.checkpoint_dir}/checkpoint_last.pt"
+    torch.save(policy.model.state_dict(), checkpoint_path)
+    print(f"Saved checkpoint to {checkpoint_path}")
+    print("Finished Training!")
 
 if __name__ == "__main__":
     main()
