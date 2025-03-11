@@ -1,0 +1,29 @@
+scene,nl_cmd,nav_to_target,grasped_target_obj,nav_to_target_with_obj,place_obj_at_goal,complete_traj
+FloorPlan_Train12_3,Find the pot that is near the television. Pick it up and place it next to the bowl that is located on the white chair in the hallway.,0,0,0,0,0
+FloorPlan_Train12_3,Please pick up the apple from the white chair and place it by the television.,1,0,0,0,0
+FloorPlan_Train12_3,"Run in to the next room and grab that vase, and then put it gently on the tan seat.",0,0,0,0,0
+FloorPlan_Train12_3,"Pick up the remote off the grey couch, then put it down next to the TV.",1,0,0,0,0
+FloorPlan_Train12_3,Pick up the apple and place it in the bowl sitting on the chair.,1,0,0,0,0
+FloorPlan_Train12_3,Grab the cup that is next to the television. Place the cup on top of the chest of drawers next to the vase.,0,0,0,0,0
+FloorPlan_Train1_3,Go to the room with the desk in it at the end of the hall and pick up the spray. Bring it to the lounge and put it down on the TV stand.,0,0,0,0,0
+FloorPlan_Train1_3,Pick up the tennis racket off the floor and put it on the bed.,0,0,0,0,0
+FloorPlan_Train1_3,Please pick up the cup by the laptop and take it to the bedroom and place it on top of the bookshelf.,0,0,0,0,0
+FloorPlan_Train1_3,Put my basketball on the chair beneath the framed desert canyon photo.,0,0,0,0,0
+FloorPlan_Train1_3,Grab the apple next to the laptop and go to the living room and place it on the table.,1,0,0,0,0
+FloorPlan_Train5_1,Go pick up the dog figurine by the TV and place it on the grey couch next to the purple pillow.,0,0,0,0,0
+FloorPlan_Train5_1,Pick up the spray and place it on the white stand with the plant on it.,0,0,0,0,0
+FloorPlan_Train5_1,Take the fork and place it in the bowl.,1,0,0,0,0
+FloorPlan_Train5_1,Pick up the newspaper lying on the couch and place it on the adjacent coffee table.,0,0,0,0,0
+FloorPlan_Train5_1,Put the dog figurine in the black pot.,1,0,0,0,0
+FloorPlan_Train7_5,"Take the vase on the table and go to the living room, then put it on the couch.",0,0,0,0,0
+FloorPlan_Train7_5,Pick up the yellow vase from the brown table and take it to the living room and put it on the coffee table.,0,0,0,0,0
+FloorPlan_Train7_5,"Go to the living room and pick up the remote next to the television, then place it on top of the books on the chair.",1,0,0,0,0
+FloorPlan_Train7_5,Take the basketball from beside the bed and place it next to the TV in the living room.,0,0,0,0,0
+FloorPlan_Train7_5,Please pick up the remote by the TV and take it and place it on the chest of drawers near the bed.,0,0,0,0,0
+FloorPlan_Train7_5,Pick up the cup and put it in the recycling bin.,0,0,0,0,0
+FloorPlan_Train8_1,Go to the black table near the living room and grab the salt. Place it on the nearby table directly next to the apple.,0,0,0,0,0
+FloorPlan_Train8_1,Pick up the spray and put it next to the TV.,1,0,0,0,0
+FloorPlan_Train8_1,Take the spray that is sitting next to the plant and put it in the drawer that the pot is sitting on top of.,0,1,0,0,0
+FloorPlan_Train8_1,Go pick up the salt and put it on the table next to the laptop and tennis.,0,0,0,0,0
+FloorPlan_Train8_1,"Grab the mug next to the laptop, then put it on the stand next to the plant.",0,0,0,0,0
+FloorPlan_Train8_1,"Go to the living room and pick up the pepper on the table. Then, put the pepper on the table with a remote controller and an alarm clock on it. Place the pepper immediately next to the remote controller.",1,0,0,0,0

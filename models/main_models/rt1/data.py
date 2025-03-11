@@ -480,11 +480,30 @@ def create_dataset(
         #b = tfds.builder_from_directory(builder_dir='/users/sjulian2/data/sjulian2/jaco_play/0.1.0')
         # b = tfds.builder_from_directory(builder_dir=dataset2path(dataset))
         
-        # pdb.set_trace()
-        b = tfds.builder_from_directory(builder_dir = '/oscar/data/stellex/ssunda11/NPM-Dataset/rt1-pytorch/rt1_dataset/0.1.0')
+        b = tfds.builder_from_directory(builder_dir = '/users/ajaafar/scratch/0.1.0')
         # ds = tfds.load("fractal20220817_data:0.1.0", data_dir="gs://gresearch/robotics")
 
         ds = b.as_dataset(split=split)
+    
+
+        # Helper function to convert tensors to numpy arrays recursively
+        # def convert_to_numpy(obj):
+        #     if isinstance(obj, dict):
+        #         return {key: convert_to_numpy(value) for key, value in obj.items()}
+        #     elif isinstance(obj, tf.Tensor):
+        #         return obj.numpy()
+        #     elif isinstance(obj, tf.data.Dataset):  # If it's a dataset (like steps)
+        #         return [convert_to_numpy(step) for step in obj.take(5)]  # Take a few steps to inspect
+        #     else:
+        #         return obj
+
+        # # Iterate over the dataset and inspect a few samples
+        # for example in ds.take(1):  # Take 1 example to inspect
+        #     numpy_example = convert_to_numpy(example)
+            
+        #     # Now you can print the actual data
+        #     print(numpy_example)
+
 
         # The RLDSSpec for the RT1 dataset.
         rt1_spec = RLDSSpec(
@@ -501,7 +520,6 @@ def create_dataset(
         trajectory_datasets.append(trajectory_dataset)
 
     trajectory_dataset = tf.data.Dataset.sample_from_datasets(trajectory_datasets)
-
     trajectory_dataset = trajectory_dataset.map(
         get_observation_and_action_from_step, num_parallel_calls=tf.data.AUTOTUNE
     )

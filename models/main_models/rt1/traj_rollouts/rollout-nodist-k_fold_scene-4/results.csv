@@ -1,0 +1,105 @@
+scene,nl_cmd,nav_to_target,grasped_target_obj,nav_to_target_with_obj,place_obj_at_goal,complete_traj
+FloorPlan_Train8_1,Grab the baseball bat and place it on the nightstand with an alarm on it.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the pillow and place it on the other chair.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the salt from the black table near the pepper and place it next to the apple on the brown table.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Pick up the plate, which is near the glass, and place it next to the laptop and the tennis racket on the white table.",0,0,0,0,0.0
+FloorPlan_Train8_1,Take the alarm clock from the table in the corridor and place it next to the plant on the table in the middle corridor.,0,1,0,0,0.0
+FloorPlan_Train8_1,Go into the central room and pick up the apple on the brown table. Go into the room with the chair in front of the TV and put the apple on the chair.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Go into the room that has a TV, pick up the blue pillow on the chair, go into the central room and put the pillow on the brown table.",0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the drawer and pick up the salt. Then go to the living room and place the salt next to the television.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Go to the adjacent corridor next to the study, pick up the blue plate, and place it in the bin that is in the living room.",0,0,0,0,0.0
+FloorPlan_Train8_1,"Travel to the tall tan drawers to grab the pot, and then put it on the couch that has no pillow.",0,0,0,0,0.0
+FloorPlan_Train8_1,"Take the apple away from the plant, making sure you then situate it between the salt and pepper on the dresser near the TV room.",0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the bottle on the drawers and put it on the white table.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go pick up the salt and put it on the table next to the laptop and tennis.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the alarm and put in on top of the drawer next to the spray and apple.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Go to the living room and pick up the pepper on the table. Then, put the pepper on the table with a remote controller and an alarm clock on it. Place the pepper immediately next to the remote controller.",0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the drawer and pick up the spray and take it to the sofa chair.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the apple and put it on the white table.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the apple and put in the green chair.,0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the spray from the coffee table with the plant. Place the spray on the black table next to the pepper.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the black mug from the white table with the laptop. Place the black mug on the coffee table next to the leafy plant.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the remote from the table. Place it on top of the drawers that have a cooking pot on top of it.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the alarm and put it on the brown desk next to the apple.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the apple from the desk and put it on the black desk next to the plate.,0,0,0,0,0.0
+FloorPlan_Train8_1,Get the remote and place it in the can next to the television.,0,0,0,0,0.0
+FloorPlan_Train8_1,Move the pepper next to the plant on the table.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the salt and place it between the cup and the plate.,0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the remote off the nearby table. Go to the living room and place it on the chair directly next to the pillow.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Run to the open space with a chest in the middle of the room. Pick up the apple next to the spray and the bowl. Take the apple to the living room and put it on the table, next to the salt on the table.",0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the remote and place it near the spray and the apple on the drawer.,1,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the apple and place it by the alarm clock.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Pick up the pot and place it by the TV, in the bin.",0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the drawer and pick up the glass bottle and put it on the top of the shelf.,0,0,0,0,0.0
+FloorPlan_Train8_1,Place the alarm next to the laptop.,1,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the spray and put it next to the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the tennis racket on top of the white desk and put it by the salt and pepper.,0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the remote control next to the alarm clock and place it on the couch in the room with the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the spray that is sitting next to the plant and put it in the drawer that the pot is sitting on top of.,0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the gray bowl and go back into the starting room and place it on the table beside the alarm.,0,0,0,0,0.0
+FloorPlan_Train8_1,Move the baseball bat by the chair near the TV to the chair that faces the opposite way on the other side of the partition.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Take the bottle from the large rectangular table with the plant in the middle and place it in the room with the large white round table, on top of the table next to the laptop.",0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the pepper grinder from the table close to the TV and put it on the light brown dresser in the middle of the room.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the hallway and pickup the apple on the brown chest of drawers next to the spray and then walk into the lounge and place the apple in the white basket next to the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Please pick up the bottle from the large brown table and place it on the small brown table.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Pick up the remote control next to the clock and bring it to me in the living room, place it on the chair.",0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the bottle and put it on the round white table.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Go to the main area and grab the bottle on the drawer, then go to the office and place it on the drawers.",0,0,0,0,0.0
+FloorPlan_Train8_1,"Mosey on over to the drawer near the office to pick up the blue plate, and drop it on the chair near the painting with the reddish-brown tones.",0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the living room and pick up the pillow on the chair. Then go to the bin in the same room and drop it inside.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Lift the plate from the small, high table and place it on the low table at the other end of the hall, next to the salt and pepper.",0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the remote on the little side table in front of you and place it in the living room in front of the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the apple from the desk with the plant and place it on the table with the salt and pepper shakers.,0,0,0,0,
+FloorPlan_Train8_1,Grab the apple off of the table in the main room and put it in the bin in the living room.,0,0,0,0,0.0
+FloorPlan_Train8_1,Find the blue plate on the stand and then go to the room with the television. Then find the bin and drop the plate inside.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the tennis racket next to the laptop and put it on the chair that’s next to the baseball bat in the TV room.,0,Grab the remote control next to the alarm clock and place it on the couch in the room with the TV.0,0,0,0.0
+FloorPlan_Train8_1,Go get the apple that is on top of the chest of drawers and place it on top of the shelf.,0,0,0,0,0.0
+FloorPlan_Train8_1,Get the black mug beside the laptop and bring it back to me in the living room.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go pick up the salt and place it on the yellow sofa in front of the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the remote control next to the clock on the small brown table and place it on the green armchair with the blue pillow opposite the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the white table and pick up the tennis racquet and place it on the shelf.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the apple from the large rectangular table with the plant in the middle and place it on the sideboard that is next to the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the next room and grab the remote from the brown table. Then go to the living room and place the remote next to the television.,0,0,0,0,0.0
+FloorPlan_Train8_1,Get the remote from the small brown table and put it on the chair by the television.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the central drawer unit and move the apple into the bowl.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the remote and take it to the chair facing the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Fetch the blue plate and put it on the shelf under the one with the pot.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Pick up the remote off the table, then bring it to me in the room with the television.",0,0,0,0,0.0
+FloorPlan_Train8_1,Take the remote next to the alarm clock and place it between the spray bottle and the plant.,0,1,0,0,0.0
+FloorPlan_Train8_1,"Pick up the blue plate that is on the table with the cup, then walk to the table with the plant and place it near the apple.",0,0,0,0,0.0
+FloorPlan_Train8_1,"Go to the living room and pick up the blue pillow, then take it to table that has the salt and place it there.",0,0,0,0,0.0
+FloorPlan_Train8_1,Move and pick up the pepper off the table and then move to the center area and place the pepper on the brown chest of drawers next to the apple.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Grab the mug next to the laptop, then put it on the stand next to the plant.",0,0,0,0,0.0
+FloorPlan_Train8_1,Take the remote from the table right in front of you and leave it on the table with the blue plate on it.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the office area with the laptop. Grab the yellow vase and place it on the blue plate on the drawers.,0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the remote next to the alarm clock and place it next to the TV.,1,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the apple and place it in the pot.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the spray from the table and take it to the room with the laptop in it. Put the item down next to the PC.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go into the room with the round white table and pick up the tennis racket. Go into the central room with the brown desk and put the tennis racket on top.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Go to the study room, pick up the tennis bat next to the laptop, go to the living room and put the bat on the chair next to the pillow.",0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the hallway and pick up the spray on the brown chest of drawers next to the apple and then walk to the office and place it on the table next to the laptop.,0,0,0,0,0.0
+FloorPlan_Train8_1,Please pick up the alarm clock from the small brown table and place it on the small black table next to the plate.,0,0,0,0,0.0
+FloorPlan_Train8_1,Please pick up the blue plate from the small black table and place it on the green chair.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the black table near the living room and grab the salt. Place it on the nearby table directly next to the apple.,0,0,0,0,0.0
+FloorPlan_Train8_1,Find the blue plate on the black table and pick it up. Place it on the white table by the laptop.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the pepper and put it on the table next to the blue plate.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Go to the office and grab the mug behind the laptop, then come back and place it on the drawers.",0,0,0,0,0.0
+FloorPlan_Train8_1,Grab the remote and take it to the chair sitting in front of the TV.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the salt that is sitting on the black table by the TV and take it to the white table.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the table and pick up the salt and place it in the white bin in the living room.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Go to the living room and grab the pillow on the couch, then come back and place it on the drawers.",0,0,0,0,0.0
+FloorPlan_Train8_1,Take the remote from beside the alarm on the table and place it on the pillow on the yellow chair opposite the television.,0,0,0,0,0.0
+FloorPlan_Train8_1,Take the remote on top of the brown desk and bring it to the room with the shelves that have a pot on the top. Put it on the bottom shelf.,0,0,0,0,0.0
+FloorPlan_Train8_1,Get the salt and place it next to the blue plate.,0,0,0,0,0.0
+FloorPlan_Train8_1,Pick up the nearby clock and then move to the table in the central area and put it down.,0,0,0,0,0.0
+FloorPlan_Train8_1,Get the cup and place it next to the alarm clock.,0,0,0,0,0.0
+FloorPlan_Train8_1,Go to the corner and take the wine glass from the stand and then go to the drawers in the middle room and place the wine glass beside the plant.,0,0,0,0,0.0
+FloorPlan_Train8_1,Find the pepper and put it on top of the green chair with a blue pillow on it.,0,0,0,0,0.0
+FloorPlan_Train8_1,"Take the spray bottle next to the plant, and put it on the white circle desk.",0,0,0,0,0.0
+FloorPlan_Train8_1,Take the remote next to the clock and put it on the chair in front of the TV.,1,0,0,0,0.0
+FloorPlan_Train8_1,"Grab the apple next to the plant, then drop it in the bin in the living room.",0,0,0,0,0
+FloorPlan_Train8_1,Go pick up the baseball bat and place it next to the alarm clock on the floor.,0,0,0,0,0
+FloorPlan_Train8_1,Take the clock to the sofa chair.,0,0,0,0,0
+FloorPlan_Train8_1,Go pick up the blue plate and place it next to the apple on the table.,0,0,0,0,0
+FloorPlan_Train8_1,"Take the apple near the painting, bring it to the living room and place it on the chair.",0,0,0,0,0
+FloorPlan_Train8_1,Go to the drawer near the TV. Pick up the salt. Put the salt next to the laptop.,0,0,0,0,0

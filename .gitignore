@@ -6,7 +6,7 @@ __pycache__/
 
 /collect_sim/commands_scenes.json
 
-#ALFRED Model
+#S2S
 /models/main_models/alfred/pretrained/*
 !/models/main_models/alfred/pretrained/.gitkeep
 /models/main_models/alfred/exp/*
@@ -66,6 +66,11 @@ __pycache__/
 /models/main_models/alfred/data/vis_feats/*
 !/models/main_models/alfred/data/vis_feats/.gitkeep
 !/dataset/.gitkeep
+
+#RT-1
+models/main_models/rt1/wandb/
+models/main_models/rt1_dataset/*
+models/main_models/rt1/results/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -199,7 +204,6 @@ dmypy.json
 .pyre/
 
 # Extras
-models/main_models/rt1/checkpoints/*
 models/main_models/datasets/*
 models/main_models/rt1/val_losses/*
 models/main_models/wandb/
@@ -208,6 +212,34 @@ models/main_models/rt1_dataset/*
 models/main_models/rt1/traj_rollouts/*
 models/main_models/run_rt1_main.sh
 models/main_models/rt1_ft_env
+models/main_models/spoc-robot-training/
+models/main_models/rt1/src/
+models/main_models/rt1/val_losses/
+models/main_models/rt1/traj_rollouts
 /modespot/
 Trajectories/
 sim_commands.npy
+run/rt1/ft_outputs/*
+run/rt1/pretrain_outputs/*
+run/rt1/run_pretrain2.sh
+run/rt1/run_pretrain3.sh
+run/rt1/run_pretrain4.sh
+run/rt1/run_pretrain5.sh
+run/rt1/run_pretrain6.sh
+run/rt1/finetune.sbatch
+run/rt1/pretrain.sbatch
+models/main_models/rt1/train_cmds_scene_gen_0.pkl
+models/main_models/rt1/train_cmds_scene_gen_1.pkl
+models/main_models/rt1/train_cmds_scene_gen_2.pkl
+models/main_models/rt1/train_cmds_scene_gen_3.pkl
+models/main_models/rt1/train_cmds_scene_gen_4.pkl
+models/main_models/rt1/train_cmds_task_gen.pkl
+models/main_models/rt1/val_cmds_scene_gen_0.pkl
+models/main_models/rt1/val_cmds_scene_gen_1.pkl
+models/main_models/rt1/val_cmds_scene_gen_2.pkl
+models/main_models/rt1/val_cmds_scene_gen_3.pkl
+models/main_models/rt1/val_cmds_scene_gen_4.pkl
+models/main_models/rt1/val_cmds_task_gen.pkl
+run_mg/
+models/main_models/rt1/motionglot/
+models/main_models/rt1/radarplot.py

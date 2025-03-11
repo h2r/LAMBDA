@@ -28,7 +28,7 @@ class RT1Policy:
         embedding_dim=512,
         use_token_learner=True,
         token_learner_bottleneck_dim=64,
-        token_learner_num_output_tokens=8,
+        token_learner_num_output_tokens=6,
         device="cuda",
         checkpoint_path: Optional[str] = None,
     ):
@@ -72,7 +72,7 @@ class RT1Policy:
             tokens_per_action=self.action_tokenizer.tokens_per_action,
             action_bins=action_bins,
             num_layers=num_layers,
-            num_heads=num_heads,
+            num_heads=num_heads,  # Removed transformer-specific
             feed_forward_size=feed_forward_size,
             dropout_rate=dropout_rate,
             time_sequence_length=time_sequence_length,
@@ -203,10 +203,12 @@ class RT1Policy:
             action_logits (Tuple[torch.Tensor, torch.Tensor]):
               A tuple containing the sampled actions and the action logits.
         """
-        action_logits = self.model(ee_obj_dist, goal_dist, videos, texts, action_logits) #added, added2
-        actions = torch.distributions.Categorical(logits=action_logits)
+        # Area 4: Forward logic
+        # action_logits = self.model(ee_obj_dist, goal_dist, videos, texts, action_logits)  # Original Transformer logic
+        lstm_out = self.model(ee_obj_dist, goal_dist, videos, texts)  # Adjusted for LSTM model
+        actions = torch.distributions.Categorical(logits=lstm_out)
         actions = actions.sample()
-        return actions, action_logits
+        return actions, lstm_out
 
     def loss(self, observations: Dict, target_actions: Dict) -> torch.Tensor:
         """
@@ -252,7 +254,8 @@ class RT1Policy:
                 target_actions,
             )
 
-        _, action_logits = self.forward(videos, texts, ee_obj_dist, goal_dist) #added, added2
+        # _, action_logits = self.forward(videos, texts, ee_obj_dist, goal_dist)  # Original Transformer logic
+        _, action_logits = self.forward(videos, texts, ee_obj_dist, goal_dist)  # Adjusted for LSTM model
 
         action_logits = rearrange(action_logits, "b f a d -> (b f a) d")
         target_actions = rearrange(target_actions, "b f a -> (b f a)")
@@ -295,10 +298,16 @@ class RT1Policy:
             videos, texts, _ = self.preprocess(videos, texts, None, None) #added, added2
         
         with torch.no_grad():
+            # if self.dist:
+            #     actions, _ = self.forward(videos, texts, ee_obj_dist, goal_dist)  # Original Transformer logic
+            # else:
+            #     actions, _ = self.forward(videos, texts, None, None)  # Original Transformer logic
+
+            # Adjusted for LSTM model
             if self.dist:
-                actions, _ = self.forward(videos, texts, ee_obj_dist, goal_dist) #added, added2
+                actions, _ = self.forward(videos, texts, ee_obj_dist, goal_dist)
             else:
-                actions, _ = self.forward(videos, texts, None, None) #added, added2
+                actions, _ = self.forward(videos, texts, None, None)
 
         actions = actions.detach().cpu().numpy()
         actions = self.action_tokenizer.detokenize(actions)

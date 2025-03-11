@@ -1,6 +1,5 @@
 import os
 import sys
-
 import torch
 from torchvision.io import read_image
 from torch.utils.data import Dataset
@@ -24,10 +23,14 @@ from sklearn.cluster import AgglomerativeClustering, DBSCAN
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 from collections import defaultdict
+import pickle as pk
+
+np.random.seed(47)
 
 sys.path.append('..')
 
-DATASET_PATH = '/oscar/data/stellex/shared/lanmp/sim_dataset.hdf5'
+# DATASET_PATH = '/mnt/ahmed/lanmp_dataset_newest.hdf5'
+DATASET_PATH = '/oscar/data/stellex/shared/lanmp/lanmp_dataset_newest.hdf5'
 
 '''
 train_keys, val_keys, test_keys = split_data(self.args.data, splits['train'], splits['val'], splits['test'])
@@ -140,7 +143,6 @@ def cluster(hdf5_path, low_div):
 
     return train_keys, test_keys
 
-
 def split_data(hdf5_path, train_ratio=0.8, val_ratio=0.1, test_ratio=0.1):
     with h5py.File(hdf5_path, 'r') as hdf_file:
         # Assuming trajectories or data units are top-level groups in the HDF5 file
@@ -156,15 +158,15 @@ def split_data(hdf5_path, train_ratio=0.8, val_ratio=0.1, test_ratio=0.1):
         val_end = train_end + int(val_ratio * total_items)
         
         # Split the indices
-        train_indices = indices[:train_end]
-        val_indices = indices[train_end:val_end]
-        test_indices = indices[val_end:]
+        train_indices = indices[:train_end+1]
+        val_indices = indices[train_end+1:val_end+1]
+        test_indices = indices[val_end+1:]
         
         # Convert indices back to keys (assuming order in keys list is stable and matches original order)
         train_keys = [keys[i] for i in train_indices]
         val_keys = [keys[i] for i in val_indices]
         test_keys = [keys[i] for i in test_indices]
-        
+
         return train_keys, val_keys, test_keys
 
 def split_by_scene(hdf5_path):
@@ -257,11 +259,13 @@ class DatasetManager(object):
     '''
     NOTE: kwargs should contain a dictionary with keys {'train_split' : x, 'val_split': y, 'test_split':z} where x+y+z = 1
     '''
-    def __init__(self, val_scene=1, train_split=0.8, val_split=0.1, test_split=0.1, split_style='task_split', diversity_scenes=1, max_trajectories=100, low_div=True):
+    def __init__(self, subset_amt, use_dist, test_scene=1, train_split=0.8, val_split=0.1, test_split=0.1, split_style='task_split', diversity_scenes=1, max_trajectories=100, low_div=True):
+        self.use_dist = use_dist
+        
         assert( train_split + val_split + test_split == 1.0, 'Error: train, val and test split do not sum to 1.0')
 
         
-        #train_keys, val_keys, test_keys = split_data(DATASET_PATH, train_split, val_split, test_split)
+        # train_keys, val_keys, test_keys = split_data(DATASET_PATH, train_split, val_split, test_split)
         if 'scene_to_keys.json' not in os.listdir('./lanmp_dataloader'):
             self.scene_to_keys = split_by_scene(DATASET_PATH)
         else:
@@ -271,40 +275,201 @@ class DatasetManager(object):
 
         self.scenes = list(sorted(list(self.scene_to_keys.keys())))
 
-        assert( split_style in ['k_fold_scene', 'task_split', 'diversity_ablation'], "Error: input split_style is invalid")
+        assert(split_style in ['k_fold_scene', 'task_split', 'diversity_ablation'], "Error: input split_style is invalid")
         if split_style == 'k_fold_scene':
-            assert(int(val_scene) < len(self.scenes), "Error: input scene is out of index space")
-            train_keys = []
-            for x in range(0, len(self.scenes)):
-                if x!=int(val_scene):
-                    train_keys += self.scene_to_keys[self.scenes[x]]  
-
-            val_keys = self.scene_to_keys[self.scenes[int(val_scene)]]
-            test_keys = None
-
-        elif split_style == 'task_split':
+            assert(int(test_scene) < len(self.scenes), "Error: input test scene is out of index space")
 
             train_keys = []
             val_keys = []
 
+            # Iterate through all scenes except the test scene
+            for x in range(len(self.scenes)):
+                if x != int(test_scene):
+                    scene_keys = self.scene_to_keys[self.scenes[x]]
+                    np.random.shuffle(scene_keys)
+                    # Stratified split: use 80% for training and 20% for validation
+                    split_idx = int(0.8 * len(scene_keys))
+                    train_keys += scene_keys[:split_idx]
+                    val_keys += scene_keys[split_idx:]
+
+            # The test set is assigned manually based on the test_scene input
+            test_keys = self.scene_to_keys[self.scenes[int(test_scene)]]
+            print(len(train_keys))
+            print(len(val_keys))
+            print(len(test_keys))
+
+            # Ensure no overlap between train, val, and test sets
+            assert(len(set(train_keys) & set(val_keys)) == 0), "Error: Train and Val sets overlap"
+            assert(len(set(train_keys) & set(test_keys)) == 0), "Error: Train and Test sets overlap"
+            assert(len(set(val_keys) & set(test_keys)) == 0), "Error: Val and Test sets overlap"
+
+            if not os.path.isfile('train_cmds_scene_gen_{test_scene}.pkl') and not os.path.isfile(f'val_cmds_scene_gen_{test_scene}.pkl'):
+                hdf = h5py.File(DATASET_PATH, 'r')
+                train_cmds = []
+                for key in train_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
+
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    train_cmds.append(nl_command)
+                
+                val_cmds = []
+                for key in val_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
+
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    val_cmds.append(nl_command)
+                
+                
+                with open(f'train_cmds_scene_gen_{test_scene}.pkl', 'wb') as file:
+                    pk.dump(train_cmds, file)
+                with open(f'val_cmds_scene_gen_{test_scene}.pkl', 'wb') as file:
+                    pk.dump(val_cmds, file)
+        elif split_style == 'task_split':
+            train_keys = []
+            val_keys = []
+            test_keys = []
+
             for scene in self.scenes:
                 
                 scene_keys = copy(self.scene_to_keys[scene])
-                random.shuffle(scene_keys)
-
+                np.random.shuffle(scene_keys)
+                    
+                split_idx = int(len(scene_keys)*(train_split))
+                split_idx2 = int(len(scene_keys)*(train_split+val_split))
                 
-                split_idx = int(len(scene_keys)*(train_split + 0.5*val_split))
+                if subset_amt is not None:
+                    train_keys_temp = scene_keys[:split_idx]
+                    num_samples = int(np.ceil(len(train_keys_temp) * (int(subset_amt) / 100)))
+                    train_keys += np.random.choice(train_keys_temp, size=num_samples, replace=False).tolist()
+                else:
+                    train_keys += scene_keys[:split_idx]
+                val_keys += scene_keys[split_idx:split_idx2]
+                test_keys += scene_keys[split_idx2:]
 
-                train_keys += scene_keys[:split_idx]
-                val_keys += scene_keys[split_idx:]
+            # Ensure no overlap between train, val, and test sets
+            assert(len(set(train_keys) & set(val_keys)) == 0), "Error: Train and Val sets overlap"
+            assert(len(set(train_keys) & set(test_keys)) == 0), "Error: Train and Test sets overlap"
+            assert(len(set(val_keys) & set(test_keys)) == 0), "Error: Val and Test sets overlap"
 
-                print('Train Perc: ', len(train_keys) / (len(train_keys) + len(val_keys)))
+
+            if not os.path.isfile('train_cmds_task_gen.pkl') and not os.path.isfile('val_cmds_task_gen.pkl'):
+                hdf = h5py.File(DATASET_PATH, 'r')
+                train_cmds = []
+                for key in train_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
+
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    train_cmds.append(nl_command)
+                
+                val_cmds = []
+                for key in val_keys:
+                    traj_group = hdf[key]
+                
+                    traj_steps = list(traj_group.keys())
+                    traj_steps.sort(key=sort_folders) 
+
+                    #extract the NL command
+                    json_str = traj_group[traj_steps[0]].attrs['metadata']
+                    traj_json_dict = json.loads(json_str)
+                    nl_command = traj_json_dict['nl_command']
+                    val_cmds.append(nl_command)
+                
+                
+                with open('train_cmds_task_gen.pkl', 'wb') as file:
+                    pk.dump(train_cmds, file)
+                with open('val_cmds_task_gen.pkl', 'wb') as file:
+                    pk.dump(val_cmds, file)
+
+####################################################################################
+            # import pickle
+            # import cv2
+            # from skimage.transform import resize
+            # import matplotlib.pyplot as plt
+
+            # hdf = h5py.File(DATASET_PATH, 'r')
+            # keys = train_keys + val_keys + test_keys
+
+            # final_arr = []
+            # for key in tqdm(keys):
+            #     traj_group = hdf[key]
+            #     traj_steps = list(traj_group.keys())
+            #     traj_steps.sort(key=sort_folders) 
+
+            #     next_discrete_actions = []
+            #     for i in range(len(traj_steps)):
+            #         json_str = traj_group[traj_steps[i]].attrs['metadata']
+            #         traj_json_dict = json.loads(json_str)
+            #         discrete_action = traj_json_dict['steps'][0]['action']
+            #         next_discrete_actions.append(discrete_action)
+            #     next_discrete_actions = next_discrete_actions[1:]                        
+
+            #     traj_arr = []
+            #     for i in range(len(traj_steps)):
+            #         step_arr = []
+
+            #         json_str = traj_group[traj_steps[i]].attrs['metadata']
+            #         traj_json_dict = json.loads(json_str)
+            #         nl_command = traj_json_dict['nl_command']
+            #         scene = traj_json_dict['scene']
+            #         rgb = np.array(traj_group[traj_steps[i]]['rgb_{}'.format(i)])
+            #         rgb = cv2.resize(rgb, (224, 224), interpolation=cv2.INTER_AREA)
+             
+            #         if i == len(traj_steps) -1 :
+            #             discrete_action = "Done"
+            #             continuous_actions = (
+            #                 [0.0,0.0,0.0] # [x,y,z] deltas of each for base (recommend: don't use)
+            #                 + [0.0] # [yaw] delta of the rotation in degrees
+            #                 + [0.0,0.0,0.0] # [x,y,z] deltas of each for end-effector
+            #             )
+            #         else:
+            #             discrete_action = next_discrete_actions[i]
+            #             continuous_actions = (
+            #                 traj_json_dict['steps'][0]['delta_global_state_body'][:3] # [x,y,z] deltas of each for base (recommend: don't use)
+            #                 + [traj_json_dict['steps'][0]['delta_global_state_body'][-1]] # [yaw] delta of the rotation in degrees
+            #                 + traj_json_dict['steps'][0]['delta_global_state_ee'][:3] # [x,y,z] deltas of each for end-effector
+            #             )
+                    
+            #         step_arr.append(scene)
+            #         step_arr.append(nl_command)
+            #         step_arr.append(rgb)
+            #         step_arr.append(discrete_action)
+            #         step_arr.append(continuous_actions)
+                
+            #         traj_arr.append(step_arr)
+
+            #     final_arr.append(traj_arr)
             
-            val_keys = ['data_13:02:17', 'data_19:58:40', 'data_15:50:55', 'data_16:22:44', 'data_15:40:22', 'data_17:08:14', 'data_15:37:13', 'data_18:38:30', 'data_13:56:07', 'data_15:22:59', 'data_13:33:54', 'data_13:18:11', 'data_19:36:17', 'data_14:38:16', 'data_13:04:13', 'data_12:04:43', 'data_16:37:57', 'data_15:38:38', 'data_16:40:44', 'data_17:59:00', 'data_20:57:07', 'data_16:03:52', 'data_16:40:36', 'data_19:31:51', 'data_16:45:24', 'data_21:09:57', 'data_17:26:17', 'data_15:01:27', 'data_14:02:16', 'data_13:29:09', 'data_14:22:29', 'data_16:43:00', 'data_13:46:04', 'data_15:13:04', 'data_16:45:58', 'data_13:33:29', 'data_17:17:50', 'data_11:19:28', 'data_17:45:27', 'data_16:00:55', 'data_15:03:19', 'data_16:06:05', 'data_16:02:46', 'data_17:41:00', 'data_17:35:45', 'data_14:05:06', 'data_18:22:47', 'data_17:02:46', 'data_15:08:23', 'data_16:15:15', 'data_19:00:23', 'data_11:50:57', 'data_15:19:33', 'data_14:52:27', 'data_16:58:53', 'data_11:44:50', 'data_16:10:21', 'data_13:10:05', 'data_17:48:24', 'data_18:09:10', 'data_18:01:35', 'data_13:34:59', 'data_12:48:23', 'data_22:17:48', 'data_16:57:05', 'data_16:49:20', 'data_17:51:34', 'data_12:54:21', 'data_16:23:48', 'data_14:24:32', 'data_16:18:35', 'data_14:26:22', 'data_16:11:06', 'data_11:58:17', 'data_17:13:00', 'data_19:34:02', 'data_13:29:42', 'data_17:20:01', 'data_15:20:09', 'data_16:53:34', 'data_15:25:56']
-            
-            print('Train Keys: ', len(train_keys))
-            print('Validation Keys: ', len(val_keys))
-            print('Validation Keys: ', val_keys)
+            # chunk_size = 100
+            # num_chunks = len(final_arr) // chunk_size + (1 if len(final_arr) % chunk_size != 0 else 0)
+            # breakpoint()
+            # # Loop through and save each chunk
+            # for i in range(num_chunks):
+            #     start_index = i * chunk_size
+            #     end_index = start_index + chunk_size
+            #     chunk = final_arr[start_index:end_index]
+            #     with open(f'/mnt/ahmed/lambda_dataset_chunk_{i}.pkl', 'wb') as file:
+            #         pickle.dump(chunk, file)
+            # breakpoint()
+
+######################################################################################
 
         elif split_style == 'diversity_ablation':
             assert(diversity_scenes < len(self.scene_to_keys.keys()), "Error: number of train scenes for diversity ablations cannot be {}".format(len(self.scene_to_keys.keys())))
@@ -350,14 +515,13 @@ class DatasetManager(object):
         if 'attribute_limits.json' not in os.listdir('./lanmp_dataloader'):
             body_pose_lim, body_orientation_lim, end_effector_pose_lim = self.determine_min_max_range([train_keys, val_keys, test_keys])
         else:
-
             with open('./lanmp_dataloader/attribute_limits.json') as f:
                 attribute_limits = json.load(f)
             body_pose_lim, body_orientation_lim, end_effector_pose_lim = attribute_limits[0], attribute_limits[1], attribute_limits[2]
 
-        self.train_dataset = RT1Dataset(train_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
-        self.val_dataset = RT1Dataset(val_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
-        # self.test_dataset = RT1Dataset(test_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
+        self.train_dataset = RT1Dataset(self.use_dist, train_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
+        self.val_dataset = RT1Dataset(self.use_dist, val_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
+        self.test_dataset = RT1Dataset(self.use_dist, test_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
 
     def determine_min_max_range(self, data_subset_keys):
 
@@ -393,16 +557,16 @@ class DatasetManager(object):
 
                         step_metadata = json.loads(traj_group[traj_steps[j]].attrs['metadata'])
 
-                        body_x = step_metadata['steps'][0]['state_body'][0]
-                        body_y = step_metadata['steps'][0]['state_body'][1]
-                        body_z = step_metadata['steps'][0]['state_body'][2]
+                        body_x = step_metadata['steps'][0]['global_state_body'][0]
+                        body_y = step_metadata['steps'][0]['global_state_body'][1]
+                        body_z = step_metadata['steps'][0]['global_state_body'][2]
                         
-                        body_yaw = step_metadata['steps'][0]['state_body'][3]
+                        body_yaw = step_metadata['steps'][0]['global_state_body'][3]
                         
 
-                        ee_x = step_metadata['steps'][0]['state_ee'][0]
-                        ee_y = step_metadata['steps'][0]['state_ee'][1]
-                        ee_z = step_metadata['steps'][0]['state_ee'][2]
+                        ee_x = step_metadata['steps'][0]['global_state_ee'][0]
+                        ee_y = step_metadata['steps'][0]['global_state_ee'][1]
+                        ee_z = step_metadata['steps'][0]['global_state_ee'][2]
 
 
 
@@ -478,21 +642,12 @@ class DatasetManager(object):
         return collated_batch
                     
 
-
-
-
-
-
-
-
 class RT1Dataset(Dataset):
 
-    
+    def __init__(self, use_dist, data_split_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim, tokenize_action=True):
 
-    def __init__(self, data_split_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim, tokenize_action=True):
-
-        #stores the keys in the dataset for the appropriate split (train, validation or test)
-        self.dataset_keys = data_split_keys
+        self.use_dist = use_dist
+        self.dataset_keys = data_split_keys 
         self.body_pose_lim = body_pose_lim
         self.body_orientation_lim = body_orientation_lim
         self.end_effector_pose_lim = end_effector_pose_lim
@@ -507,21 +662,18 @@ class RT1Dataset(Dataset):
 
 
     def make_data_discrete(self, dictionary):
-
-        
-           
         #body x, y, z coordinate
-        dictionary['body_position_deltas'][:,0] = 1 + (dictionary['body_position_deltas'][:,0] - self.body_pose_lim['min_x'])/ (self.body_pose_lim['max_x'] - self.body_pose_lim['min_x'] ) * self.num_bins
-        dictionary['body_position_deltas'][:,0] = dictionary['body_position_deltas'][:,0].astype(int)
+        # dictionary['body_position_deltas'][:,0] = 1 + (dictionary['body_position_deltas'][:,0] - self.body_pose_lim['min_x'])/ (self.body_pose_lim['max_x'] - self.body_pose_lim['min_x'] ) * self.num_bins
+        # dictionary['body_position_deltas'][:,0] = dictionary['body_position_deltas'][:,0].astype(int)
         
-        if self.body_pose_lim['max_y'] - self.body_pose_lim['min_y'] > 0:
-            dictionary['body_position_deltas'][:,1] = 1 + (dictionary['body_position_deltas'][:,1] - self.body_pose_lim['min_y'])/(self.body_pose_lim['max_y'] - self.body_pose_lim['min_y'] ) * self.num_bins  
-        else:
-            dictionary['body_position_deltas'][:,1].fill(0)
-        dictionary['body_position_deltas'][:,1] = dictionary['body_position_deltas'][:,1].astype(int)
+        # if self.body_pose_lim['max_y'] - self.body_pose_lim['min_y'] > 0:
+        #     dictionary['body_position_deltas'][:,1] = 1 + (dictionary['body_position_deltas'][:,1] - self.body_pose_lim['min_y'])/(self.body_pose_lim['max_y'] - self.body_pose_lim['min_y'] ) * self.num_bins  
+        # else:
+        #     dictionary['body_position_deltas'][:,1].fill(0)
+        # dictionary['body_position_deltas'][:,1] = dictionary['body_position_deltas'][:,1].astype(int)
         
-        dictionary['body_position_deltas'][:,2] = 1 + (dictionary['body_position_deltas'][:,2] - self.body_pose_lim['min_z'])/ (self.body_pose_lim['max_z'] - self.body_pose_lim['min_z'] ) * self.num_bins
-        dictionary['body_position_deltas'][:,2] = dictionary['body_position_deltas'][:,2].astype(int)
+        # dictionary['body_position_deltas'][:,2] = 1 + (dictionary['body_position_deltas'][:,2] - self.body_pose_lim['min_z'])/ (self.body_pose_lim['max_z'] - self.body_pose_lim['min_z'] ) * self.num_bins
+        # dictionary['body_position_deltas'][:,2] = dictionary['body_position_deltas'][:,2].astype(int)
 
         #body yaw and pitch
         dictionary['body_yaw_deltas'] = 1 + (dictionary['body_yaw_deltas'] - self.body_orientation_lim['min_yaw']) / (self.body_orientation_lim['max_yaw'] - self.body_orientation_lim['min_yaw']) * self.num_bins
@@ -541,7 +693,7 @@ class RT1Dataset(Dataset):
         if 1.0 in dictionary['terminate_episode']:
             terminate_idx = np.where(np.array(dictionary['terminate_episode'])>0)[0][0]
 
-            dictionary['body_position_deltas'][terminate_idx:,:].fill(0)
+            # dictionary['body_position_deltas'][terminate_idx:,:].fill(0)
             dictionary['body_yaw_deltas'][terminate_idx:].fill(0)
             dictionary['arm_position_deltas'][terminate_idx:,:].fill(0)
 
@@ -552,18 +704,11 @@ class RT1Dataset(Dataset):
     def detokenize_continuous_data(self, dictionary):
 
         if dictionary['curr_mode'] == 'stop':
-            dictionary['body_position_delta'] = [[0.0, 0.0, 0.0]]
             dictionary['body_yaw_delta'] = [[0.0]]
             dictionary['arm_position_deltas'] = [[0.0, 0.0, 0.0]]
 
         else:
-            dictionary['body_position_delta'][0][0] = (dictionary['body_position_delta'][0][0] - 1) * (self.body_pose_lim['max_x'] - self.body_pose_lim['min_x']) / self.num_bins + self.body_pose_lim['min_x']
-            dictionary['body_position_delta'][0][1] = (dictionary['body_position_delta'][0][1] - 1) * (self.body_pose_lim['max_y'] - self.body_pose_lim['min_y']) / self.num_bins + self.body_pose_lim['min_y']
-            dictionary['body_position_delta'][0][2] = (dictionary['body_position_delta'][0][2] - 1) * (self.body_pose_lim['max_z'] - self.body_pose_lim['min_z']) / self.num_bins + self.body_pose_lim['min_z']
-
             dictionary['body_yaw_delta'][0][0] = (dictionary['body_yaw_delta'][0][0] - 1) * (self.body_orientation_lim['max_yaw'] - self.body_orientation_lim['min_yaw']) / self.num_bins + self.body_orientation_lim['min_yaw']
-
-
             dictionary['arm_position_delta'][0][0] = (dictionary['arm_position_delta'][0][0] - 1) * (self.end_effector_pose_lim['max_x'] - self.end_effector_pose_lim['min_x']) / self.num_bins + self.end_effector_pose_lim['min_x']
             dictionary['arm_position_delta'][0][1] = (dictionary['arm_position_delta'][0][1] - 1) * (self.end_effector_pose_lim['max_y'] - self.end_effector_pose_lim['min_y']) / self.num_bins + self.end_effector_pose_lim['min_y']
             dictionary['arm_position_delta'][0][2] = (dictionary['arm_position_delta'][0][2] - 1) * (self.end_effector_pose_lim['max_z'] - self.end_effector_pose_lim['min_z']) / self.num_bins + self.end_effector_pose_lim['min_z']
@@ -601,82 +746,61 @@ class RT1Dataset(Dataset):
             dictionary['arm_position'][1] = 0
             dictionary['arm_position'][2] = 0
         
-    def get_head_pitch(self, action):
 
-        value = 0
-
-        if action == 'LookDown':
-            value = 1
-        elif action == 'LookUp':
-            value = 2
-
-        return value
-    
-    def detokenize_head_pitch(self, token):
-
-        tokenization_dict = {0:None, 1:'LookDown', 2:'LookUp'}
-
-        return tokenization_dict[token]
-
-    def get_mode(self, action):
-
-        #mode: (0) stop, (1) body, (2) yaw,  (3) manipulation, (4) grasping, (5) head pitch
-        
+    def get_mode(self, action):        
         value = None
+
+        # if action == 'stop':
+        #     value = 0
+        # elif action in set( ['LookDown', 'LookUp']):
+        #     value = 5
+        # elif action in set(['MoveAhead', 'MoveBack', 'MoveRight', 'MoveLeft']):
+        #     value = 1
+        # elif action in set(['PickupObject', 'ReleaseObject']):
+        #     value = 4
+        # elif action in set(['MoveArm', 'MoveArmBase']):
+        #     value = 3
+        # elif action  == 'RotateAgent':
+        #     value = 2
 
         if action == 'stop':
             value = 0
-        elif action in set( ['LookDown', 'LookUp']):
-            value = 5
-        elif action in set(['MoveAhead', 'MoveBack', 'MoveRight', 'MoveLeft']):
+        elif action == 'MoveAhead':
             value = 1
-        elif action in set(['PickupObject', 'ReleaseObject']):
-            value = 4
-        elif action in set(['MoveArm', 'MoveArmBase']):
-            value = 3
-        elif action  == 'RotateAgent':
+        elif action == 'MoveRight':
             value = 2
+        elif action == 'MoveLeft':
+            value = 3
+        elif action == 'MoveBack':
+            value = 4
+        elif action == 'LookDown':
+            value = 5
+        elif action == 'LookUp':
+            value = 6
+        elif action == 'PickupObject':
+            value = 7
+        elif action == 'ReleaseObject':
+            value = 8
+        elif action == 'MoveArm':
+            value = 9
+        elif action == 'MoveArmBase':
+            value = 10
+        elif action == 'RotateAgent':
+            value = 11
         
         assert(type(value)==int, 'Get Mode didn\'t return an int')
         return value
     
     def detokenize_mode(self, token):
 
-        tokenization_dict = {0: 'stop', 1:'MoveAgent', 2:'RotateAgent', 3:'MoveArm', 4:'PickupReleaseObject', 5:'PitchAgent'}
+        tokenization_dict = {0: 'stop', 1:'MoveAhead', 2:'MoveRight', 3:'MoveLeft', 4:'MoveBack', 5:'LookDown', 6:'LookUp', 7:'PickupObject', 8:'ReleaseObject', 9:'MoveArm', 10:'MoveArmBase', 11:'RotateAgent'}
 
         return tokenization_dict[token]
     
-    def detokenize_action(self, detokenized_mode, body_position_delta, body_yaw_delta, arm_position_delta, detokenized_pickup_release, detokenized_head_pitch):
+    def detokenize_action(self, detokenized_mode, body_yaw_delta, arm_position_delta):
+        return detokenized_mode
 
-        
-        if detokenized_mode == 'PickupReleaseObject':
-            return detokenized_pickup_release
-
-        elif detokenized_mode == 'PitchAgent':
-            return detokenized_head_pitch
-        else:
-            return detokenized_mode
-
-
-    def get_pickup_release(self, action):
-
-        if action == 'PickupObject':
-            value = 1
-        elif action == 'ReleaseObject':
-            value = 2
-        else: 
-            value = 0
-        
-        return value
-
-    def detokenize_pickup_release(self, token):
-
-        tokenization_dict = {0:None, 1:'PickupObject', 2:'ReleaseObject'}
-        return tokenization_dict[token]
-    
     def __getitem__(self, idx):
-        
-        # pdb.set_trace()
         
         traj_group = self.hdf[self.dataset_keys[idx]]
         
@@ -699,18 +823,17 @@ class RT1Dataset(Dataset):
         all_image_obs = []
         all_nl_commands = []
         all_is_terminal = []
-        all_pickup_release = []
-        all_body_position_deltas = []
+        all_base = []
         all_body_yaw_deltas = []
-        all_body_pitches = []
         all_arm_position_deltas = []
         all_control_mode = []
-
         all_pad_lengths = []
 
+        if self.use_dist:
+            all_ee_obj_dists = [] #added
+            all_goal_dists = [] #added2
 
-
-        #build the dictionary for each sequence
+        #build the dictionary for each trajectory. the while loop is for 1 trajectory
         while end <= len(traj_steps) and not terminate:
 
             '''
@@ -720,14 +843,17 @@ class RT1Dataset(Dataset):
             '''
             image_obs = []
             nl_commands = []
-            body_position_deltas = []
+            base = []
             body_yaw_deltas = []
             arm_position_deltas = []
             terminate_episodes = []
-            pickup_releases = []
-            body_pitches = []
             control_modes = []
 
+            if self.use_dist:
+                ee_obj_dists = [] #added
+                goal_dists = [] #added2
+
+            #6 step window
             for i in range(start, end):
 
                 #visual observation
@@ -738,44 +864,37 @@ class RT1Dataset(Dataset):
                 nl_commands.append(nl_command)
 
                 current_metadata = json.loads(traj_group[traj_steps[i]].attrs['metadata'])
-                
 
                 if i < len(traj_steps)-1:
-
                     next_metadata = json.loads(traj_group[traj_steps[i+1]].attrs['metadata'])
                 
-                    #body position, body yaw, arm position
-                    body_position_delta = np.array(next_metadata['steps'][0]['state_body'][:3])-np.array(current_metadata['steps'][0]['state_body'][:3])
-                    body_yaw_delta = next_metadata['steps'][0]['state_body'][3] - current_metadata['steps'][0]['state_body'][3]
-                    arm_position_delta = np.array(next_metadata['steps'][0]['state_ee'][:3]) - np.array(current_metadata['steps'][0]['state_ee'][:3])
+                    body_yaw_delta = next_metadata['steps'][0]['global_state_body'][3] - current_metadata['steps'][0]['global_state_body'][3]
+                    arm_position_delta = np.array(next_metadata['steps'][0]['global_state_ee'][:3]) - np.array(current_metadata['steps'][0]['global_state_ee'][:3])
 
-                    #terminate episode / pick up release / body pitch / mode
+                    #terminate episode / mode
                     terminate_episode = int(i == len(traj_steps)-1)
-                    pickup_release = self.get_pickup_release(next_metadata['steps'][0]['action'])
-                    body_pitch = self.get_head_pitch(next_metadata['steps'][0]['action'])
                     control_mode = self.get_mode(next_metadata['steps'][0]['action'])
+                    if self.use_dist:
+                        ee_obj_dist = next_metadata['steps'][0]['curr_ee_to_target_obj_dist'] #added
+                        goal_dist = next_metadata['steps'][0]['curr_base_to_goal_dist'] #added2
                 else:
-
-                    #body position, body yaw, arm positon -- for last step
-                    body_position_delta = np.array([0.0, 0.0, 0.0])
                     body_yaw_delta = 0.0
                     arm_position_delta = np.array([0.0, 0.0, 0.0])
 
-                    #is terminal / pick up release / body pitch / mode -- for last step
+                    #is terminal / mode -- for last step
                     terminate_episode = int(i == len(traj_steps)-1)
-                    pickup_release = self.get_pickup_release(None)
-                    body_pitch = self.get_head_pitch(None)
                     control_mode = self.get_mode('stop')
+                    if self.use_dist:
+                        ee_obj_dist = float(-1) #added
+                        goal_dist = float(-1) #added2
 
-                body_position_deltas.append(body_position_delta)
                 body_yaw_deltas.append(body_yaw_delta)
                 arm_position_deltas.append(arm_position_delta)
                 terminate_episodes.append(terminate_episode)
-                pickup_releases.append(pickup_release)
-                body_pitches.append(body_pitch)
                 control_modes.append(control_mode)
-
-            
+                if self.use_dist:
+                    ee_obj_dists.append(ee_obj_dist) #added
+                    goal_dists.append(goal_dist) #added2
 
             #check for remainder and pad data with extra
             if end >= len(traj_steps) and padding_length > 0:
@@ -785,13 +904,13 @@ class RT1Dataset(Dataset):
                     image_obs.append(ith_obs)
                     nl_commands.append(nl_command)
 
-                    body_position_deltas.append(np.array([0.0, 0.0, 0.0]))
                     body_yaw_deltas.append(0.0)
                     arm_position_deltas.append(np.array([0.0, 0.0, 0.0]))
                     terminate_episodes.append(0)
-                    pickup_releases.append(0.0)
-                    body_pitches.append(0.0)
                     control_modes.append(0.0)
+                    if self.use_dist:
+                        ee_obj_dists.append(float(-1)) #added
+                        goal_dists.append(float(-1)) #added2
                 
                 terminate = True
             elif end >= len(traj_steps):
@@ -800,174 +919,63 @@ class RT1Dataset(Dataset):
 
 
             #pre-process and discretize numerical data 
-            body_position_deltas = np.stack(body_position_deltas)
             body_yaw_deltas = np.stack(body_yaw_deltas)
             arm_position_deltas = np.stack(arm_position_deltas)
             
             if self.tokenize_action:
                 
                 tokenized_actions = {
-                    'body_position_deltas': body_position_deltas,
                     'body_yaw_deltas': body_yaw_deltas,
                     'arm_position_deltas': arm_position_deltas,
                     'terminate_episode': terminate_episodes
                 }
                 
                 tokenized_actions = self.make_data_discrete(tokenized_actions)
-                
-                body_position_deltas = tokenized_actions['body_position_deltas']
-                
+                                
                 body_yaw_deltas = np.expand_dims(tokenized_actions['body_yaw_deltas'], axis=1)
                 
                 arm_position_deltas = tokenized_actions['arm_position_deltas']
                 
 
-            
-
             all_image_obs.append(np.stack(image_obs))
             all_nl_commands.append(np.stack(nl_commands))
             all_is_terminal.append(np.stack(terminate_episodes))
-            all_pickup_release.append(np.stack(pickup_releases))
-            all_body_position_deltas.append(body_position_deltas)
             all_body_yaw_deltas.append(body_yaw_deltas)
-            all_body_pitches.append(np.stack(body_pitches))
             all_arm_position_deltas.append(arm_position_deltas)
             all_control_mode.append(np.stack(control_modes))
 
+            if self.use_dist:
+                all_ee_obj_dists.append(np.stack(ee_obj_dists)) #added
+                all_goal_dists.append(np.stack(goal_dists)) #added2
+
             all_pad_lengths.append(0 if not end >= len(traj_steps) else padding_length)
             
-
+            #move the window by 6
             start += 6
             end = min(end + 6, len(traj_steps))
 
+        if self.use_dist:
+            return np.stack(all_image_obs), np.stack(all_nl_commands), np.stack(all_is_terminal), np.stack(all_body_yaw_deltas), np.stack(all_arm_position_deltas), np.stack(all_control_mode), np.stack(all_ee_obj_dists), np.stack(all_goal_dists), np.stack(all_pad_lengths), #added, added2
+        else:
+            return np.stack(all_image_obs), np.stack(all_nl_commands), np.stack(all_is_terminal), np.stack(all_body_yaw_deltas), np.stack(all_arm_position_deltas), np.stack(all_control_mode), np.stack(all_pad_lengths)
 
             
-        
-        return np.stack(all_image_obs), np.stack(all_nl_commands), np.stack(all_is_terminal), np.stack(all_pickup_release), np.stack(all_body_position_deltas), np.stack(all_body_yaw_deltas), np.stack(all_body_pitches), np.stack(all_arm_position_deltas), np.stack(all_control_mode), np.stack(all_pad_lengths)
 
-
-
-    def __getitem_old__(self, idx):
-        
-        
-        traj_group = self.hdf[self.dataset_keys[idx]]
-        
-        traj_steps = list(traj_group.keys())
-        traj_steps.sort(key=sort_folders) 
-
-        #extract the NL command
-        json_str = traj_group[traj_steps[0]].attrs['metadata']
-        traj_json_dict = json.loads(json_str)
-        nl_command = traj_json_dict['nl_command']
-
-        start = 0; end = min(len(traj_steps), 6)
-
-        #return list of dictionaries with attributes required for RT1
-        all_image_obs = []
-        all_nl_commands = []
-        all_is_terminal = []
-        all_pickup_release = []
-        all_body_position = []
-        all_body_yaw = []
-        all_body_pitch = []
-        all_arm_position = []
-        all_mode = []
-
-
-
-        #build the dictionary for each sequence
-        while end < len(traj_steps):
-
-            '''
-                mode: stop, body, yaw, manipulation, grasping, head pitch
-                gripper: (x, y, z, grasp)
-                body: (x, y, yaw, look up/down)
-            '''
-            image_obs = []
-
-            for i in range(start, end):
-                ith_obs = np.array(traj_group[traj_steps[i]]['rgb_{}'.format(i)])
-                
-                image_obs.append(ith_obs)
-            
-            image_obs = np.stack(image_obs)
-            
-            
-            
-            before_end_step_metadata = json.loads(traj_group[traj_steps[end-1]].attrs['metadata'])
-            end_step_metadata = json.loads(traj_group[traj_steps[end]].attrs['metadata'])                
-
-
-
-            dictionary = {
-                'observation': image_obs,
-                'nl_command': nl_command, #DONE
-                'is_terminal': int(end_step_metadata['steps'][0]['action']=='stop'), #DONE
-                'pickup_release': self.get_pickup_release(end_step_metadata['steps'][0]['action']), #DONE
-                'body_position': np.array(end_step_metadata['steps'][0]['state_body'][:3])-np.array(before_end_step_metadata['steps'][0]['state_body'][:3]), #DONE 
-                'body_yaw': end_step_metadata['steps'][0]['state_body'][3] - before_end_step_metadata['steps'][0]['state_body'][3], #DONE
-                'body_pitch': self.get_head_pitch(end_step_metadata['steps'][0]['action']), #DONE
-                'arm_position': np.array(end_step_metadata['steps'][0]['state_ee'][:3]) - np.array(before_end_step_metadata['steps'][0]['state_ee'][:3]), #DONE
-                'mode': self.get_mode(end_step_metadata['steps'][0]['action']) #DONE
-            }
-
-            #pre-process the data dictonary
-            if self.tokenize_action:
-                self.make_data_discrete(dictionary)
-
-
-            all_image_obs.append(dictionary['observation'])
-            all_nl_commands.append(dictionary['nl_command'])
-            all_is_terminal.append(dictionary['is_terminal'])
-            all_pickup_release.append(dictionary['pickup_release'])
-            all_body_position.append(dictionary['body_position'])
-            all_body_yaw.append(dictionary['body_yaw'])
-            all_body_pitch.append(dictionary['body_pitch'])
-            all_arm_position.append(dictionary['arm_position'])
-            all_mode.append(dictionary['mode'])
-            
-
-            start += 1
-            end += 1
-
-        #add the terminal 'stop' step
-        all_image_obs.append(dictionary['observation'])
-        all_nl_commands.append(dictionary['nl_command'])
-        all_is_terminal.append(1)
-        all_pickup_release.append(0)
-        all_body_position.append([0,0,0])
-        all_body_yaw.append(0)
-        all_body_pitch.append(0)
-        all_arm_position.append([0,0,0])
-        all_mode.append(0)
-
-
-
-        
-       
-        return np.stack(all_image_obs), np.stack(all_nl_commands), np.expand_dims(np.stack(all_is_terminal), axis=1), np.expand_dims(np.stack(all_pickup_release), axis=1), np.stack(all_body_position), np.expand_dims(np.stack(all_body_yaw),axis=1), np.expand_dims(np.stack(all_body_pitch), axis=1), np.stack(all_arm_position), np.expand_dims(np.stack(all_mode), axis=1)
-
-
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
    
-    dataset_manager = DatasetManager(0, 0.8, 0.1, 0.1)
+#     dataset_manager = DatasetManager(0, 0.8, 0.1, 0.1)
 
-    dataloader = DataLoader(dataset_manager.train_dataset, batch_size=3,
-                        shuffle=True, num_workers=0, collate_fn= dataset_manager.collate_batches)
+#     dataloader = DataLoader(dataset_manager.train_dataset, batch_size=3,
+#                         shuffle=True, num_workers=0, collate_fn= dataset_manager.collate_batches)
 
-    val_dataloader = DataLoader(dataset_manager.val_dataset, batch_size=2,
-                        shuffle=True, num_workers=0, collate_fn= dataset_manager.collate_batches)
+#     val_dataloader = DataLoader(dataset_manager.val_dataset, batch_size=2,
+#                         shuffle=True, num_workers=0, collate_fn= dataset_manager.collate_batches)
 
     
     
-    for batch, sample_batch in enumerate(dataloader):
+#     for batch, sample_batch in enumerate(dataloader):
         
-        # print('BATCH {}:'.format(batch))
-        # print('Num Steps: {}'.format(sample_batch[0].shape[0]))
-        print('Batch {}: '.format(batch), sample_batch[0].shape[0])
-        
-        
-   
-
-   
+#         # print('BATCH {}:'.format(batch))
+#         # print('Num Steps: {}'.format(sample_batch[0].shape[0]))
+#         print('Batch {}: '.format(batch), sample_batch[0].shape[0])

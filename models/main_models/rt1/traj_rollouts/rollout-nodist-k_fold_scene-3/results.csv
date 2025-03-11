@@ -1,0 +1,116 @@
+scene,nl_cmd,nav_to_target,grasped_target_obj,nav_to_target_with_obj,place_obj_at_goal,complete_traj
+FloorPlan_Train7_5,"Grab the vase off the brown table, then place it on the white table in the living room.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the basketball from beside the bed and place it next to the TV in the living room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the basketball and place it on the table near the laptop.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Please pick up the vase from the table and place it on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Fetch the basketball by the bed and put it on the couch.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the bedroom and grab the basketball from near the bed. Then bring it to the living room and place it on the couch.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Get the basketball from the bedroom and put it on the television table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Get the basketball from the floor by the bed and put it in the blue bin.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the basketball next to the baseball, then place it on the chair near the lamp.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Get the basketball and place it in the can next to the laptop.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the basketball in the bedroom and then move to the waiting room and place the basketball on the light blue chair near the tall lamp.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the bedroom and pick up the basketball and place it on the sofa in the living room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Get the apple next to the laptop and place it next to the television.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Grab the cup on the coffee table and bring it to the laptop desk.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the ball from beside the bed and place it on the couch.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the basketball from beside the bed and place it beside the laptop on the table.,1,0.0,0,,0.0
+FloorPlan_Train7_5,Grab the basketball next to the bed. Place it in the blue bin near the laptop.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the plate on the white table and bring it to the bedroom. Place it on the bed that’s beside the basketball.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go into the bedroom and pick up the yellow vase. Then go into the living room and place the yellow vase on top of the white coffee table in front of the television.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go into the bedroom and pick up the basketball beside the bed. Next, go into the living room and place the basketball on the white sofa.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the basketball from the floor by the bed. Place the basketball in the bin across the painting of a river and mountains.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the alarm clock next to the lamp and place it on the table, next to the laptop.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the end of the bedroom beside the cot. Pick up the basketball to the left of the baseball bat and place it by the TV.,0.,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the basketball next to the baseball bat and put it in the bin.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the apple and place it by the pillow on the sofa.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the plate from the coffee table and put it inside the blue recycling bin next to the desk.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the nearby alarm, take it to the living room and put it down on the table.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the apple that is next to the laptop and place it on top of the blue chair that is closest to the corner in the same room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the basketball next to the bed and put it in the bin.,0.,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the cup from the white table near the television and place it on the brown table in between the laptop and the vase.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go pick up the apple next to my laptop and place it on the blue chair at the furthest end of the same room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go into the room with the television, pick up the remote, bring the remote into the room with the bed and place the remote on the bed.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go to the room with the tan couch, pick the pillow up and bring it into the room with the bed. Put the pillow on the bed.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Get the apple that is next to the laptop, then go to the living room and place it on the table near the cup.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Collect the mug from the table where my laptop is situated and put it next to the cup in the entertainment room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the alarm clock on the drawers in the bedroom and place it on the table in the study.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Run to the study, pick up the mug from the table, and bring it to me in the living room.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Retrieve the remote from the entertainment room, then take it past the couch into the next room and drop it into the recycling bin.",1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the drawers near the bed and pick up the alarm clock and drop it in the recycle box near the laptop.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the apple sitting on the desk with the laptop and place it on the plate sitting on the table in the room with the TV.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go pick up the mug on the table with the laptop and put the mug on the table near the TV and couch.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the remote and put in on the couch.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go into the office and pick up the apple beside the laptop. Next, place the apple inside the blue recycling bin.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the living room and pick up the plate on the coffee table. Place the plate on the table with the laptop in the next room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the remote from the TV table and place it on the sofa.,1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the vase and place it on the sofa.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Put the spray next to the bin on the white table in the lounge.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Get the vase from the table and put it on the sofa.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the TV remote and put it on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Place the bowl on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the alarm on the drawer, go to the living room and put it on the table.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Move the vase from the table to the sofa in the lounge.,0.,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go to the living room, pick up the cup, and put it in the blue bin.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the mug and place it on the desk.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the alarm and place it by the plate on the table near the TV.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Move the vase from the brown table to the cushion that is on the sofa.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the plate from the white table and drop it into the recycling bin on the low table, next to the laptop.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go to the living room and take the cup from the table, then go to the room where the laptop is located and place the cup next to the laptop.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take a vase and place on the coffee table flush against the wall.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the spray that is next to the bin and then go to the living room and place the spray on the table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go pick up the vase. Take it to the living room and put it on the table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the pillow from the couch and place it on the blue chair in the corner.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the pillow and place it on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Run to the living room, grab the pillow from the couch and bring it back to the bedroom and put it on the bed.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the living room and grab the cup from the coffee table and put it in the blue bin in the side room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the vase that is on the brown table. Go to the living room and put the vase on the white table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the remote control that is next to the TV and place it on the sofa.,1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the yellow vase on the brown table and then move to the lounge and place the book on the white table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the vase on the brown table. Move to the living room and put the vase on the couch.,0,0.0,0,0.0,
+FloorPlan_Train7_5,Take the spray bottle on the floor next to the blue bin and place it on the white table in the living room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the vase from the brown table in the next room and place the vase on the sofa in the living room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the plate from the lounge table and put it next to the laptop.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the spray from the floor by the bin to the table with the TV on it.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go pick up the remote by the TV and place it on my bed.,1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the yellow vase and put it on the coffee table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go to the living room and pick up the remote next to the television, then place it on top of the books on the chair.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the living room. Pick up the cup and put it on the plate on the table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the brown table and pick up the vase and place it in the blue bin.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Grab the glass cup from the table in front of the TV and place it next to the alarm clock on the dresser next to the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the vase from the brown table and place it in front of the plate on the white table close to the television.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the living room and grab the remote that is next to the TV. Place the remote next to the pillow on the couch in the same room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the lounge and pick up the pillow on the couch. Move it to the bedroom and place the pillow on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the vase from the brown table close to the Starry Night painting and place it on the blue chair that's in the back corner of the room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Please pick up the alarm clock on the chest of drawers and take it and place it on the white sofa.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Get the plate in front of the television and place it on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Please pick up the remote by the TV and take it and place it on the chest of drawers near the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the cup and put it in the recycling bin.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the glass from the lounge, take it to the bedroom and put it down on the chest of drawers.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the living room and grab the cup that is on the table. Place it on the table next to the laptop.,1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the yellow vase from the brown table and take it to the living room and put it on the coffee table.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the spray from the floor and place it in the trash can.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the apple next to the laptop and place it next to the pillow on the white sofa near the television.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go to the living room and grab the plate on the table, then come back to the bedroom and place it on the drawers.",0,,0,0.0,0.0
+FloorPlan_Train7_5,Go to the room with the desk with the apple on it and pick up the apple. Bring the apple into the bedroom and place the apple on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the living room and pick up the pillow on the sofa and place it on the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the vase, head to the light blue chairs, and place the vase on right chair.",1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go get the vase from the brown table. Take it to the living room and place it next to the remote.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go pick up my alarm clock and place it next to my laptop.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the alarm clock on the chest in the bedroom and place it on top of the books on the chair in the corridor.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Grab the vase that is on the brown table. Place it on the white desk next to the alarm.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Take the basketball next to the bed in the bedroom and go to the office, then put it next to the TV.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the vase from the brown table and place it on the bed.,1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Go to the coffee table and pick up the cup and then place it on the drawers beside the clock.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the alarm clock from the drawers and then run and place it on the white couch.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Go to the living room, grab the cup, then drop it in the recycling bin next to the laptop.",1,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the cup from the coffee table. Put the cup on the brown table next to the laptop.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Pick up the spray next to the recycling bin, then put it on the cabinet next to the bed.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Run to the living room, pick up the plate, then put it on the bed.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the pillow from the couch and place it on the far side of the bed.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the alarm and bring it to the room with two chairs. Place it on the chair in the corner of the room.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Pick up the vase that is on the table and put it over on the dresser.,0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,"Take the vase on the table and go to the living room, then put it on the couch.",0,0.0,0,0.0,0.0
+FloorPlan_Train7_5,Take the vase from the table and place it on the chair in the corner of the room.,0,0,0,0,0
+FloorPlan_Train7_5,Take the vase from the brown table and put it on top of the white coffee table.,0,0,0,0,0
+FloorPlan_Train7_5,Pick up the vase on the brown table and place it on the white coffee table.,0,0,0,0,0

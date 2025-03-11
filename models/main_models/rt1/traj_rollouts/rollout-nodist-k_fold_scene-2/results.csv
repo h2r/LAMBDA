@@ -1,0 +1,100 @@
+scene,nl_cmd,nav_to_target,grasped_target_obj,nav_to_target_with_obj,place_obj_at_goal,complete_traj
+FloorPlan_Train5_1,Get the teddy on the bed and place it next to the television.,0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the bedroom room and pick up the teddy bear on the bed. Take it to the living room and place it in the middle of the sofa.,0.0,0,0,0,0
+FloorPlan_Train5_1,Get the pot in front of the television and place it on the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Pick up the book that is on the bed, then walk to the living room and place it on the table near the hand.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Walk to the living room and pick up the cell phone off the table, then place it on the bed.",1,0,0,0,0
+FloorPlan_Train5_1,"Pick up the spray off the square table, then bring it to me in the bedroom.",0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the newspaper lying on the couch and place it on the adjacent coffee table.,0.0,0,0,0,0
+FloorPlan_Train5_1,Move to the bedroom. Take the teddy from the bed and place it on the yellow couch in the living room.,0.0,0,0,0,0
+FloorPlan_Train5_1,Move to the bedroom. Take the book from the bed and place it on the desk beside the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Take the fork, which is on top of the brown drawers opposite the yellow couch, and then walk towards the living room. Place the fork on the black table next to the television.",1,0,0,0,0
+FloorPlan_Train5_1,Walk into the bedroom which is to your left and pick up the book on the bed. Walk back past the couch and to the living room and place the book on the black sofa opposite the television.,0.0,0,0,0,0
+FloorPlan_Train5_1,Go get the spray off the black dresser in the next room and trash it in my bedroom.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Walk to the lounge and pickup the cellphone on the table, turn around and walk back towards the couch, and place the phone on the couch.",0.0,0,0,0,0
+FloorPlan_Train5_1,Take the book from the bed and put it on the coffee table in front of the couch.,0.0,0,0,0,0
+FloorPlan_Train5_1,Take the pen that is next to the basketball and put it on the couch with the newspaper.,0.0,0,0,0,0
+FloorPlan_Train5_1,Please pick up the vase from the cabinet and put it on the bed.,1,0,0,0,0
+FloorPlan_Train5_1,Pick up the spray and place it on the white stand with the plant on it.,0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the remote lying on the couch and place it on the white desk with the plant sitting on it.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bedroom, go and grab the blue book on the bed, then go into the living room and set the book on the coffee table in front of the television.",0.0,0,0,0,0
+FloorPlan_Train5_1,Go into the living room and pick up the newspaper on the couch. Then go into the bedroom and set it on top of the drawer beside the white vase.,0.0,0,0,0,0
+FloorPlan_Train5_1,Grab the book and go to the living room and place it next to the TV.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room and grab the cell phone on the table, then come back to the bedroom and place it on the bed.",0.0,0,0,0,0
+FloorPlan_Train5_1,Grab the teddy bear on the bed and go to the living room and place it next to the TV.,0.0,0,0,0,0
+FloorPlan_Train5_1,Put the panda bear in the bedroom on the yellow sofa.,0.0,0,0,0,0
+FloorPlan_Train5_1,Place the vase on the bedside table in the bedroom.,1,0,0,0,0
+FloorPlan_Train5_1,Go to the bedroom and pick up the teddy on the bed and place it on the sofa in the living room.,0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the white drawer and pick up the pen and place it on the drawer next to the vase.,0.0,0,0,0,0
+FloorPlan_Train5_1,Grab the glass cup on the end table and place it next to the mug and the bowl.,0.0,0,0,0,0
+FloorPlan_Train5_1,Go pick up the cell phone from the coffee table and place it on the yellow couch.,0.0,0,0,0,0
+FloorPlan_Train5_1,Grab the book from the bed and put it on top of the drawer facing the yellow couch.,0.0,0,0,0,0
+FloorPlan_Train5_1,Take the basketball from the top of the white drawers and put it next to the bear on the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,Take the baseball bat and place it on the gray couch.,1,0,0,0,0
+FloorPlan_Train5_1,Pick up the newspaper on the sofa and place it on the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,Grab the cellphone from the coffee table. Place the cellphone on the brown shelf next to the statue.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room, pick up the newspaper. Go to the bedroom and put the newspaper on the bed next to the laptop.",0.0,0,0,0,0
+FloorPlan_Train5_1,Place the newspaper on the couch on my bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,Take the newspaper and put it on the yellow couch.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bed and pick up the bear, then go and sit it on the yellow couch.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room, grab the newspaper off the grey couch, then place it on the yellow couch.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bedroom, pick up the teddy, then place it on the grey couch next to the pillow.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Grab the cellphone from the living room, then put it on the bed, next to the laptop.",1,0,0,0,0
+FloorPlan_Train5_1,"Take the book on the bed, move to the living room and place the book on top of the book near the TV.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bed, take the teddy and drop it inside the bin next to the bed.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Run to the white drawer, grab the pen and bring it back to me in the bedroom.",0.0,0,0,0,0
+FloorPlan_Train5_1,Please pick up the newspaper from the sofa and place it on the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,Find the pot and go into the bedroom. Put it on the bedside table opposite the lamp.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the grey couch and pick up the newspaper, take it to the bedroom and place it on the bed.",0.0,0,0,0,0
+FloorPlan_Train5_1,Get the basketball and place it on the table that is in front of the television.,0.0,0,0,0,0
+FloorPlan_Train5_1,Take the basketball in the room on the right hand side of the bed in the bedroom and place it in the bin that is on the left of the bed in the bedroom.,0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the teddy bear from the bed and move it to the nearby sofa.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Pick up the hand from the living room, then take it to the couch.",0.0,0,0,0,0
+FloorPlan_Train5_1,Go back to the bed and pick up the book and place it on the table next to the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bedroom, grab the book on the bed next to the laptop, bring the book into the living room with the grey couch and put the book on the coffee table.",0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the vase across from the yellow couch. Bring it into the bedroom and put it on the bed.,1,0,0,0,0
+FloorPlan_Train5_1,"Grab the fertility idol from the brown drawer, then put it in the bin next to the bed.",1,0,0,0,0
+FloorPlan_Train5_1,"Run towards the newspaper in the living room, pick it up, and place it next to the pot.",0.0,0,0,0,0
+FloorPlan_Train5_1,Go towards the bed and take the teddy bear on the bed to the living room and place it on the sofa.,0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the living room and pick up the hand from the table and place it next to the laptop on the bed.,1,0,0,0,0
+FloorPlan_Train5_1,Pick up the spray and place it next to the TV.,0.0,0,0,0,0
+FloorPlan_Train5_1,Run quickly to the room with a sideboard and pick up the vase. Take the vase to the living room and place it at the centre of the coffee table. Hasten up please!,1,0,0,0,0
+FloorPlan_Train5_1,Throw the pencil away in the trash can.,0.0,0,0,0,0
+FloorPlan_Train5_1,Grab the book that is next to the television. Place it on the table next to the hand.,0.0,0,0,0,0
+FloorPlan_Train5_1,Place the spray bottle next to the basketball.,0.0,0,0,0,0
+FloorPlan_Train5_1,Grab the newspaper on the gray couch. Place it on the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Next to the chair bed is a baseball bat, pick it up and take it to the sofa.",1,0,0,0,0
+FloorPlan_Train5_1,Take the hand from the coffee table to the yellow couch.,0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the bedroom and take the teddy bear that is sitting on the bed. Take the teddy bear and place it on the brown shelf next to the vase.,0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the bottle and put it next to the pot on the white table.,1,0,0,0,0
+FloorPlan_Train5_1,Grab the candle from the brown shelf. Take the candle and place it on the coffee table in the living room.,1,0,0,0,0
+FloorPlan_Train5_1,Pick up the teddy from the bed and place it by the TV.,0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the candle and place it by the apple on the table with the spray.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room, pick up the book and put it on the drawer.",0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the nearby set of drawers and pick up the bottle then place it on the bedside table.,1,0,0,0,0
+FloorPlan_Train5_1,Take the fork and place it in the bowl.,0.0,0,0,0,0
+FloorPlan_Train5_1,Take the Arabian Nights book from the bed and place it on the yellow sofa.,0.0,0,0,0,0
+FloorPlan_Train5_1,Take the book on the bed and place it on top of the book on the TV stand.,0.0,0,0,0,0
+FloorPlan_Train5_1,Find the apple in the lounge and put it in the bowl on the set of drawers.,1,0,0,0,0
+FloorPlan_Train5_1,Find the white vase and place it on the white desk in front of the basketball.,0.0,0,0,0,0
+FloorPlan_Train5_1,Put the dog figurine in the black pot.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bedroom and take the teddy from the bed, then go to the living room and place the teddy on the sofa.",0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the living room and take the book that's next to the television. Then take the book and place it on the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the bureau in the middle room and pick up the statue and then go to the couch and put the statue on the couch.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Take the basketball from the table and run it to the trash can next to the bed, placing it down inside of it.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Run to the living room and grab the pen off the drawer, then bring it back to me to the bedroom.",0.0,0,0,0,0
+FloorPlan_Train5_1,Go to the living room and pick up the dog and place it on the desk in the bedroom.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Pick up the hand, take it to the bowl and place the hand inside the bowl.",0.0,0,0,0,0
+FloorPlan_Train5_1,Go pick up the dog figurine by the TV and place it on the grey couch next to the purple pillow.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the table in front of the TV and grab the hand, then bring it to the bedroom and place it on the bed.",0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the basketball and put it on the sofa.,0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bedroom and pick up the teddy from the bed, then walk to the grey couch and put the teddy on it.",0.0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room, pick up the cup on the small table and go slowly to the bedroom. Place the cup on the desk in the bedroom, next to the table clock.",0.0,0,0,0,0
+FloorPlan_Train5_1,Take the cellphone and place it on the desk next to the bed.,0.0,0,0,0,0
+FloorPlan_Train5_1,Run to the living room and grab the cellphone off the table and bring it back to me in the bedroom.,0.0,0,0,0,0
+FloorPlan_Train5_1,Pick up the glass bottle and bring it to the room with a TV on the desk. Place it on the chair opposite it.,1,0,0,0,0
+FloorPlan_Train5_1,Go pick up the fork and place it next to the laptop on my bed.,1,0,0,0,0
+FloorPlan_Train5_1,Go pick up the spray and drop it in the trash box.,0,0,0,0,0
+FloorPlan_Train5_1,Take the pencil from the grey sofa and place it on the round bedside table next to the bed.,0,0,0,0,0
+FloorPlan_Train5_1,Take the cellphone from the coffee table and place it on the bedside table.,0,0,0,0,0
+FloorPlan_Train5_1,Move the teddy from the bed to the yellow sofa.,0,0,0,0,0

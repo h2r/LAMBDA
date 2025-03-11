@@ -1,0 +1,55 @@
+scene,nl_cmd,nav_to_target,grasped_target_obj,nav_to_target_with_obj,place_obj_at_goal,complete_traj
+FloorPlan_Train12_3,Take the remote from the arm of the chair and place it on the cabinet in front of the TV.,1,0,0,0,0
+FloorPlan_Train12_3,"Move to the living room and pick up the orange cup next to the TV on the brown drawers, then place the cup on the grey couch next to the laptop.",0,0,0,0,0
+FloorPlan_Train12_3,Pick up the basketball and place it on the small dark table in between the mug and the bottle.,0,0,0,0,0
+FloorPlan_Train12_3,Pick up the book and put it on the white chair.,0,0,0,0,0
+FloorPlan_Train12_3,Go to the chair and pick up the bowl on the chair and put it on the chair across the hallway.,0,0,0,0,0
+FloorPlan_Train12_3,Go to the drawer and pick up the vase and place it on the sofa next to the drawer.,0,0,0,0,0
+FloorPlan_Train12_3,"Get the apple from the chair in the living room, then bring it to me in the television room.",1,0,0,0,0
+FloorPlan_Train12_3,Pick up the remote control and go and place it on the drawer next to the TV.,0,0,0,0,0
+FloorPlan_Train12_3,Get the apple from the white chair and put it next to the alarm.,1,0,0,0,0
+FloorPlan_Train12_3,Pick up the bowl from the white chair next to the painting and place it next to the vase on the brown drawers.,0,0,0,0,0
+FloorPlan_Train12_3,Next to the couch on the chair pick up the apple. Bring the apple into the adjacent room with the purple chair and put the apple on the purple chair.,1,0,0,0,0
+FloorPlan_Train1_3,Take the alarm from the shelves near the bed and place it on the blue chair.,0,0,0,0,0
+FloorPlan_Train1_3,"Go to the bedroom, pick up the pillow on the bed, then place it on the couch.",0,0,0,0,0
+FloorPlan_Train1_3,"Go into the living room and grab the box beside the television, then put the box on the blue chair.",0,0,0,0,0
+FloorPlan_Train1_3,Go to the office and pick up the spray and place it on the sofa in the living room.,0,0,0,0,0
+FloorPlan_Train1_3,Run to the bedroom and take the pillow on the bed in the bedroom and place it on the white sofa.,0,0,0,0,0
+FloorPlan_Train1_3,Get the book from the room with the baseball bat and take it to the sofa.,0,0,0,0,0
+FloorPlan_Train1_3,Pick up the tennis racket next to the brown desk and place it on the black shelf.,0,0,0,0,0
+FloorPlan_Train1_3,Pick up the apple and place it on the table near the tennis racket.,1,0,0,0,0
+FloorPlan_Train1_3,Take the cardboard box in the living room and place it next to the red bin in the left office.,0,0,0,0,0
+FloorPlan_Train1_3,Go to the side room and pick up the book from the table and place it on the bookshelf in the bedroom.,0,0,0,0,0
+FloorPlan_Train5_1,Go to the white drawer and pick up the pen and place it on the drawer next to the vase.,0,0,0,0,0
+FloorPlan_Train5_1,"Go to the bedroom and pick up the teddy from the bed, then walk to the grey couch and put the teddy on it.",0,0,0,0,0
+FloorPlan_Train5_1,Please pick up the newspaper from the sofa and place it on the bed.,0,0,0,0,0
+FloorPlan_Train5_1,"Walk to the lounge and pickup the cellphone on the table, turn around and walk back towards the couch, and place the phone on the couch.",0,0,0,0,0
+FloorPlan_Train5_1,"Go to the grey couch and pick up the newspaper, take it to the bedroom and place it on the bed.",0,0,0,0,0
+FloorPlan_Train5_1,Pick up the newspaper lying on the couch and place it on the adjacent coffee table.,0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room, pick up the cup on the small table and go slowly to the bedroom. Place the cup on the desk in the bedroom, next to the table clock.",0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room, pick up the book and put it on the drawer.",0,0,0,0,0
+FloorPlan_Train5_1,Run to the living room and grab the cellphone off the table and bring it back to me in the bedroom.,0,0,0,0,0
+FloorPlan_Train5_1,Put the panda bear in the bedroom on the yellow sofa.,0,0,0,0,0
+FloorPlan_Train7_5,Take the remote control that is next to the TV and place it on the sofa.,0,0,0,0,0
+FloorPlan_Train7_5,Take the cup from the coffee table. Put the cup on the brown table next to the laptop.,0,0,0,0,0
+FloorPlan_Train7_5,"Run to the study, pick up the mug from the table, and bring it to me in the living room.",0,0,0,0,0
+FloorPlan_Train7_5,Move the vase from the brown table to the cushion that is on the sofa.,0,0,0,0,0
+FloorPlan_Train7_5,Grab the cup on the coffee table and bring it to the laptop desk.,0,0,0,0,0
+FloorPlan_Train7_5,"Pick up the basketball next to the baseball, then place it on the chair near the lamp.",0,0,0,0,0
+FloorPlan_Train7_5,Go pick up the mug on the table with the laptop and put the mug on the table near the TV and couch.,0,0,0,0,0
+FloorPlan_Train7_5,"Run to the living room, grab the pillow from the couch and bring it back to the bedroom and put it on the bed.",0,0,0,0,0
+FloorPlan_Train7_5,"Go to the living room, grab the cup, then drop it in the recycling bin next to the laptop.",0,0,0,0,0
+FloorPlan_Train7_5,Pick up the alarm and place it by the plate on the table near the TV.,0,0,0,0,0
+FloorPlan_Train7_5,Go to the living room and grab the remote that is next to the TV. Place the remote next to the pillow on the couch in the same room.,1,0,0,0,0
+FloorPlan_Train7_5,Get the apple next to the laptop and place it next to the television.,0,0,0,0,0
+FloorPlan_Train8_1,Take the tennis racket next to the laptop and put it on the chair that’s next to the baseball bat in the TV room.,0,0,0,0,0
+FloorPlan_Train8_1,Take the alarm clock from the table in the corridor and place it next to the plant on the table in the middle corridor.,1,0,0,0,0
+FloorPlan_Train8_1,Grab the remote and take it to the chair sitting in front of the TV.,1,0,0,0,0
+FloorPlan_Train8_1,Go to the drawer near the TV. Pick up the salt. Put the salt next to the laptop.,0,0,0,0,0
+FloorPlan_Train8_1,Pick up the salt that is sitting on the black table by the TV and take it to the white table.,0,0,0,0,0
+FloorPlan_Train8_1,Pick up the alarm and put in on top of the drawer next to the spray and apple.,1,0,0,0,0
+FloorPlan_Train8_1,"Take the apple away from the plant, making sure you then situate it between the salt and pepper on the dresser near the TV room.",0,0,0,0,0
+FloorPlan_Train8_1,Take the remote from beside the alarm on the table and place it on the pillow on the yellow chair opposite the television.,1,0,0,0,0
+FloorPlan_Train8_1,Go to the hallway and pickup the apple on the brown chest of drawers next to the spray and then walk into the lounge and place the apple in the white basket next to the TV.,0,0,0,0,0
+FloorPlan_Train8_1,"Go into the room that has a TV, pick up the blue pillow on the chair, go into the central room and put the pillow on the brown table.",0,0,0,0,0
+FloorPlan_Train8_1,Get the remote from the small brown table and put it on the chair by the television.,1,0,0,0,0

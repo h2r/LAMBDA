@@ -1,0 +1,16 @@
+scene,nl_cmd,nav_to_target,grasped_target_obj,nav_to_target_with_obj,place_obj_at_goal,complete_traj
+FloorPlan_Train12_3,Pick up the apple and put it in the living room next to the TV.,0,0,0,0,0
+FloorPlan_Train12_3,Take the apple on the chair and go to the living room. Then put it next to the TV.,1,0,0,0,0
+FloorPlan_Train12_3,Pick up the remote from the couch. Put it on the drawer next to the vase.,1,0,0,0,0
+FloorPlan_Train1_3,Grab the spray next on the table and put in next to the TV.,0,0,0,0,0
+FloorPlan_Train1_3,Pick up the apple from the table and place it on the couch in the living room.,1,0,0,0,0
+FloorPlan_Train1_3,Take the basketball and place it on the table next to the bat.,0,0,0,0,0
+FloorPlan_Train5_1,Take the cellphone from the coffee table and place it on the bedside table.,1,0,0,0,0
+FloorPlan_Train5_1,"Take the fork, which is on top of the brown drawers opposite the yellow couch, and then walk towards the living room. Place the fork on the black table next to the television.",1,0,0,0,0
+FloorPlan_Train5_1,"Take the book on the bed, move to the living room and place the book on top of the book near the TV.",0,0,0,0,0
+FloorPlan_Train7_5,Go pick up the mug on the table with the laptop and put the mug on the table near the TV and couch.,0,0,0,0,0
+FloorPlan_Train7_5,Pick up the apple sitting on the desk with the laptop and place it on the plate sitting on the table in the room with the TV.,0,0,0,0,0
+FloorPlan_Train7_5,Move the vase from the table to the sofa in the lounge.,0,0,0,0,0
+FloorPlan_Train8_1,Go to the white table and pick up the tennis racquet and place it on the shelf.,0,0,0,0,0
+FloorPlan_Train8_1,"Pick up the pot and place it by the TV, in the bin.",0,0,0,0,0
+FloorPlan_Train8_1,"Lift the plate from the small, high table and place it on the low table at the other end of the hall, next to the salt and pepper.",0,0,0,0,0

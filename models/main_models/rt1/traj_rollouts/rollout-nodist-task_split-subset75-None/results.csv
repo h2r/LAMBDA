@@ -1,0 +1,43 @@
+scene,nl_cmd,nav_to_target,grasped_target_obj,nav_to_target_with_obj,place_obj_at_goal,complete_traj
+FloorPlan_Train12_3,Pick up the pillow on the chair and put it on the grey sofa with a laptop in the living room. Place it next to the remote control.,0,0,0,0,0
+FloorPlan_Train12_3,Pick up the spray from the floor and place it on the bottom shelf of the TV stand next to the baseball bat.,0,0,0,0,0
+FloorPlan_Train12_3,Please bring the box from the TV room and drop it into the receptacle bin.,0,0,0,0,0
+FloorPlan_Train12_3,Please pick up the book from the wicker chair and place it on the chest of drawers.,0,0,0,0,0
+FloorPlan_Train12_3,"Grab the apple off the chair next to the couch, then drop it in the box near the TV.",0,0,0,0,0
+FloorPlan_Train12_3,Take the apple and go into the corridor with the TV. Place it inside the pot that is next to the TV.,0,0,0,0,0
+FloorPlan_Train12_3,Grab the book from the orange couch and place it on the grey couch next to the laptop.,0,0,0,0,0
+FloorPlan_Train12_3,Go to the hallway and pick up the bottle and place it on the drawer next to the purple armchair.,0,0,0,0,0
+FloorPlan_Train12_3,"Pick up the book on the brown bamboo chair and put the book on the TV stand, next to the pot.",0,0,0,0,0
+FloorPlan_Train1_3,Pick up the box in the living room next to the TV and put it on the bed in the bedroom.,0,0,0,0,0
+FloorPlan_Train1_3,Run to the bedroom and take the pillow on the bed in the bedroom and place it on the white sofa.,0,0,0,0,0
+FloorPlan_Train1_3,Go into the living room and grab the baskeball beside the couch. Then proceed to put it on the white chair.,0,0,0,0,0
+FloorPlan_Train1_3,Take the Sherlock Holmes book from the room with the round white table and place it on the bed in the bedroom.,0,0,0,0,0
+FloorPlan_Train1_3,Grab the mug next to the laptop and go to the living room and place it next to the TV.,1,0,0,0,0
+FloorPlan_Train1_3,Take the white book and drop it on the chair under the desert painting on the wall.,0,0,0,0,0
+FloorPlan_Train1_3,Pick up the book on the round white table and put it on the grey lounge chair.,0,0,0,0,0
+FloorPlan_Train1_3,Go to the office and pick up the spray and place it on the sofa in the living room.,0,0,0,0,0
+FloorPlan_Train5_1,Go pick up the fork and place it next to the laptop on my bed.,1,0,0,0,0
+FloorPlan_Train5_1,"Run to the white drawer, grab the pen and bring it back to me in the bedroom.",0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room, grab the newspaper off the grey couch, then place it on the yellow couch.",0,0,0,0,0
+FloorPlan_Train5_1,"Go to the living room and grab the cell phone on the table, then come back to the bedroom and place it on the bed.",0,0,0,0,0
+FloorPlan_Train5_1,Move to the bedroom. Take the book from the bed and place it on the desk beside the bed.,0,0,0,0,0
+FloorPlan_Train5_1,Take the pencil from the grey sofa and place it on the round bedside table next to the bed.,0,0,0,0,0
+FloorPlan_Train5_1,Pick up the candle and place it by the apple on the table with the spray.,1,0,0,0,0
+FloorPlan_Train5_1,Go get the spray off the black dresser in the next room and trash it in my bedroom.,0,0,0,0,0
+FloorPlan_Train7_5,"Pick up the glass from the lounge, take it to the bedroom and put it down on the chest of drawers.",1,0,0,0,0
+FloorPlan_Train7_5,Pick up the yellow vase on the brown table and then move to the lounge and place the book on the white table.,0,0,0,0,0
+FloorPlan_Train7_5,"Go into the room with the television, pick up the remote, bring the remote into the room with the bed and place the remote on the bed.",0,0,0,0,0
+FloorPlan_Train7_5,Please pick up the alarm clock on the chest of drawers and take it and place it on the white sofa.,1,0,0,0,0
+FloorPlan_Train7_5,Go to the bedroom and pick up the basketball and place it on the sofa in the living room.,0,0,0,0,0
+FloorPlan_Train7_5,"Go to the living room, grab the cup, then drop it in the recycling bin next to the laptop.",1,1,0,0,0
+FloorPlan_Train7_5,Get the vase from the table and put it on the sofa.,0,0,0,0,0
+FloorPlan_Train7_5,Take the remote control that is next to the TV and place it on the sofa.,0,0,0,0,0
+FloorPlan_Train7_5,Go to the end of the bedroom beside the cot. Pick up the basketball to the left of the baseball bat and place it by the TV.,0,0,0,0,0
+FloorPlan_Train8_1,Take the black mug from the white table with the laptop. Place the black mug on the coffee table next to the leafy plant.,0,0,0,0,0
+FloorPlan_Train8_1,Take the alarm clock from the table in the corridor and place it next to the plant on the table in the middle corridor.,1,0,0,0,0
+FloorPlan_Train8_1,Fetch the blue plate and put it on the shelf under the one with the pot.,0,0,0,0,0
+FloorPlan_Train8_1,Grab the spray from the coffee table with the plant. Place the spray on the black table next to the pepper.,0,0,0,0,0
+FloorPlan_Train8_1,Take the clock to the sofa chair.,0,0,0,0,0
+FloorPlan_Train8_1,Grab the pepper grinder from the table close to the TV and put it on the light brown dresser in the middle of the room.,0,0,0,0,0
+FloorPlan_Train8_1,Get the remote and place it in the can next to the television.,0,0,0,0,0
+FloorPlan_Train8_1,Find the blue plate on the stand and then go to the room with the television. Then find the bin and drop the plate inside.,0,0,0,0,0
