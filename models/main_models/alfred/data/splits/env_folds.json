@@ -1,4 +1,0 @@
-{
-    "train_envs": ["FloorPlan_Train12_3", "FloorPlan_Train7_5", "FloorPlan_Train8_1", "FloorPlan_Train1_3"],
-    "test_envs": "FloorPlan_Train5_1"
-}
