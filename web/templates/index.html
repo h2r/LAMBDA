@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructions</title>
+     <style>
+        #start-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .iframe-container {
+            position: relative;
+            width: 100%; /* Take the full width to center the iframe */
+            padding-top: 23%; /* Adjust padding-top to maintain aspect ratio */
+            overflow: hidden;
+            text-align: center; /* Center align the content */
+        }
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 50%; /* Center the iframe */
+            transform: translateX(-50%); /* Adjust the positioning */
+            width: 40%; /* Adjust the width as needed */
+            height: 100%; /* Adjust the height to fit the container */
+        }
+
+     </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Instructions</h1>
+
+    <font size="+2">
+        Welcome and thank you for participating in our data collection! On the next page, you will write <b>15</b> unique commands to a robot in 5 virtual household scenes, i.e., <b>3 commands per scene</b>. 
+        <br>
+        <br>
+        A personal assistant robot can navigate the virtual environment, pick up and place objects. It perceives the environment with its camera. Please see the video below of how the robot operates in the environment.
+        <br>
+        <h3>Video:</h3>
+        <div class="iframe-container">
+            <iframe id="myIframe" src="https://drive.google.com/file/d/1-POxqTh2AedW-ZIYSGbPJQc3b3FDfcOL/preview"></iframe>
+        </div>
+        <br>
+        <h3>Rules:</h3>
+        <ul>
+            <li>When giving commands, assume the robot is as intelligent as a human.</li> 
+            <li>When giving commands, assume the robot starts in the same position in each scene.</li> 
+            <li>Each command is separate and should not refer to any previous command. Assume the robot resets to the starting position for each command.</li>
+            <li>Each command must include picking up and placing objects and moving between rooms. Do <b>NOT</b> both pick AND place in the starting room.</li>
+            <li>Only refer to objects, furniture, and rooms in the scene. Refer to them in a way that best describes them, like using their labels (objects only), generic names, attributes, what is inside a room, and/or spatial relation to others, etc.</li>
+            <li>Only command the robot to pick up a labeled object a human can pick up with one hand. For example, the TV is labeled, but a human cannot pick it up with one hand.</li>
+            <li>Some object labels are incorrect; please do not use incorrect labels to describe objects e.g., “floor” for a lamp.</li>
+            <li>Do <b>NOT</b> command to rotate an object or lay it on its side.</li>
+            <li>Do <b>NOT</b> pick up or open/turn on any of the following objects in your commands, even if they exist in the scene. You can refer to them in relation to other objects. For example, “Pick up the bat next to the laptop" but not "Pick up the laptop."</li>
+                <ul>
+                    <li>Laptop</li>
+                    <li>Drawers (Do <b>NOT</b> place anything inside)</li>
+                    <li>Lamp (sometimes mistakenly labeled “floor” or “desk”)</li>
+                    <li>TV</li>
+                    <li>Desk</li>
+                </ul>
+        </ul>
+        <h3>Examples:</h3>
+        <ul>
+            <li>“Go to the living room and grab the purple pillow on the couch, then go to the office and place it on the chair.”</li>
+            <li>“Go to the living room and pick up the basketball next to the table, then go to the can in the same room and drop it inside.”</li>
+            <li>“Run to the bedroom and grab my phone off the bed, then bring it back to me in the kitchen.”</li>
+            <li>“Take the baseball bat next to the nightstand in the bedroom and go to the office then put it by the white chair.”</li>
+            <li>“Find the bowl that’s on the right of the apple and take it to the office that has the laptop. Put the bowl on the blue table, specifically next to the book.”</li>
+          </ul> 
+        <h3>FAQ:</h3>
+        <ul>
+            <li>Q: Can I refer to specifics in the scene, like the Vincent van Gogh painting on the wall?</li>
+                <ul>
+                    <li>A: Yes.</li>
+                </ul>
+            <li>Q: Can I refer to objects/furniture that do not show labels when I hover the cursor on them, such as a desk?</li>
+                <ul>
+                    <li>A: Yes, as long as you do not tell the robot to pick them up. For example, you can tell the robot to place an object on a desk but not to pick up the desk.</li>
+                </ul>
+            <li>Q: Can I pick up an object and not place it, e.g., "Pick up the remote and wait near the sofa"?</li>
+                <ul>
+                    <li>A: No.</li> 
+                </ul>
+            <li>Q: Can I throw or smash objects?</li>
+                <ul>
+                    <li>No. Please only pick and place.</li>
+                </ul>
+            <li>Q: Do I have to explicitly specify rooms in my commands?</li>
+                <ul>
+                    <li>No, they can be implied. Your command must instruct the robot to move across rooms. You can do that either implicitly, e.g., "Put the pillow by the couch.", where the pillow and the couch are in separate rooms, or explicitly, e.g., "Go to the office and take the pillow to the couch in the living room."</li> 
+                </ul>
+            <li>Q: Can I use the room the robot starts at in my commands?</li>
+                <ul>
+                    <li>A: Yes, as long as the robot also goes to other rooms and picks/places in the other rooms. E.g. "Take the apple and put it on the living room table", or "Go to the living room, take the ball, and put it on top of the office desk", the office being the starting room.</li> 
+                </ul>
+            <li>Q: Do I have to perform the tasks in addition to giving commands?</li>
+                <ul>
+                    <li>A: No. You can if it helps you brainstorm.</li> 
+                </ul>
+            <li>Q: Is any personal information collected?</li>
+                <ul>
+                    <li>A: No.</li> 
+                </ul>
+        </ul>
+        <br>
+        You can use the <b>Instructions</b> button at the bottom of the <b>next</b> page to review the instructions and video. You will <b>NOT</b> lose your progress.
+    </font>
+    <br>
+    <br>
+    <br>
+    <!-- Start button -->
+    <div style="text-align: center;">
+        <button id="start-button" onclick="navigateToScene('scenes')">Start</button>
+    </div>
+    <script>
+        // Function to navigate to a scene
+        function navigateToScene(sceneName) {
+            window.location.href = '/' + sceneName;
+        }
+    </script>
+</body>
+</html>

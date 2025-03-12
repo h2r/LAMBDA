@@ -243,3 +243,8 @@ models/main_models/rt1/val_cmds_task_gen.pkl
 run_mg/
 models/main_models/rt1/motionglot/
 models/main_models/rt1/radarplot.py
+
+# website
+spot/
+__pycache__/
+data/

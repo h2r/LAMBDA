@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenes</title>
+    <style>
+        #filtersImg {
+            width: 25%;
+            height: auto;
+            position: relative;
+        }
+
+        #mapImg {
+            width: 35%;
+            height: 80%;
+            position: relative;
+            margin-top: -5%;
+        }
+
+        #mapImg2 {
+            width: 10%;
+            height: 25%;
+            position: relative;
+            margin-top: -30px;
+        }
+
+        #mapImg3 {
+            width: 65%;
+            height: 85%;
+            position: relative;
+            margin-top: -1%;
+        }
+
+        .text-block {
+            font-size: 1.5em; /* This sets the font size to +2 of the base font size */
+            margin-bottom: 40px; /* Adds space between the text and the image */
+        }
+
+        .text-block2 {
+            font-size: 120%;
+            margin-bottom:10%; /* Adds space between the text and the image */
+            text-align: left; /* Aligns text to the left */
+            margin-left: 0; /* Adjust this value to control how far left the text starts */
+            padding-left: 0; /* Adjust padding if needed */
+            margin-right: 5%;
+        }
+
+        #finish-button, #instructions-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        #instructions-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 5px;
+        }
+        .row {
+            display: flex;
+            justify-content: center; 
+            margin-bottom: 5%;
+            margin-top: 2%;
+        }
+
+        .form-container input[type="text"] {
+            width: 75%;
+            padding: 1.5%;
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .form-container {
+            flex: 1; 
+            margin-top: 10%;
+            margin-left: -15%;
+        }
+        
+        .form-container2 input[type="text"] {
+            width: 142%;
+            padding: 3%;
+            margin-bottom: 10px;
+        }
+
+        .form-container2 label {
+            display: block;
+            margin-top: 10px;
+        }
+        
+        .form-container2, .column {
+            flex:   1; 
+            /* padding: 0 5px; */
+            margin-top: 5%;
+        }
+
+        .form-container2 {
+            flex:   1; 
+            margin-top: 12%;
+            margin-right:65%;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            margin-top: -2%;
+            margin-bottom: 0;
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+        }
+
+        .iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .iframe-container2 {
+            position: relative;
+            width: 55%;
+            padding-top: 32%;
+            overflow: hidden;
+        }
+
+        .iframe-container2 iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Commands</h1>
+
+    <div class="text-block">
+        1. In the interactive section below, please wait for it to finish loading, <b>then</b> unselect the <b>Filter Scenes</b> checkboxes as indicated by the image below:
+    </div>
+    
+    <img src="/static/filters.png" alt="Filters checkboxes" id="filtersImg">
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="text-block">
+        2. In the same interactive section, please scroll down (note there are two scrollers, one for the web page and one for the interactive section) to select <b>Floorplan_Train1_3</b> that looks like this (this will be scene 1):
+    </div>
+
+    <br>
+    <br>
+
+    <img src="/static/train1_3.png" alt="Train1_3" id="mapImg2">
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div class="text-block">
+        3. Next, click <b>Press to Play</b>. You can then use the WASD keys to move, hold shift to move faster, and use the mouse to point at an object to see its label, pick it up, and place it. Explore the rooms and objects as much as possible so brainstorming commands become easier.
+    </div>
+
+    <div class="text-block">
+        4. Press <b>Q</b> to exit the environment. Fill in all 3 command boxes next to that scene.
+    </div>
+
+    <div class="text-block">
+        5. Repeat steps 2-4 for all 5 scenes.
+    </div>
+
+    <div class="text-block">
+        Please type all commands with reasonable length and diversity. After clicking finish, you will <b>NOT</b> be able to come back and edit them.
+    </div>
+
+    <div class="text-block">
+        <i>Tip 1: Click the <b>Instructions</b> button at the bottom of this page if you would like to review the instructions and rewatch the video from the first page. You will <b>NOT</b> lose progress.</i>
+    </div>
+
+    <div class="text-block">
+        <i>Tip 2: If the interactive window freezes, press <b>Q</b> or <b>Esc</b>, then click <b>Press to Play</b>. If unresolved, reopen in incognito, but first <b>note your commands</b> as progress will be lost in new window.</i>
+    </div>
+
+
+    <div class="iframe-container">
+        <iframe id="myIframe" src="https://ai2thor.allenai.org/demo/"></iframe>
+    </div>    
+    
+    <br>
+    <br>
+    <hr style="height:5px; background-color:#333;">
+    <br>
+    <br>
+
+    <!-- Row 1: Two sets of input boxes side by side -->
+    <div class="row">
+        <div class="column">
+            <div class="text-block2">
+                For Scene 1, please select<br>
+                <b>Floorplan_Train1_3</b><br><br>
+                Starting position: By laptop
+            </div>
+            <img src="/static/train1_3.png" alt="Train1_3" id="mapImg">
+        </div>
+
+        <div class="form-container">
+            <form id="command-form">
+                <label for="s1c1">Scene 1 Command 1:</label>
+                <input type="text" id="s1c1" name="s1c1" class="command-input" minlength="16">
+                <label for="s1c2">Scene 1 Command 2:</label>
+                <input type="text" id="s1c2" name="s1c2" class="command-input" minlength="16">
+                <label for="s1c3">Scene 1 Command 3:</label>
+                <input type="text" id="s1c3" name="s1c3" class="command-input" minlength="16">
+            </form>
+        </div>
+
+        <div class="column">
+            <div class="text-block2">
+                For Scene 2, please select<br>
+                <b>Floorplan_Train5_1</b><br><br>
+                Starting position: By yellow couch
+            </div>
+            <img src="/static/train5_1.png" alt="Train5_1" id="mapImg">
+        </div>
+            
+        <div class="form-container">
+            <form id="command-form">
+                <label for="s2c1">Scene 2 Command 1:</label>
+                <input type="text" id="s2c1" name="s2c1" class="command-input" minlength="16">
+                <label for="s2c2">Scene 2 Command 2:</label>
+                <input type="text" id="s2c2" name="s2c2" class="command-input" minlength="16">
+                <label for="s2c3">Scene 2 Command 3:</label>
+                <input type="text" id="s2c3" name="s2c3" class="command-input" minlength="16">
+            </form>
+        </div>
+    </div>
+
+    <!-- Row 2: Two sets of input boxes side by side -->
+    <div class="row">
+        <div class="column">
+            <div class="text-block2">
+                For Scene 3, please select<br>
+                <b>Floorplan_Train7_5</b><br><br>
+                Starting position: By drawers
+            </div>
+            <img src="/static/train7_5.png" alt="Train7_5" id="mapImg">
+        </div>
+
+        <div class="form-container">
+            <form id="command-form">
+                <label for="s3c1">Scene 3 Command 1:</label>
+                <input type="text" id="s3c1" name="s3c1" class="command-input" minlength="16">
+                <label for="s3c2">Scene 3 Command 2:</label>
+                <input type="text" id="s3c2" name="s3c2" class="command-input" minlength="16">
+                <label for="s3c3">Scene 3 Command 3:</label>
+                <input type="text" id="s3c3" name="s3c3" class="command-input" minlength="16">
+            </form>
+        </div>
+
+        <div class="column">
+            <div class="text-block2">
+                For Scene 4, please select<br>
+                <b>Floorplan_Train8_1</b><br><br>
+                Starting position: Front of clock
+            </div>
+            <img src="/static/train8_1.png" alt="Train8_1" id="mapImg">
+        </div>
+
+        <div class="form-container">
+            <form id="command-form">
+                <label for="s4c1">Scene 4 Command 1:</label>
+                <input type="text" id="s4c1" name="s4c1" class="command-input" minlength="16">
+                <label for="s4c2">Scene 4 Command 2:</label>
+                <input type="text" id="s4c2" name="s4c2" class="command-input" minlength="16">
+                <label for="s4c3">Scene 4 Command 3:</label>
+                <input type="text" id="s4c3" name="s4c3" class="command-input" minlength="16">
+            </form>
+        </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="row">
+        <div class="column">
+            <div class="text-block2">
+                For Scene 5, please select<br>
+                <b>Floorplan_Train12_3</b><br><br>
+                Starting position: Outside entrance of couch room
+            </div>
+            <img src="/static/train12_3.png" alt="Train12_3" id="mapImg3">
+        </div>
+
+        <div class="form-container2">
+            <form id="command-form">
+                <label for="s5c1">Scene 5 Command 1:</label>
+                <input type="text" id="s5c1" name="s5c1" class="command-input" minlength="16">
+                <label for="s5c2">Scene 5 Command 2:</label>
+                <input type="text" id="s5c2" name="s5c2" class="command-input" minlength="16">
+                <label for="s5c3">Scene 5 Command 3:</label>
+                <input type="text" id="s5c3" name="s5c3" class="command-input" minlength="16">
+            </form>
+        </div>
+    </div>
+
+    <div id="submission-message" style="display: none; text-align: center; margin: 0 auto;">
+        Saving data...<br>
+        Please wait here.
+    </div>
+    
+    <div style="text-align: center;">
+        <button id="instructions-button" onclick="showInstructions()">Instructions</button>
+    </div>
+    <div style="text-align: center;">
+        <button id="finish-button" onclick="dataAndNextScene()" disabled>Finish</button>
+    </div>
+
+    <div id="instructions-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeInstructions()">&times;</span>
+            <h1 style="text-align: center;">Instructions</h1>
+            <font size="+2">
+                Welcome and thank you for participating in our data collection! On the next page, you will write <b>15</b> unique commands to a robot in 5 virtual household scenes, i.e., <b>3 commands per scene</b>. 
+                <br>
+                <br>
+                A personal assistant robot can navigate the virtual environment, pick up and place objects. It perceives the environment with its camera. Please see the video below of how the robot operates in the environment.
+                <br>
+                <h3>Video:</h3>
+                <div class="iframe-container">
+                    <iframe id="myIframe" src="https://drive.google.com/file/d/1-POxqTh2AedW-ZIYSGbPJQc3b3FDfcOL/preview"></iframe>
+                </div>
+                <br>
+                <h3>Rules:</h3>
+                <ul>
+                    <li>When giving commands, assume the robot is as intelligent as a human.</li> 
+                    <li>When giving commands, assume the robot starts in the same position in each scene.</li> 
+                    <li>Each command is separate and should not refer to any previous command. Assume the robot resets to the starting position for each command.</li>
+                    <li>Each command must include picking up and placing objects and moving between rooms. Do <b>NOT</b> both pick AND place in the starting room.</li>
+                    <li>Only refer to objects, furniture, and rooms in the scene. Refer to them in a way that best describes them, like using their labels (objects only), generic names, attributes, what is inside a room, and/or spatial relation to others, etc.</li>
+                    <li>Only command the robot to pick up a labeled object a human can pick up with one hand. For example, the TV is labeled, but a human cannot pick it up with one hand.</li>
+                    <li>Some object labels are incorrect; please do not use incorrect labels to describe objects e.g., “floor” for a lamp.</li>
+                    <li>Do <b>NOT</b> command to rotate an object or lay it on its side.</li>
+                    <li>Do <b>NOT</b> pick up or open/turn on any of the following objects in your commands, even if they exist in the scene. You can refer to them in relation to other objects. For example, “Pick up the bat next to the laptop" but not "Pick up the laptop."</li>
+                        <ul>
+                            <li>Laptop</li>
+                            <li>Drawers (Do <b>NOT</b> place anything inside)</li>
+                            <li>Lamp (sometimes mistakenly labeled “floor” or “desk”)</li>
+                            <li>TV</li>
+                            <li>Desk</li>
+                        </ul>
+                </ul>
+                <h3>Examples:</h3>
+                <ul>
+                    <li>“Go to the living room and grab the purple pillow on the couch, then go to the office and place it on the chair.”</li>
+                    <li>“Go to the living room and pick up the basketball next to the table, then go to the can in the same room and drop it inside.”</li>
+                    <li>“Run to the bedroom and grab my phone off the bed, then bring it back to me in the kitchen.”</li>
+                    <li>“Take the baseball bat next to the nightstand in the bedroom and go to the office then put it by the white chair.”</li>
+                    <li>“Find the bowl that’s on the right of the apple and take it to the office that has the laptop. Put the bowl on the blue table, specifically next to the book.”</li>
+                </ul> 
+                <h3>FAQ:</h3>
+                <ul>
+                    <li>Q: Can I refer to specifics in the scene, like the Vincent van Gogh painting on the wall?</li>
+                        <ul>
+                            <li>A: Yes.</li>
+                        </ul>
+                    <li>Q: Can I refer to objects/furniture that do not show labels when I hover the cursor on them, such as a desk?</li>
+                        <ul>
+                            <li>A: Yes, as long as you do not tell the robot to pick them up. For example, you can tell the robot to place an object on a desk but not to pick up the desk.</li>
+                        </ul>
+                    <li>Q: Can I pick up an object and not place it, e.g., "Pick up the remote and wait near the sofa"?</li>
+                        <ul>
+                            <li>A: No.</li> 
+                        </ul>
+                    <li>Q: Can I throw or smash objects?</li>
+                        <ul>
+                            <li>No. Please only pick and place.</li>
+                        </ul>
+                    <li>Q: Do I have to explicitly specify rooms in my commands?</li>
+                        <ul>
+                            <li>No, they can be implied. Your command must instruct the robot to move across rooms. You can do that either implicitly, e.g., "Put the pillow by the couch.", where the pillow and the couch are in separate rooms, or explicitly, e.g., "Go to the office and take the pillow to the couch in the living room."</li> 
+                        </ul>
+                    <li>Q: Can I use the room the robot starts at in my commands?</li>
+                        <ul>
+                            <li>A: Yes, as long as the robot also goes to other rooms and picks/places in the other rooms. E.g. "Take the apple and put it on the living room table", or "Go to the living room, take the ball, and put it on top of the office desk", the office being the starting room.</li> 
+                        </ul>
+                    <li>Q: Do I have to perform the tasks in addition to giving commands?</li>
+                        <ul>
+                            <li>A: No. You can if it helps you brainstorm.</li> 
+                        </ul>
+                    <li>Q: Is any personal information collected?</li>
+                        <ul>
+                            <li>A: No.</li> 
+                        </ul>
+                </ul>
+                <br>
+                You can use the <b>Instructions</b> button at the bottom of the <b>next</b> page to review the instructions and video. You will <b>NOT</b> lose your progress.
+            </font>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            if (localStorage.getItem('sub_done') === 'true') {
+                var finishButton = document.getElementById('finish-button');
+                finishButton.disabled = true;
+                finishButton.textContent = 'Submitted';
+            }
+            if (localStorage.getItem('in_done') === 'true') {
+                var formInputs = document.querySelectorAll('#command-form input');
+                    formInputs.forEach(function(input) {
+                        input.disabled = true;
+                    });
+            }
+        };
+
+        function closeInstructions() {
+            document.getElementById('instructions-modal').style.display = 'none';
+        }
+
+        function showInstructions() {
+            document.getElementById('instructions-modal').style.display = 'block';
+        }
+
+        function dataAndNextScene() {
+            var formData = {
+                's1c1': document.getElementById('s1c1').value,
+                's1c2': document.getElementById('s1c2').value,
+                's1c3': document.getElementById('s1c3').value,
+                's2c1': document.getElementById('s2c1').value,
+                's2c2': document.getElementById('s2c2').value,
+                's2c3': document.getElementById('s2c3').value,
+                's3c1': document.getElementById('s3c1').value,
+                's3c2': document.getElementById('s3c2').value,
+                's3c3': document.getElementById('s3c3').value,
+                's4c1': document.getElementById('s4c1').value,
+                's4c2': document.getElementById('s4c2').value,
+                's4c3': document.getElementById('s4c3').value,
+                's5c1': document.getElementById('s5c1').value,
+                's5c2': document.getElementById('s5c2').value,
+                's5c3': document.getElementById('s5c3').value,
+            };
+            
+            // Once data is submitted successfully, redirect to the next scene
+            document.getElementById('submission-message').style.display = 'block';
+            document.getElementById('finish-button').disabled = true;
+            document.getElementById('finish-button').innerText = "Submitted";
+
+            var formInputs = document.querySelectorAll('#command-form input');
+            formInputs.forEach(function(input) {
+                input.disabled = true;
+            });
+
+            localStorage.setItem('sub_done', 'true');
+            localStorage.setItem('in_done', 'true');
+
+            // AJAX request to Flask
+            fetch('/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                
+                setTimeout(function() {
+                    window.location.href = '/end';
+                }, 1000);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    
+        function checkInputs() {
+            var inputs = document.getElementsByClassName('command-input');
+            var allFilled = true;
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].value.length < inputs[i].minLength || inputs[i].value === '') {
+                    allFilled = false;
+                    break;
+                }
+            }
+            document.getElementById('finish-button').disabled = !allFilled;
+        }
+
+        var inputs = document.getElementsByClassName('command-input');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener('input', checkInputs);
+        }
+    </script>
+</body>
+</html>
