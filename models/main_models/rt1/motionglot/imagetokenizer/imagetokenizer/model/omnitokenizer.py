@@ -11,6 +11,8 @@ from einops.layers.torch import Rearrange
 import sys
 sys.path.append('/users/ajaafar/data/ajaafar/LaNMP-Dataset/models/main_models/rt1/motionglot/imagetokenizer')
 from imagetokenizer.model.modules.vae import DiagonalGaussianDistribution
+
+from .modules.vae import DiagonalGaussianDistribution
 from ..utils.omnitokenizer_utils import (
     logits_laplace,
     pair,

@@ -15,8 +15,15 @@ from transformers import GPT2Tokenizer
 import configparser 
 from transformers import AutoTokenizer
 import random 
-from . import tokenize_lanmp
+from copy import copy
+# from . import tokenize_lanmp
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from motionglot import tokenize_lanmp
+from itertools import chain
 
+
+np.random.seed(47)
 
 def load_img_tokenizer():
 
@@ -28,17 +35,20 @@ def load_img_tokenizer():
     return img_model.to("cuda")
 
 def get_max_min_ranges():
-    dataset_path = "/users/ajaafar/data/ajaafar/LaNMP-Dataset/models/main_models/rt1/motionglot/pickle_data"
-    all_files = os.listdir(dataset_path )
+    all_files = os.listdir(args.dataset_path )
     
     all_yaw = []
     all_x = []
     all_y = []
     all_z = []
 
+    all_id0 , all_id1 , all_id2 , all_id3, all_id4, all_id5, all_id6 = [],[], [], [], [], [], []
+
+    all_id0 , all_id1 , all_id2 , all_id3, all_id4, all_id5, all_id6 = [],[], [], [], [], [], []
+
     for file in tqdm( all_files):
         if file.split(".")[1] == "pkl":
-            path =os.path.join( dataset_path , file )
+            path =os.path.join( args.dataset_path , file )
             data =  tokenize_lanmp.get_data(path )
 
             num_traj = len(data)
@@ -53,6 +63,16 @@ def get_max_min_ranges():
                         all_y.append(y)
                         all_z.append(z)
 
+                    if val == "MoveArmBase":
+                        id0, id1, id2, id3,id4,id5,id6 =  data[i][j][4][0] , data[i][j][4][1] ,data[i][j][4][2] , data[i][j][4][3] ,data[i][j][4][4],data[i][j][4][5] , data[i][j][4][6]
+                        all_id0.append( id0)
+                        all_id1.append( id1)
+                        all_id2.append( id2)
+                        all_id3.append( id3)
+                        all_id4.append( id4)
+                        all_id5.append( id5)
+                        all_id6.append( id6)
+
                     if  val == "RotateAgent":
                         yaw = data[i][j][4][ 3]
                         all_yaw.append(yaw)
@@ -61,7 +81,15 @@ def get_max_min_ranges():
     y_min, y_max = np.min(all_y) , np.max(all_y)
     z_min, z_max = np.min(all_z) , np.max(all_z)
     yaw_min, yaw_max = np.min(all_yaw) , np.max(all_yaw)
-    return [yaw_min , yaw_max] , [ x_min, x_max ] , [ y_min, y_max  ] ,[z_min, z_max] 
+    
+    id0_min, id0_max = np.min(all_id0) , np.max(all_id0)
+    id1_min, id1_max = np.min(all_id1) , np.max(all_id1)
+    id2_min, id2_max = np.min(all_id2) , np.max(all_id2)
+    id3_min, id3_max = np.min(all_id3) , np.max(all_id3)
+    id4_min, id4_max = np.min(all_id4) , np.max(all_id4)
+    id5_min, id5_max = np.min(all_id5) , np.max(all_id5)
+    id6_min, id6_max = np.min(all_id6) , np.max(all_id6)
+    return [yaw_min , yaw_max] , [ x_min, x_max ] , [ y_min, y_max  ] ,[z_min, z_max] , [ id0_min, id0_max ] , [id1_min, id1_max] , [id2_min, id2_max] , [id3_min, id3_max] , [id4_min, id4_max] , [id5_min, id5_max] ,[id6_min, id6_max] 
 
 def get_bin_index(x, min_val, max_val, num_bins):
     """
@@ -128,14 +156,15 @@ def detokenize_action(discrete_action, index):
         yaw_delta_val = get_val_from_bin_index(index[0], yaw[0] , yaw[1] , num_bins)
         return yaw_delta_val
     
-
 def load_traj():
     all_files = os.listdir(args.dataset_path )
-    yaw, eef_x, eef_y, eef_z = get_max_min_ranges()
+    yaw, eef_x, eef_y, eef_z , id0_range, id1_range, id2_range,id3_range, id4_range,id5_range,id6_range = get_max_min_ranges()
+    yaw, eef_x, eef_y, eef_z , id0_range, id1_range, id2_range,id3_range, id4_range,id5_range,id6_range = get_max_min_ranges()
 
     all_text = []
     all_imgs = []
     all_lang_instruct = []
+    all_scenes = []
 
     for file in tqdm( all_files):
         if file.split(".")[1] == "pkl":
@@ -147,6 +176,7 @@ def load_traj():
                 traj_text = []
                 traj_img = []
                 lang_instruct = []
+                scene = data[i][0][0]
                 for j in range(num_steps):
                     
                     val = data[i][j][3]
@@ -158,17 +188,20 @@ def load_traj():
 
                         string_val = "MoveArm " + str(x_idx) +" , " + str(y_idx) + " , " + str(z_idx)
                     elif val == "MoveArmBase":
-                        x,y,z = data[i][j][4][ 4] ,  data[i][j][4][ 5] ,  data[i][j][4][ 6]
-                        x_idx = get_bin_index( x , eef_x[0] , eef_x[1] , args.num_bins )
-                        y_idx = get_bin_index( y , eef_y[0] , eef_y[1] , args.num_bins )
-                        z_idx = get_bin_index( z , eef_z[0] , eef_z[1] , args.num_bins )
-
-                        string_val = "MoveArmBase " + str(x_idx) +" , " + str(y_idx) + " , " + str(z_idx)
+                        id0, id1, id2, id3,id4,id5,id6 =  data[i][j][4][0] , data[i][j][4][1] ,data[i][j][4][2] , data[i][j][4][3] ,data[i][j][4][4],data[i][j][4][5] , data[i][j][4][6]
+                        id0_idx = 0#get_bin_index( id0 , id0_range[0] , id0_range[1] , args.num_bins)
+                        id1_idx = 0#get_bin_index(id1  , id1_range[0] , id1_range[1], args.num_bins )
+                        id2_idx = 0#get_bin_index(id2 , id2_range[0] , id2_range[1] , args.num_bins)
+                        id3_idx = 0#get_bin_index(id3 , id3_range[0] , id3_range[1] , args.num_bins)
+                        id4_idx = get_bin_index(id4 , id4_range[0] , id4_range[1] , args.num_bins)
+                        id5_idx = get_bin_index(id5  , id5_range[0] , id5_range[1] , args.num_bins )
+                        id6_idx = get_bin_index(id6  , id6_range[0] , id6_range[1] , args.num_bins )
+                        string_val = "MoveArmBase " + str( id5_idx )
                     elif val == "RotateAgent":
                         yaw1 = data[i][j][4][ 3]
                         yaw_idx = get_bin_index( yaw1 , yaw[0] , yaw[1], args.num_bins )
 
-                        string_val = "RotateAgent " + str( yaw_idx )
+                        string_val = "RotateAgent " + str( yaw_idx ) 
                     else:
                         string_val = str(val)
                     
@@ -178,10 +211,20 @@ def load_traj():
                 
                 all_text.append(traj_text)
                 all_imgs.append( traj_img )
-                all_lang_instruct.append( lang_instruct )
+                all_lang_instruct.append(lang_instruct)
+                all_scenes.append(scene)
                 
-    
-    return all_imgs , all_text , all_lang_instruct
+    with open('all_imgs.pkl', 'wb') as file:
+        pickle.dump(all_imgs, file)
+    with open('all_text.pkl', 'wb') as file:
+        pickle.dump(all_text, file)
+    with open('all_lang_instruct.pkl', 'wb') as file:
+        pickle.dump(all_lang_instruct, file)
+    with open('all_scenes.pkl', 'wb') as file:
+        pickle.dump(all_scenes, file)
+
+
+    return all_imgs , all_text , all_lang_instruct, all_scenes
 
 def get_image_strings( image_idx ):
     num_seqs = len(image_idx )
@@ -239,6 +282,11 @@ def tokenize_images():
         all_tokens_ids.append( torch.cat( tokens_ids_per_traj , dim =0 )  )
         all_masks.append( torch.cat( mask_per_traj , dim =0 )  )
     
+    with open('all_tokens_ids.pkl', 'wb') as file:
+        pickle.dump(all_tokens_ids, file)
+    with open('all_masks.pkl', 'wb') as file:
+        pickle.dump(all_masks, file)
+
     return all_tokens_ids , all_masks
 
 def define_vocabulary():
@@ -276,63 +324,134 @@ def define_vocabulary():
     return tokenizer , VOCAB 
 
 
+def split_by_scene(all_token_ids, all_masks, all_scenes, all_lang):
+    #mapping which ids are relevant to specific scenes
+    scene_to_ids = {}
+    scene_to_masks = {}
+    scene_to_langs = {}
+
+    for token_id, mask, scene, lang in zip(all_token_ids, all_masks, all_scenes, all_lang):
+        if scene not in scene_to_ids:
+            scene_to_ids[scene] = []
+        scene_to_ids[scene].append(token_id.tolist())
+        
+        if scene not in scene_to_masks:
+            scene_to_masks[scene] = []
+        scene_to_masks[scene].append(mask.tolist())
+
+        if scene not in scene_to_langs:
+            scene_to_langs[scene] = []
+        scene_to_langs[scene].append(lang)
+    
+    with open('scene_to_ids.json', 'w') as f:
+        json.dump(scene_to_ids, f)
+    with open('scene_to_masks.json', 'w') as f:
+        json.dump(scene_to_masks, f)
+    with open('scene_to_langs.json', 'w') as f:
+        json.dump(scene_to_langs, f)
+
+    return scene_to_ids, scene_to_masks, scene_to_langs
 
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser("data pre-process for body movements ")
     parser.add_argument("--image_token_model", help="point to the file with the name of all files", default= "img_token_model.pth" , type=str)
-    parser.add_argument("--processed_img_data_path" , help="path to the pre processed dataset" , default= "/oscar/home/sharitha/data/datasets/lambda/lanmp_dataset_imgs.pt" )
-    parser.add_argument("--dataset_path", help="point to the file with the name of all files", default= "/oscar/home/sharitha/data/datasets/lambda/" , type=str)
-    parser.add_argument("--num_bins", help="point to the file with the name of all files", default= 128 , type=int )
+    parser.add_argument("--processed_img_data_path" , help="path to the pre processed dataset" , default= "lambda_dataset_imgs.pt" )
+    parser.add_argument("--dataset_path", help="point to the file with the name of all files", default= "pickle_data" , type=str)
+    parser.add_argument("--split_type", default = None, choices =  ['scene_gen', 'task_gen'],)
+    parser.add_argument("--num_bins", help="point to the file with the name of all files", default= 256 , type=int )
+    parser.add_argument("--test_scene", help="held out test scene for scene generalization", default= 0 , type=int )
     parser.add_argument("--model_type", help="path to folder with prompts ", default= "openai-community/gpt2"  ,type =str ) # "openai-community/gpt2"
 
     args = parser.parse_args()
-    train_val_split = 0.8 
+    train_split = 0.8
+    val_split = 0.1
+    test_scene = args.test_scene
 
     tokenizer , VOCAB  = define_vocabulary()
     
     img_token_model = load_img_tokenizer()
-    all_img, text_strings , all_lang = load_traj()
 
+    # if os.path.isdir("semi_processed_data"):
+    #     with open('all_imgs.pkl', 'rb') as file:
+    #         all_img = pickle.load(file)
+    #     with open('all_text.pkl', 'rb') as file:
+    #         all_text = pickle.load(file)
+    #     with open('all_lang_instruct.pkl', 'rb') as file:
+    #         all_lang = pickle.load(file)
+    #     with open('all_scenes.pkl', 'rb') as file:
+    #         all_scenes = pickle.load(file)
+    #     with open('all_masks.pkl', 'rb') as file:
+    #         all_masks = pickle.load(file)
+    #     with open('all_tokens_ids.pkl', 'rb') as file:
+    #         all_token_ids = pickle.load(file)
+    # else:
+    all_img, text_strings , all_lang, all_scenes = load_traj()
     all_token_ids, all_masks = tokenize_images()
 
-    print(len(all_token_ids) , len(all_masks))
+    print("Length of all_token_ids:", len(all_token_ids))
+    print("Length of all_masks:", len(all_masks))
 
     num_traj = len(all_token_ids)
     assert len(all_token_ids) == len(all_masks)
-
-    all_train, all_valid= [] , [] 
-    all_train_mask, all_valid_mask =[], []
-
-    for i in tqdm( range(num_traj)):
-        split_idx = int( train_val_split*len( all_token_ids[i] ) )
-        
-        train_data = all_token_ids[i][0:split_idx, :]
-        valid_data = all_token_ids[i][split_idx:, : ]
-        
-        train_mask = all_masks[i][0:split_idx, :]
-        valid_mask = all_masks[i][split_idx:, : ]
-
-        all_train.append( train_data)
-        all_valid.append( valid_data )
-        all_train_mask.append(train_mask )
-        all_valid_mask.append( valid_mask )
     
-    train_data , valid_data = torch.cat( all_train , dim =0  ) , torch.cat( all_valid , dim =0  )
-    train_mask , valid_mask = torch.cat( all_train_mask , dim =0  ) , torch.cat( all_valid_mask , dim =0  )
+    train_langs = []
+    val_langs = []
+
+    train_data = []
+    val_data = []
+    # test_data = []
+
+    train_mask = []
+    val_mask = []
+    # test_mask = []
+
+    if args.split_type == "task_gen":
+        with open('rt1_cmds_order/train_cmds_task_gen.pkl', 'rb') as file:
+            train_cmds_subset = pickle.load(file)
+        with open('rt1_cmds_order/val_cmds_task_gen.pkl', 'rb') as file:
+            val_cmds_subset = pickle.load(file)
+    else:
+        with open(f'rt1_cmds_order/train_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
+            train_cmds_subset = pickle.load(file)
+        with open(f'rt1_cmds_order/val_cmds_scene_gen_{test_scene}.pkl', 'rb') as file:
+            val_cmds_subset = pickle.load(file)
+
+    # Iterate through train_cmds_task_gen to find matching elements and their indices
+    for cmd in train_cmds_subset:
+        for i, lang_group in enumerate(all_lang):
+            if cmd == lang_group[0]:  # Match only the first element of each inner list
+                train_langs.append(lang_group[0])
+                train_data.append(all_token_ids[i].tolist())
+                train_mask.append(all_masks[i].tolist())
+    # Iterate through val_cmds_task_gen to find matching elements and their indices
+    for cmd in val_cmds_subset:
+        for i, lang_group in enumerate(all_lang):
+            if cmd == lang_group[0]:  # Match only the first element of each inner list
+                val_langs.append(lang_group[0])
+                val_data.append(all_token_ids[i].tolist())
+                val_mask.append(all_masks[i].tolist())
+
+    assert set(train_langs).isdisjoint(set(val_langs)), "The lists have overlapping elements!"
+
+    # Flatten the first two dimensions (3D to 2D)
+    train_data = torch.tensor(list(chain.from_iterable(train_data)))
+    val_data = torch.tensor(list(chain.from_iterable(val_data)))
+    train_mask = torch.tensor(list(chain.from_iterable(train_mask)))
+    val_mask = torch.tensor(list(chain.from_iterable(val_mask)))
 
     DATA= {} 
 
-    DATA['train_data']  = train_data
-    DATA['valid_data']  = valid_data
-    DATA['train_mask']  = train_mask
-    DATA['valid_mask']  = valid_mask
+    DATA['train_data'] = train_data
+    DATA['valid_data'] = val_data
+    DATA['train_mask'] = train_mask
+    DATA['valid_mask'] = val_mask
 
-    print(train_data.shape, train_mask.shape ,valid_mask.shape ,valid_data.shape   )
+    print(train_data.shape, train_mask.shape ,val_mask.shape ,val_data.shape)
 
-    tokenizer.save_pretrained("lambda_tokenizer/moma")
+    tokenizer.save_pretrained(f"lambda_tokenizer/lambda_{args.split_type}_{args.test_scene}")
 
-    with open("train_data_lambda/moma.pkl", "wb") as f:
+    with open(f"tokenized_dataset_pickles/lambda_{args.split_type}_{args.test_scene}.pkl", "wb") as f:
         pickle.dump(DATA , f)
-
-
+    
+    print("FINISHED!")

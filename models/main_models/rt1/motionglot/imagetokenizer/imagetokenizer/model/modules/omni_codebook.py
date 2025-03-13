@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.distributed as dist
 
-from imagetokenizer.utils.omnitokenizer_utils import shift_dim
+from ...utils.omnitokenizer_utils import shift_dim
 
 
 class Codebook(nn.Module):
