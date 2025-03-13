@@ -224,3 +224,6 @@ run/rt1/finetune.sbatch
 run/rt1/pretrain.sbatch
 /users/ajaafar/data/ajaafar/LaNMP-Dataset/run_mg/train_outputs/*
 /usermodels/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/model/__pycache__
+
+models/main_models/rt1/motionglot/lambda_tokenizer/moma/*
+models/main_models/rt1/motionglot/rt1_cmds_order/*
