@@ -1,7 +1,8 @@
-# LAMBDA ($\lambda$) Benchmark
-
+<div align="center">
+  <h1>LAMBDA (λ) Benchmark</h1>
+</div>
 <p align="center">
-  Under Review 
+  Under IROS Review 
   <br>
   <a href="https://lambdabenchmark.github.io/">Website</a> |
   <a href="https://arxiv.org/abs/2412.05313">arXiv</a> |
@@ -40,7 +41,7 @@ sim_dataset.hdf5/
 Under each folder, there are three main numpy files: `depth_<num>`, `inst_seg_<num>`, and `rgb_<num>`,
 which correspond to the depth image, segmentation image, and rgb image, respectively.
 
-Under the metadata for each folder, there is a dumped json describing other metadata of each time step.
+There is also a json file which includes dumped metadata for that time step.
 The detailed metadata can be found in the dataset card.
 
 <!-- | key | description | value |
@@ -133,43 +134,61 @@ The detailed metadata can be found in the dataset card.
 | all_joint_angles | {"fl.hx": 0.00921491626650095, "fl.hy": 0.8005377054214478, "fl.kn": -1.574602723121643, "fr.hx": -0.013359702192246914, "fr.hy": 0.8004810810089111, "fr.kn": -1.5761274099349976, "hl.hx": 0.007037687581032515, "hl.hy": 0.7966209053993225, "hl.kn": -1.5693817138671875, "hr.hx": -0.009716067463159561, "hr.hy": 0.7977815270423889, "hr.kn": -1.581333041191101, "arm0.sh0": 0.0001010894775390625, "arm0.sh1": -3.1184749603271484, "arm0.hr0": 0.0, "arm0.el0": 3.1350982189178467, "arm0.el1": 1.5687037706375122, "arm0.wr0": -0.00045931339263916016, "arm0.wr1": -1.5694420337677002, "arm0.f1x": -0.007805943489074707} |
 | all_joint_velocities | {"fl.hx": -0.0014713359996676445, "fl.hy": -0.0019799235742539167, "fl.kn": 0.011371612548828125, "fr.hx": -0.007194998674094677, "fr.hy": 0.0033285804092884064, "fr.kn": -0.01216356735676527, "hl.hx": 0.004889719653874636, "hl.hy": -0.0077947331592440605, "hl.kn": 0.005902839358896017, "hr.hx": 0.01074210461229086, "hr.hy": 0.005369353573769331, "hr.kn": -0.019331036135554314, "arm0.sh0": -0.009795751422643661, "arm0.sh1": 0.011766805313527584, "arm0.hr0": 0.0, "arm0.el0": 0.010913466103374958, "arm0.el1": -0.007954984903335571, "arm0.wr0": 0.004147909115999937, "arm0.wr1": 0.003433068050071597, "arm0.f1x": -0.0011129062622785568} | -->
 
-## Running Data Collection 🕹️
+## Data Collection 🕹️
 
 ### Simulation (AI2THOR) 🎮
-1. ```cd collect_sim```
-2. ```python install -r sim_reqs.txt```
+1. ```cd collect_data/collect_sim```
+2. ```pip install -r sim_reqs.txt```
 3. ```cd custom_ai2thor_lib_code```
-4. Move the files to the ai2thor library folder in the virtual environment
+4. Move the files there to the ai2thor library folder in the virtual environment and replace any existing duplicates
 5. Collect data ```python mani.py --scene "<scene number>" --command "<natural language command>"```.
 Use the following keys to move in the simulator:
-* WASD: moving the robot base
-* J/L: rotate the robot left/right
-* I/K: moving the robot head up/down
-* G: grasp
-* R: release
-* Up arrow/down arrow: move robot shoulder up/down
-* 7/4: move end-effector left/right
-* 8/5 move end-effector up/down
-* 9/6 move end-effector forward/backward
-* Q: end collection and save data
-* CTRL+C: restart collection without saving
+* **WASD:** moving the robot base
+* **J/L:** rotate the robot left/right
+* **I/K:** moving the robot head up/down
+* **G:** grasp
+* **R:** release
+* **Up arrow/down arrow:** move robot shoulder up/down
+* **7/4:** move end-effector left/right
+* **8/5:** move end-effector up/down
+* **9/6:** move end-effector forward/backward
+* **Q:** end collection and save data
+* **Ctrl-C:** restart collection without saving
 
 ### Real (Spot) 🤖
-1. ```cd collect_real```
+1. ```cd collect_data/collect_real```
 2. ```conda create --name <env> --file spot_env.txt```
 3. Create a map using ```python record_env_graph.py```. See [this](https://dev.bostondynamics.com/python/examples/graph_nav_command_line/readme#recording-service-command-line) for more details on how to record the map.
 4. Collect data using the map ```python collect_spot_data.py -u <map folder> -t "<natural language command>"```
+5. Move Spot to execute the task trajectory using the Spot tablet controller
+6. `Ctrl-C` to exit and save the data
 
-<!-- ## RT-1
-The RT-1 model from the paper ["RT-1: Robotics Transformer for Real-World Control at Scale"](https://www.roboticsproceedings.org/rss19/p025.pdf) by _Brohan et al._ was modified and fine-tuned on LaNMP. This model was trained and run on an NVIDIA 3090 GPU.
+## Simulation Training 🏋️
+Coming soon.
 
-<img src="./models/main_models/rt1/figures/rt1.png" width="450px"></img>
+## Simulation Inference 💻
+### RT-1
+The RT-1 model from the paper ["RT-1: Robotics Transformer for Real-World Control at Scale"](https://www.roboticsproceedings.org/rss19/p025.pdf) by _Brohan et al._ was pretrained on their dataset. Then we modified (action head) and trained it on LAMBDA. We utilized a <a href = "https://github.com/Rohan138/rt1-pytorch.git"> forked PyTorch implementation </a>. It was trained and inferenced on 1 NVIDIA 3090 GPU.
 
-A forked implementation of <a href = "https://github.com/Rohan138/rt1-pytorch.git"> RT1 (Robotic Transformer) </a> originally inspired by the <a href="https://ai.googleblog.com/2022/12/rt-1-robotics-transformer-for-real.html"> Google Research </a> paper.
 
-This implemenetation of RT-1 was pretrained on the <a href="https://sites.google.com/view/bridgedata"> Bridge </a> dataset and further fine-tuned on our LaNMP dataset for evaluation. Please find details of the repository below
+1. Download our checkpoints from [here](https://drive.google.com/drive/folders/1JF-cbr6ubASXxEOvgz4Qcob7Fl9vCaPL?usp=sharing) (will add more checkpoints later)
+2. `conda create --name rt-1 python=3.9.16`
+3. `conda activate rt-1`
+4. `cd models/main_models/rt1`
+5. `pip install -r requirements.txt`  
+6. `python rollout_ai2thor.py --checkpoint-file-path "" --trajectory-save-path "" --split-type "k_fold_scene" --test-scene 4`
 
-### Setup Instructions
+
+
+### MotionGlot-MoMa
+Coming soon.
+<!-- The MotionGlot model from the paper ["MotionGlot: A Multi-Embodied Motion Generation Model"](https://arxiv.org/abs/2410.16623) by _Harithas et al_. was modified (details in our paper) and trained on LAMBDA. It was trained on 8 NVIDIA 3090 GPUs and inferenced on 1.
+
+1. `conda create --name mg-moma python=3.9`
+2. `conda activate mg-moma` -->
+
+
+<!-- ### Setup Instructions
 
 ```bash
 git clone git@github.com:h2r/LaNPM-Dataset.git
@@ -188,38 +207,6 @@ This repository has 7 critical files/folders whose use cases are described below
 5) ```rollout_ai2thor.py```: interfaces between the finetuned RT-1 model (from a loaded checkpoint after finetuning on LaNMP) and the ```ai2thor_env.py``` Gym environment, in order to send observations from the AI2Thor environment to RT-1 and execute proposed action tokens by RT-1 on AI2Thor. Note that this file should not be run on a headless machine since it requires/deploys AI2Thor simulator GUI
 6) ```rt1_pytorch/rt1_policy.py```: contains the RT-1 model implementation in PyTorch. The ```loss()``` function performs forward pass of RT-1 for training and ```act()``` function performs the forward pass during inference.
 7) ```lanmp_dataloader/rt1_dataloader.py```: contains the ```DatasetManager``` class that extracts trajectories from the LaNMP ```sim_data.hdf5``` dataset file. The script automatically separates train and validation subsets according to different splits e.g. k-fold by scene, task wise or for diversity ablation. The ```DatasetManager``` also handles tokenizing/detokenizing the raw trajectory data into 256 discrete buckets, whilst also chunking trajectories across non-overlapping window lengths of 6 steps
-
-### Details about file arguments
-
-Most relevant files in this repository accept the same set of arguments that are detailed below
-* ```dataset```: only for the ```main.py``` file, specifies the dataset on which the RT-1 model should be pretrained
-* ```train-split```: specifies what fraction of the loaded dataset should be used for training v.s. evaluation
-* ```eval-split```: specifies what fraction of the laoded dataset should be used for evaluation v.s. training
-* ```epochs```: total number of passes over the all batches of the training set
-* ```lr```: learning rate for cross-entropy loss of RT1
-* ```train-batch-size```: the number of trajectories from which to sample data for the current training batch
-* ```eval-batch-size```: the number of trajectories from which to sample data for the current evaluation batch
-* ```trajectory-length```: the window size (context history of ```trajecotry-length``` previous images) used for each trajectory when feeding data to RT-1 model; this is set to 6 based on the RT-1 implementation 
-* ```sentence-transformer```: the language embedding to apply on the language-specified task
-* ```device```: the device to load the model/data onto during training/inference
-* ```eval-freq```: the interval of batches at which to run evaluation/inference on the validation dataset (currently set to 0 in ```main_ft.py```)
-* ```checkpoint-freq```: the interval of batches at which to save a checkpoint during training
-* ```checkpoint-dir```: the directory path at which to save a checkpoint during training
-* ```load-checkpoint```: (optional) path of the pretrained checkpoint to load for further fine-tuning 
-* ```wandb```: boolean determining if logging to weights and biases should happen
-* ```eval-scene```: the AI2Thor scene number in the dataset that is held out of the training set for evaluation during k-fold cross validation across scenes
-* ```split-type```: determines the split type (i.e. k-fold by scene, task wise or diversity ablation) between train and evaluation used by the ```DatasetManager``` in ```rt1_dataloader.py```
-* ```num-diversity-scenes```: only if ```split-type``` is ```diversity-ablation```, this is used to determine the total number of scenes to perform diversity ablation over i.e. maximum of 4 for LaNMP simulation data
-*  ```max-diversity-trajectories```: only if ```split-type``` is ```diversity-ablation```, this is used to determine the total number of trajectories that are divided evenly across the number of ```num-diversity-scenes``` scenes
-* ```train-subbatch```: the batch size to use during training/finetuning
-* ```eval-subbatch```: the batch size to use during evaluation
-
-### Checkpoint samples
-
-Please find the follow checkpoints samples that can be loaded to the RT-1 model. These can be found on the supplementary <a href='https://drive.google.com/drive/folders/1vorYOcqRRnQUqFEl9lzwbPJNb4nC9eZI?usp=drive_link'>Google Drive</a> associated with this project
-* ```sample_checkpoints/pretrained_bridge```: the final checkpoint saved when pretraining the RT-1 model on the Bridge dataset
-* ```sample_checkpoints/task_gen```: the final checkpoint saved after finetuning RT-1 model on the task-wise split for the task generalization experiment
-* ```sample_checkpoints/kfold_cross_val```: the final checkpoints saved after finetuning RT-1 model using k-fold cross validations where each fold represented a held out scene from AI2Thor
 
 ### Additional notes
 
@@ -254,15 +241,11 @@ When running any of the finetuning or pretraining scripts, please ensure the fol
 6. Ensure the `action_order` and `action_space` in lines 61 and 62 of `action_tokenizer.py` fetch from `lanmp_keys` defined in line 56
 7. Run `python3 main_ft.py` with all arguments input as required
 8. Checkpoints for pretraining should be saved chronologically (by step number) in the `checkpoint-dir` directory
+-->
 
-### Running Inference (on AI2Thor)
-1. `cd LaNMP-Dataset/models/main_models/rt1`
-2. Open `main_ft_eval.py` and modify the `checkpoint-path` argument to the checkpoint path from pretraining, finetuning or one of the pre-saved checkpoints (from Google Drive)
-4. Set all other arguments in `main_ft_eval.py' (particularly `split-type` defines the type of experiment to be run i.e. k-fold across scenes, task generalization or diversity ablations)
-5. Navigate to `LaNMP-Dataset/models/main_models/rt1/rt1_pytorch/tokenizers/action_tokenizer.py`
-6. Ensure the `action_order` and `action_space` in lines 61 and 62 of `action_tokenizer.py` fetch from `lanmp_keys` defined in line 56
-7. Run `python3 main_ft_eval.py` with all arguments input as required
-8. Evaluation loss logs should be reported on weights and biases as well as printed (mean ± std dev) on the terminal -->
+
+
+
 
 ## Citation 📝
 If you utilize our work, please consider citing:

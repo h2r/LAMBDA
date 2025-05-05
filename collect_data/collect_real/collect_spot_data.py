@@ -857,12 +857,9 @@ class GraphNavInterface(object):
 
 
 def main(argv):
-
-    # HOSTNAME = '138.16.160.202'
-    # HOSTNAME = 'gouger'
-    HOSTNAME = '138.16.161.23'
-    USER = 'user'
-    PASS = 'bigbubbabigbubba'
+    HOSTNAME = ''
+    USER = ''
+    PASS = ''
 
     """Run the command-line interface."""
     parser = argparse.ArgumentParser(description=__doc__)
