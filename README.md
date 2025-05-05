@@ -16,7 +16,7 @@
 
 Learning to execute long-horizon mobile manipulation tasks is crucial for advancing robotics in household and workplace settings. However, current approaches are typically data-inefficient, underscoring the need for improved models that require realistically sized benchmarks to evaluate their efficiency. To address this, we introduce the LAMBDA (λ) benchmark––Long-horizon Actions for Mobile-manipulation Benchmarking of Directed Activities––which evaluates the data efficiency of models on language-conditioned, long-horizon, multi-room, multi-floor, pick-and-place tasks using a dataset of manageable size, more feasible for collection. Our benchmark includes 571 human-collected demonstrations that provide realism and diversity in simulated and real-world settings. Unlike planner-generated data, these trajectories offer natural variability and replay-verifiability, ensuring robust learning and evaluation. We leverage LAMBDA to benchmark current end-to-end learning methods and a modular neuro-symbolic approaches that combines foundation models with task and motion planning. We find that end-to-end methods—even when pretrained—yield lower success rates, while neuro-symbolic methods perform significantly better and require less data.
 
-## Dataset Format
+## Dataset Format 🗂️
 More detailed dataset information can be found in the dataset card [DataCard.md](https://github.com/h2r/LaNPM-Dataset/blob/main/DataCard.md#lanmp).
 
 Download the dataset from this [DropBox](https://www.dropbox.com/scl/fo/c1q9s420pzu1285t1wcud/AGMDPvgD5R1ilUFId0i94KE?rlkey=7lwmxnjagi7k9kgimd4v7fwaq&dl=0).
@@ -133,9 +133,9 @@ The detailed metadata can be found in the dataset card.
 | all_joint_angles | {"fl.hx": 0.00921491626650095, "fl.hy": 0.8005377054214478, "fl.kn": -1.574602723121643, "fr.hx": -0.013359702192246914, "fr.hy": 0.8004810810089111, "fr.kn": -1.5761274099349976, "hl.hx": 0.007037687581032515, "hl.hy": 0.7966209053993225, "hl.kn": -1.5693817138671875, "hr.hx": -0.009716067463159561, "hr.hy": 0.7977815270423889, "hr.kn": -1.581333041191101, "arm0.sh0": 0.0001010894775390625, "arm0.sh1": -3.1184749603271484, "arm0.hr0": 0.0, "arm0.el0": 3.1350982189178467, "arm0.el1": 1.5687037706375122, "arm0.wr0": -0.00045931339263916016, "arm0.wr1": -1.5694420337677002, "arm0.f1x": -0.007805943489074707} |
 | all_joint_velocities | {"fl.hx": -0.0014713359996676445, "fl.hy": -0.0019799235742539167, "fl.kn": 0.011371612548828125, "fr.hx": -0.007194998674094677, "fr.hy": 0.0033285804092884064, "fr.kn": -0.01216356735676527, "hl.hx": 0.004889719653874636, "hl.hy": -0.0077947331592440605, "hl.kn": 0.005902839358896017, "hr.hx": 0.01074210461229086, "hr.hy": 0.005369353573769331, "hr.kn": -0.019331036135554314, "arm0.sh0": -0.009795751422643661, "arm0.sh1": 0.011766805313527584, "arm0.hr0": 0.0, "arm0.el0": 0.010913466103374958, "arm0.el1": -0.007954984903335571, "arm0.wr0": 0.004147909115999937, "arm0.wr1": 0.003433068050071597, "arm0.f1x": -0.0011129062622785568} | -->
 
-## Running Data Collection
+## Running Data Collection 🕹️
 
-### Simulation (AI2THOR)
+### Simulation (AI2THOR) 🎮
 1. ```cd collect_sim```
 2. ```python install -r sim_reqs.txt```
 3. ```cd custom_ai2thor_lib_code```
@@ -154,7 +154,7 @@ Use the following keys to move in the simulator:
 * Q: end collection and save data
 * CTRL+C: restart collection without saving
 
-### Real (Spot)
+### Real (Spot) 🤖
 1. ```cd collect_real```
 2. ```conda create --name <env> --file spot_env.txt```
 3. Create a map using ```python record_env_graph.py```. See [this](https://dev.bostondynamics.com/python/examples/graph_nav_command_line/readme#recording-service-command-line) for more details on how to record the map.
@@ -264,7 +264,8 @@ When running any of the finetuning or pretraining scripts, please ensure the fol
 7. Run `python3 main_ft_eval.py` with all arguments input as required
 8. Evaluation loss logs should be reported on weights and biases as well as printed (mean ± std dev) on the terminal -->
 
-### BibTeX
+## Citation 📝
+If you utilize our work, please consider citing:
 ```
    @misc{lambdabenchmark,
       title={{\lambda}: A Benchmark for Data-Efficiency in Long-Horizon Indoor Mobile Manipulation Robotics}, 
