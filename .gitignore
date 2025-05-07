@@ -227,9 +227,3 @@ run/rt1/pretrain.sbatch
 
 models/main_models/rt1/motionglot/lambda_tokenizer/moma/*
 models/main_models/rt1/motionglot/rt1_cmds_order/*
-models/main_models/rt1/motionglot/lambda_tokenizer/moma/added_tokens.json
-models/main_models/rt1/motionglot/lambda_tokenizer/moma/merges.txt
-models/main_models/rt1/motionglot/lambda_tokenizer/moma/special_tokens_map.json
-models/main_models/rt1/motionglot/lambda_tokenizer/moma/tokenizer.json
-models/main_models/rt1/motionglot/lambda_tokenizer/moma/tokenizer_config.json
-models/main_models/rt1/motionglot/lambda_tokenizer/moma/vocab.json
