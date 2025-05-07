@@ -248,3 +248,8 @@ models/main_models/rt1/radarplot.py
 spot/
 __pycache__/
 data/
+models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/model/__pycache__
+models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/model/modules/__pycache__
+models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/quantize/__pycache__
+models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/utils/__pycache__
+models/main_models/rt1/motionglot/rt1_cmds_order
