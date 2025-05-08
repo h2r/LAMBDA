@@ -216,6 +216,8 @@ models/main_models/spoc-robot-training/
 models/main_models/rt1/src/
 models/main_models/rt1/val_losses/
 models/main_models/rt1/traj_rollouts
+models/main_models/rt1/motionglot/pickle_data
+models/main_models/rt1/motionglot/img_token_model.pth
 /modespot/
 Trajectories/
 sim_commands.npy
@@ -240,11 +242,8 @@ models/main_models/rt1/val_cmds_scene_gen_2.pkl
 models/main_models/rt1/val_cmds_scene_gen_3.pkl
 models/main_models/rt1/val_cmds_scene_gen_4.pkl
 models/main_models/rt1/val_cmds_task_gen.pkl
-run_mg/
-models/main_models/rt1/motionglot/
 models/main_models/rt1/radarplot.py
 
-# website
 spot/
 __pycache__/
 data/
@@ -253,3 +252,29 @@ models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/model/modules/__
 models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/quantize/__pycache__
 models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/utils/__pycache__
 models/main_models/rt1/motionglot/rt1_cmds_order
+models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/model/__pycache__
+
+models/main_models/rt1/motionglot/rt1_cmds_order/*
+run/mg-moma/train_outputs
+run/mg-moma/train_outputs_ft
+run/mg-moma/train.sbatch
+
+models/main_models/rt1/motionglot/scene_gen_1
+models/main_models/rt1/motionglot/scene_gen_2
+models/main_models/rt1/motionglot/scene_gen_3
+models/main_models/rt1/motionglot/scene_gen_4
+models/main_models/rt1/motionglot/semi_processed_data
+models/main_models/rt1/motionglot/task_gen
+models/main_models/rt1/motionglot/task_gen_ft
+models/main_models/rt1/motionglot/task_gen_ft_freeze_all
+models/main_models/rt1/motionglot/tokenized_dataset_pickles
+models/main_models/rt1/motionglot/wandb
+models/main_models/rt1/motionglot/jsons
+models/main_models/rt1/motionglot/all_lang_instruct.pkl
+models/main_models/rt1/motionglot/all_masks.pkl
+models/main_models/rt1/motionglot/all_text.pkl
+models/main_models/rt1/motionglot/all_scenes.pkl
+models/main_models/rt1/motionglot/all_tokens_ids.pkl
+
+models/main_models/rt1/tests
+models/main_models/rt1/cluster_dict.json

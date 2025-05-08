@@ -17,9 +17,9 @@ import random
 import h5py
 import re 
 from skimage.io import imsave, imread
-from imagetokenizer.imagetokenizer.model import OmniTokenizer
-from imagetokenizer.imagetokenizer.model import Magvit2Tokenizer
-from imagetokenizer.imagetokenizer.model import TiTok
+from .imagetokenizer.imagetokenizer.model import OmniTokenizer
+from .imagetokenizer.imagetokenizer.model import Magvit2Tokenizer
+from .imagetokenizer.imagetokenizer.model import TiTok
 from torch.utils.data import Dataset 
 from torch.utils.data import DataLoader 
 import torchvision.transforms as T

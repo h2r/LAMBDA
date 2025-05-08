@@ -117,6 +117,45 @@ def get_bin_index(x, min_val, max_val, num_bins):
         
     return index
 
+
+def detokenize_action(discrete_action, index):
+    
+    def get_val_from_bin_index(index, min_val, max_val, num_bins):
+        # Avoid division by zero or invalid input
+        if max_val <= min_val or num_bins <= 0:
+            raise ValueError("Invalid range or number of bins.")
+
+        # Calculate the bin width
+        bin_width = (max_val - min_val) / num_bins
+        
+        # Compute the continuous value corresponding to the center of the bin
+        x = min_val + (index + 0.5) * bin_width
+        
+        # Clamp the value to ensure it's within range (optional, based on assumptions)
+        x = max(min(x, max_val), min_val)
+        
+        return x
+
+
+    # yaw, eef_x, eef_y, eef_z = get_max_min_ranges()
+    yaw = [-346.2767677307129, 353.14554023742676]
+    eef_x = [-0.22499990463256836, 0.3750004768371582]
+    eef_y = [-0.2999999523162842, 0.15000009536743164]
+    eef_z = [-0.23398804664611816, 0.26000285148620605]
+    
+    num_bins = 256
+
+    if discrete_action in ["MoveArm", "MoveArmBase"]:
+        # if discrete_action == "MoveArmBase":
+        #     breakpoint()
+        x_delta_val = get_val_from_bin_index(index[0], eef_x[0] , eef_x[1] , num_bins)
+        y_delta_val = get_val_from_bin_index(index[1], eef_y[0] , eef_y[1] , num_bins)
+        z_delta_val = get_val_from_bin_index(index[2], eef_z[0] , eef_z[1] , num_bins)
+        return [x_delta_val, y_delta_val, z_delta_val]
+    elif discrete_action == "RotateAgent":
+        yaw_delta_val = get_val_from_bin_index(index[0], yaw[0] , yaw[1] , num_bins)
+        return yaw_delta_val
+    
 def load_traj():
     all_files = os.listdir(args.dataset_path )
     yaw, eef_x, eef_y, eef_z , id0_range, id1_range, id2_range,id3_range, id4_range,id5_range,id6_range = get_max_min_ranges()
@@ -148,16 +187,6 @@ def load_traj():
                         z_idx = get_bin_index( z , eef_z[0] , eef_z[1] , args.num_bins )
 
                         string_val = "MoveArm " + str(x_idx) +" , " + str(y_idx) + " , " + str(z_idx)
-                    elif val == "MoveArmBase":
-                        id0, id1, id2, id3,id4,id5,id6 =  data[i][j][4][0] , data[i][j][4][1] ,data[i][j][4][2] , data[i][j][4][3] ,data[i][j][4][4],data[i][j][4][5] , data[i][j][4][6]
-                        id0_idx = 0#get_bin_index( id0 , id0_range[0] , id0_range[1] , args.num_bins)
-                        id1_idx = 0#get_bin_index(id1  , id1_range[0] , id1_range[1], args.num_bins )
-                        id2_idx = 0#get_bin_index(id2 , id2_range[0] , id2_range[1] , args.num_bins)
-                        id3_idx = 0#get_bin_index(id3 , id3_range[0] , id3_range[1] , args.num_bins)
-                        id4_idx = get_bin_index(id4 , id4_range[0] , id4_range[1] , args.num_bins)
-                        id5_idx = get_bin_index(id5  , id5_range[0] , id5_range[1] , args.num_bins )
-                        id6_idx = get_bin_index(id6  , id6_range[0] , id6_range[1] , args.num_bins )
-                        string_val = "MoveArmBase " + str( id5_idx )
                     elif val == "RotateAgent":
                         yaw1 = data[i][j][4][ 3]
                         yaw_idx = get_bin_index( yaw1 , yaw[0] , yaw[1], args.num_bins )

@@ -8,6 +8,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange, repeat, pack, unpack
 from einops.layers.torch import Rearrange
+<<<<<<< HEAD
+=======
+import sys
+sys.path.append('/users/ajaafar/data/ajaafar/LaNMP-Dataset/models/main_models/rt1/motionglot/imagetokenizer')
+from imagetokenizer.model.modules.vae import DiagonalGaussianDistribution
+>>>>>>> mg_eval
 
 from .modules.vae import DiagonalGaussianDistribution
 from ..utils.omnitokenizer_utils import (
