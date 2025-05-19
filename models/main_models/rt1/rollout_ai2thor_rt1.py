@@ -9,9 +9,9 @@ import torch
 import wandb
 from sentence_transformers import SentenceTransformer
 from torch.optim import Adam
-# import tensorflow_hub as hub 
+import tensorflow_hub as hub 
 from data import create_dataset
-from rt1_pytorch.rt1_policy import RT1Policy
+from rt1_pytorch.rt1.rt1_policy import RT1Policy
 from tqdm import tqdm
 from lanmp_dataloader.rt1_dataloader import DatasetManager, DataLoader
 import gc
@@ -43,13 +43,13 @@ def parse_args():
     parser.add_argument(
         "--checkpoint-file-path",
         type=str,
-        default="/users/ajaafar/data/ajaafar/LaNMP-Dataset/models/main_models/rt1/results/checkpoints/train-mamba-nodist-task_split--scene-HP1/checkpoint_best.pt", #NOTE: change according to checkpoint file that is to be loaded
+        default="dummy", #NOTE: change according to checkpoint file that is to be loaded
         help="directory to save checkpoints",
     )
     parser.add_argument(
         "--trajectory-save-path",
         type=str,
-        default="traj_rollouts/scene2",
+        default="results/traj_rollouts/scene2",
         help = "directory to save the generated trajectory predicted by the model"
     )
     parser.add_argument(
@@ -103,28 +103,11 @@ def parse_args():
         help='use random agent if true, not if false', 
         action='store_true'
     )
-    #MotionGlot args below
-    parser.add_argument(
-        "--image_token_model", 
-        help="point to the file with the name of all files", 
-        default= "motionglot/img_token_model.pth", 
-        type=str
-    )
-    parser.add_argument("--checkpoint_path",
-        help="point to the file with the name of all files",
-        default= "/users/ajaafar/data/ajaafar/LaNMP-Dataset/models/main_models/rt1/motionglot/task_gen_ft/checkpoint-best" ,
-        type=str
-    )
-    parser.add_argument("--tokenizer_path", 
-        help=" path to folder with tokenizer " , 
-        default= "motionglot/lambda_tokenizer/lambda_task_gen_0", 
-        type= str 
-    ) 
     return parser.parse_args()
 
 
 def main():
-    with open("../../../collect_sim/cmd_id_dic.json", "r") as json_file:
+    with open("../../../collect_data/collect_sim/misc/cmd_id_dic.json", "r") as json_file:
         cmd_id_dic = json.load(json_file)
 
     args = parse_args()
@@ -188,11 +171,11 @@ def main():
 
 
     #NOTE: has to be Not None because of raw instruction input
-    # text_embedding_model = (
-    #     SentenceTransformer(args.sentence_transformer)
-    #     if args.sentence_transformer
-    #     else hub.load("https://tfhub.dev/google/universal-sentence-encoder/4") 
-    # )
+    text_embedding_model = (
+        SentenceTransformer(args.sentence_transformer)
+        if args.sentence_transformer
+        else hub.load("https://tfhub.dev/google/universal-sentence-encoder/4") 
+    )
    
 
     def get_text_embedding(observation: Dict):
@@ -249,7 +232,7 @@ def main():
         a = None
         word_action = state_action['word_action']
         i = state_action['i']
-        # print(word_action)
+        print(word_action)
         if word_action in ['MoveAhead', 'MoveBack', 'MoveRight', 'MoveLeft']:
             if word_action == "MoveAhead":
                 a = dict(action="MoveAgent", ahead=move, right=0, returnToStart=False,speed=1,fixedDeltaTime=fixedDeltaTime)
@@ -276,7 +259,7 @@ def main():
             a = dict(action="MoveArmBase",y=i,speed=1,returnToStart=False,fixedDeltaTime=fixedDeltaTime)
         elif word_action in ['MoveArm']:
             a = dict(action='MoveArm',position=dict(x=state_action['arm_position'][0], y=state_action['arm_position'][1], z=state_action['arm_position'][2]),coordinateSpace="world",restrictMovement=False,speed=1,returnToStart=False,fixedDeltaTime=fixedDeltaTime)
-        elif word_action in ['Done']:
+        elif word_action in ['stop']:
             a = dict(action="Done")
         try:
             if word_action == "LookDown":
@@ -288,7 +271,6 @@ def main():
             print(e)         
             breakpoint()
         
-        # time.sleep(0.1)
         success = event.metadata['lastActionSuccess']
         error = event.metadata['errorMessage']
 
@@ -360,18 +342,16 @@ def main():
             continue
 
         #get NL cmd embedding
-        # language_command_embedding = get_text_embedding(np.array([[nl_cmd]]))
-        # language_command_embedding = np.repeat(language_command_embedding, 6, axis=1)
+        language_command_embedding = get_text_embedding(np.array([[nl_cmd]]))
+        language_command_embedding = np.repeat(language_command_embedding, 6, axis=1)
 
         # start/reset THOR env for every trajectory/task
         controller, last_event, i = start_reset(traj_json_dict['scene'], controller)
 
         #extract the visual observation from initialzed environment
         curr_image = last_event.frame.copy()
-        curr_image = cv2.resize(curr_image, (224, 224), interpolation=cv2.INTER_AREA)
-        curr_image = torch.from_numpy(curr_image).permute(2,0,1).unsqueeze(0)
-        # visual_observation = np.expand_dims(np.expand_dims(curr_image, axis=0) , axis=0)
-        # visual_observation = np.repeat(visual_observation, 6, axis=1)
+        visual_observation = np.expand_dims(np.expand_dims(curr_image, axis=0) , axis=0)
+        visual_observation = np.repeat(visual_observation, 6, axis=1)
 
         #track the starting coordinates for body, yaw rotation and arm coordinate
         curr_arm_coordinate = np.array(list(last_event.metadata["arm"]["joints"][3]['position'].values()))
@@ -416,7 +396,7 @@ def main():
 
 
         #track the total number of steps and the last control mode
-        num_steps = 0; action_discrete = None; is_terminal = False
+        num_steps = 0; curr_mode = None; is_terminal = False
 
        
         #track data for all steps
@@ -446,9 +426,7 @@ def main():
                 }
 
             generated_action_tokens = rt1_model_policy.act(curr_observation)
-           
-            num_steps +=1
-
+        
            
             # terminate_episode = generated_action_tokens['terminate_episode'][0] #not needed for actual rolling out
 
@@ -498,18 +476,18 @@ def main():
             # agent_holding = np.array(last_event.metadata['arm']['heldObjects'])
             
             #fetch the new visual observation from the simulator, update the current mode and increment number of steps
-            # curr_image = np.expand_dims(np.expand_dims(last_event.frame, axis=0) , axis=0)
-            curr_image = last_event.frame.copy()
-            curr_image = cv2.resize(curr_image, (224, 224), interpolation=cv2.INTER_AREA)
-            curr_image = torch.from_numpy(curr_image).permute(2,0,1).unsqueeze(0)
+            curr_image = np.expand_dims(np.expand_dims(last_event.frame, axis=0) , axis=0)
 
             #removes the oldest observation in the window of 6 and adds the latest to replace it
-            # visual_observation = visual_observation[:,1:,:,:,:]
-            # visual_observation = np.concatenate((visual_observation, curr_image), axis=1)
+            visual_observation = visual_observation[:,1:,:,:,:]
+            visual_observation = np.concatenate((visual_observation, curr_image), axis=1)
             
             curr_arm_coordinate = np.array(list(last_event.metadata["arm"]["joints"][3]['position'].values()))
-            
+
+            num_steps +=1
+                        
             time.sleep(0.1)
+
 
             #add data to the dataframe CSV
             # step_data = {   
