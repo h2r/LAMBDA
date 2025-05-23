@@ -31,7 +31,7 @@ def posemb_sincos_1d(seq, dim, temperature=10000, device=None, dtype=torch.float
     return pos_emb.type(dtype)
 
 # Robotic Transformer rewritten to use Mamba without concatenating action tokens.
-class RT1Model(nn.Module):
+class RM1Model(nn.Module):
     def __init__(
         self,
         dist: bool,

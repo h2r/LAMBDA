@@ -9,7 +9,7 @@ from numpy import array
 from rt1_pytorch.tokenizers.image_tokenizer import RT1ImageTokenizer
 
 
-class RT1Model(nn.Module):
+class RL1Model(nn.Module):
     def __init__(
         self,
         dist: bool,
@@ -46,18 +46,6 @@ class RT1Model(nn.Module):
 
         self.num_tokens = self.image_tokenizer.num_output_tokens
 
-        # Area 1: Transformer initialization (replace with LSTM)
-        # self.transformer = nn.Transformer(
-        #     d_model=embedding_dim,
-        #     nhead=num_heads,
-        #     num_encoder_layers=num_layers,
-        #     num_decoder_layers=num_layers,
-        #     dim_feedforward=feed_forward_size,
-        #     dropout=dropout_rate,
-        #     activation="gelu",
-        #     batch_first=True,
-        #     device=device,
-        # )
         self.lstm = nn.LSTM(
             input_size=embedding_dim,
             hidden_size=feed_forward_size,

@@ -7,10 +7,10 @@ from einops import rearrange
 from torch.nn import functional as F
 import pdb
 
-from rt1_pytorch.rt1_model import RT1Model
+from rt1_pytorch.rm1.rm1_model import RM1Model
 from rt1_pytorch.tokenizers.action_tokenizer import RT1ActionTokenizer
 
-class RT1Policy:
+class RM1Policy:
     def __init__(
         self,
         dist: bool,
@@ -63,7 +63,7 @@ class RT1Policy:
 
         # CHANGED: Updated RT1Model instantiation to remove unused num_heads parameter.
         # breakpoint()
-        self.model = RT1Model(
+        self.model = RM1Model(
             dist=self.dist,
             arch=arch,
             tokens_per_image=8,#self.action_tokenizer.tokens_per_action,

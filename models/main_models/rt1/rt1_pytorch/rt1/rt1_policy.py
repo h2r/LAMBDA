@@ -8,7 +8,7 @@ from einops import rearrange
 from torch.nn import functional as F
 import pdb
 
-from rt1_pytorch.rt1_model import RT1Model
+from rt1_pytorch.rt1.rt1_model import RT1Model
 from rt1_pytorch.tokenizers.action_tokenizer import RT1ActionTokenizer
 
 

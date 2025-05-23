@@ -8,11 +8,11 @@ from einops import rearrange
 from torch.nn import functional as F
 import pdb
 
-from rt1_pytorch.rt1_model import RT1Model
+from rt1_pytorch.rl1.rl1_model import RL1Model
 from rt1_pytorch.tokenizers.action_tokenizer import RT1ActionTokenizer
 
 
-class RT1Policy:
+class RL1Policy:
     def __init__(
         self,
         dist: bool,
@@ -66,7 +66,7 @@ class RT1Policy:
             action_order=list(action_space.keys()),
         )
 
-        self.model = RT1Model(
+        self.model = RL1Model(
             dist=self.dist,
             arch=arch,
             tokens_per_action=self.action_tokenizer.tokens_per_action,

@@ -11,7 +11,9 @@ from torch.optim import Adam
 from torch.optim.lr_scheduler import ExponentialLR
 import tensorflow_hub as hub 
 from data import create_dataset
-from rt1_pytorch.rt1_policy import RT1Policy
+from rt1_pytorch.rt1.rt1_policy import RT1Policy
+from rt1_pytorch.rm1.rm1_policy import RM1Policy
+from rt1_pytorch.rl1.rl1_policy import RL1Policy
 from tqdm import tqdm
 from lanmp_dataloader.rt1_dataloader import DatasetManager, DataLoader
 import gc
@@ -102,7 +104,7 @@ def parse_args():
     parser.add_argument(
         "--checkpoint-dir",
         type=str,
-        default="checkpoints/temp", #"checkpoints/diversity_v1_4"
+        default="checkpoints/temp",
         help="directory to save checkpoints",
     )
     parser.add_argument(
@@ -159,6 +161,16 @@ def parse_args():
     parser.add_argument(
         "--freeze",
         help='if true, freezes layers to finetune the model, if false trains model from scratch', 
+        action='store_true'
+    )
+    parser.add_argument(
+        "--lstm",
+        help='if true, uses lstm instead of transformer', 
+        action='store_true'
+    )
+    parser.add_argument(
+        "--mamba",
+        help='if true, uses mamba instead of transformer', 
         action='store_true'
     )
     return parser.parse_args()
@@ -237,7 +249,13 @@ def main():
     )
 
     print("Building policy...")
-    policy = RT1Policy(
+    if args.lstm:
+        policyttype = RL1Policy
+    elif args.mamba:
+        policyttype = RM1Policy
+    else:
+        policyttype = RT1Policy
+    policy = policyttype(
         dist=args.use_dist,
         observation_space=observation_space,
         action_space=action_space,
