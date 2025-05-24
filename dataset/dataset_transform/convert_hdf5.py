@@ -6,9 +6,9 @@ import zipfile
 from tqdm import tqdm
 
 # Directory containing the zip files
-zip_files_directory = '/users/ajaafar/data/shared/lanmp/Trajectories'
+zip_files_directory = ''
 # HDF5 file to create or update
-hdf5_file_path = '/users/ajaafar/data/shared/lanmp/lanmp_dataset.hdf5'
+hdf5_file_path = ''
 # Specific trajectories to reprocess
 reprocess_trajectories = ['data_16:03:52:00', 'data_16:03:52']
 

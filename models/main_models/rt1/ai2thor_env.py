@@ -6,9 +6,6 @@ import ai2thor
 from ai2thor.controller import Controller
 from json import load
 from os import path
-import sys
-sys.path.append('~/data/ajaafar/NPM-Dataset/models/main_models/alfred')
-sys.path.append('~/data/ajaafar/NPM-Dataset/models/main_models/alfred/gen')
 import gen.constants as constants
 # import gen.utils.image_util as image_util
 # from gen.utils import game_util

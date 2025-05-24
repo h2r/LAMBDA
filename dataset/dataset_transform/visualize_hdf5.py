@@ -17,6 +17,6 @@ def print_hdf5_group_structure(group, prefix=''):
             print(prefix + f'  [Dataset] shape: {item.shape}, dtype: {item.dtype}')
 
 # Open the HDF5 file
-hdf5_path = '/users/ajaafar/data/shared/lanmp/lanmp_dataset.hdf5'
+hdf5_path = ''
 with h5py.File(hdf5_path, 'r') as hdf:
     print_hdf5_group_structure(hdf)

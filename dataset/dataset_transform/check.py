@@ -6,7 +6,7 @@ import openai
 import numpy as np
 
 
-PATH = "/users/ajaafar/data/shared/lanmp/sim_dataset.hdf5" #HDF5 dataset path
+PATH = "" #HDF5 dataset path
 with open('dic_release.json', 'r') as file:
     dic = json.load(file)
 

@@ -3,7 +3,7 @@ import zipfile
 import json
 from collections import defaultdict
 
-zip_files_directory = '/users/ajaafar/scratch/lanmp_dataset/Trajectories/' 
+zip_files_directory = '' 
 
 # Dictionary to store the nl_command strings and their associated zip files
 nl_commands_files = defaultdict(list)

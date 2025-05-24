@@ -6,7 +6,7 @@ import openai
 import numpy as np
 
 
-PATH = "/users/ajaafar/data/shared/lanmp/sim_dataset.hdf5" #HDF5 dataset path
+PATH = "" #HDF5 dataset path
 dic = {}
 with h5py.File(PATH, 'r') as hdf_file:
     # Iterate through each trajectory group

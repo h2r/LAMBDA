@@ -63,8 +63,8 @@ def get_obj_pos(event, obj):
 scene_objs= {}
 scene_objs_json = None
 
-PATH = "/users/ajaafar/data/shared/lanmp/sim_dataset.hdf5" #HDF5 dataset path
-NEW_PATH = "/users/ajaafar/data/shared/lanmp/sim_dataset_augmented.hdf5" #augmented HDF5 dataset path
+PATH = "" #HDF5 dataset path
+NEW_PATH = "" #augmented HDF5 dataset path
 no_pickup_release = []
 commands_scenes={}
 cmd_id = {}

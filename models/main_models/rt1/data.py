@@ -472,15 +472,8 @@ def create_dataset(
     #tf.io.gfile.exists(builder_dir=dataset2path(dataset))
     for dataset in datasets:
         #tf.io.gfile.exists(builder_dir=dataset2path(dataset))
-        
-
-        # b = tfds.builder_from_directory(builder_dir='/oscar/data/stellex/shared/bridge/0.1.0')
-        #'~/data/sjulian2/bridge/0.1.0/'
-        # dataset = tfds.load('bridge', split='train')
-        #b = tfds.builder_from_directory(builder_dir='/users/sjulian2/data/sjulian2/jaco_play/0.1.0')
-        # b = tfds.builder_from_directory(builder_dir=dataset2path(dataset))
-        
-        b = tfds.builder_from_directory(builder_dir = '/users/ajaafar/scratch/0.1.0')
+                
+        b = tfds.builder_from_directory(builder_dir = '') #add path to fractal dataset for rt1
         # ds = tfds.load("fractal20220817_data:0.1.0", data_dir="gs://gresearch/robotics")
 
         ds = b.as_dataset(split=split)
