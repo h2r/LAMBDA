@@ -29,9 +29,8 @@ def GPT_model(freeze_all=False, unfreeze_head=False):
     # config.resid_pdrop = 0.2  # Change residual dropout to 0.3
     # config.embd_pdrop = 0.2   # Change embedding dropout to 0.3
 
-    # model = GPT2LMHeadModel.from_pretrained(args.pre_train_model  ).to(args.device)
+    model = GPT2LMHeadModel.from_pretrained(args.pre_train_model).to(args.device)
 
-    model = GPT2LMHeadModel.from_pretrained(args.pre_train_model , state_dict=None)
     model.init_weights()
     model.resize_token_embeddings( len(tokenizer) )
 
@@ -122,7 +121,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", help=" path to dataset " , default= "tokenized_dataset_pickles/lambda_task_gen.pkl", type= str ) 
     parser.add_argument("--device", help=" set device  " , default= "cuda", type= str )
     parser.add_argument("--output_dir", help=" output dir  " , default= "", type= str )
-    parser.add_argument("--pre_train_model", help=" set path to pre train model " , default= "gpt2" , type= str )
+    parser.add_argument("--pre_train_model", help=" set path to pre train model " , default= "gpt2" , type= str )#replace gpt2 for finetuning
     parser.add_argument("--freeze_all", action="store_true", help="freeze the gpt-2 model")
     parser.add_argument("--unfreeze_head", action="store_true", help="unfreeze the gpt-2 head")
 
