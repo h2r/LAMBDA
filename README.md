@@ -164,25 +164,40 @@ Use the following keys to move in the simulator:
 6. `Ctrl-C` to exit and save the data
 
 ## Simulation Training 🏋️
-Coming soon.
+### RT-1
+The RT-1 model from the paper ["RT-1: Robotics Transformer for Real-World Control at Scale"](https://www.roboticsproceedings.org/rss19/p025.pdf) by _Brohan et al._ was pretrained on their dataset. Then we modified (action head) and trained it on LAMBDA. We utilized a <a href = "https://github.com/Rohan138/rt1-pytorch.git"> forked PyTorch implementation </a>. We trained and inferenced on 1 NVIDIA 3090 GPU.
+
+1. `conda create --name rt-1 python=3.9.16`
+2. `conda activate rt-1`
+3. `cd models/main_models/rt1`
+4. `pip install -r requirements.txt`
+5. `cd ../../run_training/rt1`
+6. Download the RT-1 pretrained model checkpoint from [here](https://drive.google.com/file/d/1vDY7Fl9kOJkPqRjYXdl-ygOax3otJC9Q/view?usp=sharing)
+7. Modify the path [here](https://github.com/h2r/LAMBDA/blob/c62ab5082256b054e51fbb85502b4a7236ecfa97/run_training/rt1/run_train.sh#L22) to wherever you stored the pretrained checkpoint
+8. Modify the dataset path [here](https://github.com/h2r/LAMBDA/blob/c62ab5082256b054e51fbb85502b4a7236ecfa97/run_training/rt1/run_train.sh#L21) (Make sure you have the simulation dataset downloaded as instructed at the top of this README)
+9. Make any argument and/or hyperparameter changes you want in this [file](https://github.com/h2r/LAMBDA/blob/c62ab5082256b054e51fbb85502b4a7236ecfa97/run_training/rt1/run_train.sh#L22)
+10. `./run_train_finetune.sh`
+
+### MotionGlot-MoMa
+MotionGlot-MoMa is a modified version of the MotionGlot model from the paper ["MotionGlot: A Multi-Embodied Motion Generation Model
+"](https://arxiv.org/abs/2410.16623) by Harithas et al.
+
+Instructions coming soon.
 
 ## Simulation Inference 💻
 ### RT-1
-The RT-1 model from the paper ["RT-1: Robotics Transformer for Real-World Control at Scale"](https://www.roboticsproceedings.org/rss19/p025.pdf) by _Brohan et al._ was pretrained on their dataset. Then we modified (action head) and trained it on LAMBDA. We utilized a <a href = "https://github.com/Rohan138/rt1-pytorch.git"> forked PyTorch implementation </a>. It was trained and inferenced on 1 NVIDIA 3090 GPU.
-
-
 1. Download our checkpoints from [here](https://drive.google.com/drive/folders/1JF-cbr6ubASXxEOvgz4Qcob7Fl9vCaPL?usp=sharing) (will add more checkpoints later)
-2. `conda create --name rt-1 python=3.9.16`
-3. `conda activate rt-1`
+2. `conda create --name rt-1 python=3.9.16` (skip if already done from the training instructions above)
+3. `conda activate rt-1` (skip if already done from the RT-1 training instructions above)
 4. `cd models/main_models/rt1`
-5. `pip install -r requirements.txt`  
+5. `pip install -r requirements.txt` (skip if already done from the RT-1 training instructions above)
 6. `python rollout_ai2thor.py --checkpoint-file-path "" --trajectory-save-path "" --split-type "k_fold_scene" --test-scene 4`
 
 
 
 ### MotionGlot-MoMa
 Coming soon.
-<!-- The MotionGlot model from the paper ["MotionGlot: A Multi-Embodied Motion Generation Model"](https://arxiv.org/abs/2410.16623) by _Harithas et al_. was modified (details in our paper) and trained on LAMBDA. It was trained on 8 NVIDIA 3090 GPUs and inferenced on 1.
+<!-- The MotionGlot model from the paper ["MotionGlot: A Multi-Embodied Motion Generation Model"](https://arxiv.org/abs/2410.16623) by _Harithas et al_. was modified (details in our paper) and trained on LAMBDA. We trained on 8 NVIDIA 3090 GPUs and inferenced on 1.
 
 1. `conda create --name mg-moma python=3.9`
 2. `conda activate mg-moma` -->
