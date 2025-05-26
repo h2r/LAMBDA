@@ -221,15 +221,15 @@ models/main_models/rt1/motionglot/img_token_model.pth
 /modespot/
 Trajectories/
 sim_commands.npy
-run/rt1/ft_outputs/*
-run/rt1/pretrain_outputs/*
-run/rt1/run_pretrain2.sh
-run/rt1/run_pretrain3.sh
-run/rt1/run_pretrain4.sh
-run/rt1/run_pretrain5.sh
-run/rt1/run_pretrain6.sh
-run/rt1/finetune.sbatch
-run/rt1/pretrain.sbatch
+run_trianing/rt1/ft_outputs/*
+run_trianing/rt1/pretrain_outputs/*
+run_trianing/rt1/run_pretrain2.sh
+run_trianing/rt1/run_pretrain3.sh
+run_trianing/rt1/run_pretrain4.sh
+run_trianing/rt1/run_pretrain5.sh
+run_trianing/rt1/run_pretrain6.sh
+run_trianing/rt1/finetune.sbatch
+run_trianing/rt1/pretrain.sbatch
 models/main_models/rt1/train_cmds_scene_gen_0.pkl
 models/main_models/rt1/train_cmds_scene_gen_1.pkl
 models/main_models/rt1/train_cmds_scene_gen_2.pkl
@@ -255,9 +255,9 @@ models/main_models/rt1/motionglot/rt1_cmds_order
 models/main_models/rt1/motionglot/imagetokenizer/imagetokenizer/model/__pycache__
 
 models/main_models/rt1/motionglot/rt1_cmds_order/*
-run/mg-moma/train_outputs
-run/mg-moma/train_outputs_ft
-run/mg-moma/train.sbatch
+run_training/mg-moma/train_outputs
+run_training/mg-moma/train_outputs_ft
+run_training/mg-moma/train.sbatch
 
 models/main_models/rt1/motionglot/scene_gen_1
 models/main_models/rt1/motionglot/scene_gen_2
@@ -278,3 +278,7 @@ models/main_models/rt1/motionglot/all_tokens_ids.pkl
 
 models/main_models/rt1/tests
 models/main_models/rt1/cluster_dict.json
+
+run_training/rt1/ft_outputs/
+run_training/rt1/run_pretrain/
+run_training/rt1/train_finetune.sbatch
