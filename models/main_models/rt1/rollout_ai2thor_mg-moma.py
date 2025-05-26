@@ -34,6 +34,12 @@ def parse_args():
         help="device to use for training",
     )
     parser.add_argument(
+        "--dataset-path",
+        type=str,
+        default=None,
+        help="Path of the LAMBDA simulated dataset",
+    )
+    parser.add_argument(
         "--trajectory-save-path",
         type=str,
         default="dummy",
@@ -109,7 +115,7 @@ def main():
 
     print("Loading dataset...")
     
-    dataset_manager = DatasetManager(args.subset_amt, False, args.test_scene, 0.8, 0.1, 0.1, split_style = args.split_type, diversity_scenes = None, max_trajectories = None)
+    dataset_manager = DatasetManager(args.subset_amt, False, args.test_scene, 0.8, 0.1, 0.1, split_style = args.split_type, diversity_scenes = None, max_trajectories = None, dataset_path=args.dataset_path)
     
     train_dataloader = DataLoader(dataset_manager.train_dataset, batch_size = args.eval_batch_size, shuffle=False, num_workers=2, collate_fn= dataset_manager.collate_batches, drop_last = False)
     val_dataloader = DataLoader(dataset_manager.val_dataset, batch_size = args.eval_batch_size, shuffle=False, num_workers=2, collate_fn= dataset_manager.collate_batches, drop_last = False)

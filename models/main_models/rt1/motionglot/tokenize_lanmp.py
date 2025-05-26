@@ -242,7 +242,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser("data pre-process for body movements ")
     parser.add_argument("--image_token_model", help="point to the file with the name of all files", default= "fun-research/TiTok" , type=str)
-    parser.add_argument("--dataset_path", help="point to the file with the name of all files", default= "/oscar/home/sharitha/data/datasets/lambda/" , type=str)
+    parser.add_argument("--dataset_path", help="point to the file with the name of all files", default= None , type=str)
     parser.add_argument("--processed_data_path" , help="path to the pre processed dataset" , default= "/oscar/home/sharitha/data/datasets/lambda/lanmp_dataset_imgs.pt" )
     parser.add_argument("--prepare_dataset", help="set to 1 to prepare dataset", default= 0 , type=int )
     parser.add_argument("--batch_size", help="set to 1 to prepare dataset", default= 256 , type=int )
@@ -251,6 +251,7 @@ if __name__ == "__main__":
     parser.add_argument("--start_wandb", help="start wandb " , default=1 , type =int )
 
     args = parser.parse_args()
+    assert(args.dataset_path != None, "Error, LAMBDA simulated dataset path not provided")
 
     # img_token_model = get_image_tokenizer()
     

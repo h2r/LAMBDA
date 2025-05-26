@@ -78,6 +78,12 @@ def parse_args():
         default=8,
     )
     parser.add_argument(
+        "--dataset-path",
+        type=str,
+        default=None,
+        help="Path of the LAMBDA simulated dataset",
+    )
+    parser.add_argument(
         "--sentence-transformer",
         type=str,
         default=None,
@@ -205,7 +211,7 @@ def main():
 
     print("Loading dataset...")
 
-    dataset_manager = DatasetManager(args.subset_amt, args.use_dist, args.test_scene, 0.8, 0.1, 0.1, split_style = args.split_type, diversity_scenes = args.num_diversity_scenes, max_trajectories = args.max_diversity_trajectories, low_div=args.low_div)
+    dataset_manager = DatasetManager(args.subset_amt, args.use_dist, args.test_scene, 0.8, 0.1, 0.1, split_style = args.split_type, diversity_scenes = args.num_diversity_scenes, max_trajectories = args.max_diversity_trajectories, low_div=args.low_div, dataset_path=args.dataset_path)
     
     if args.wandb and args.split_type == 'diversity_ablation':
         wandb.log({"task_keys": dataset_manager.train_dataset.dataset_keys})

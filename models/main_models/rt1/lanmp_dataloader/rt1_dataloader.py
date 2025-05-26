@@ -29,9 +29,6 @@ np.random.seed(47)
 
 sys.path.append('..')
 
-# DATASET_PATH = '/mnt/ahmed/lanmp_dataset_newest.hdf5'
-DATASET_PATH = '/oscar/data/stellex/shared/lanmp/lanmp_dataset_newest.hdf5'
-
 '''
 train_keys, val_keys, test_keys = split_data(self.args.data, splits['train'], splits['val'], splits['test'])
 '''
@@ -259,15 +256,16 @@ class DatasetManager(object):
     '''
     NOTE: kwargs should contain a dictionary with keys {'train_split' : x, 'val_split': y, 'test_split':z} where x+y+z = 1
     '''
-    def __init__(self, subset_amt, use_dist, test_scene=1, train_split=0.8, val_split=0.1, test_split=0.1, split_style='task_split', diversity_scenes=1, max_trajectories=100, low_div=True):
+    def __init__(self, subset_amt, use_dist, test_scene=1, train_split=0.8, val_split=0.1, test_split=0.1, split_style='task_split', diversity_scenes=1, max_trajectories=100, low_div=True, dataset_path=None):
         self.use_dist = use_dist
-        
-        assert( train_split + val_split + test_split == 1.0, 'Error: train, val and test split do not sum to 1.0')
+        self.dataset_path = dataset_path
 
+        assert( train_split + val_split + test_split == 1.0, 'Error: train, val and test split do not sum to 1.0')
+        assert(self.dataset_path != None, 'Error: dataset path not provided')
         
         # train_keys, val_keys, test_keys = split_data(DATASET_PATH, train_split, val_split, test_split)
         if 'scene_to_keys.json' not in os.listdir('./lanmp_dataloader'):
-            self.scene_to_keys = split_by_scene(DATASET_PATH)
+            self.scene_to_keys = split_by_scene(self.dataset_path)
         else:
             with open('./lanmp_dataloader/scene_to_keys.json') as f:
                 self.scene_to_keys = json.load(f)
@@ -304,7 +302,7 @@ class DatasetManager(object):
             assert(len(set(val_keys) & set(test_keys)) == 0), "Error: Val and Test sets overlap"
 
             if not os.path.isfile('train_cmds_scene_gen_{test_scene}.pkl') and not os.path.isfile(f'val_cmds_scene_gen_{test_scene}.pkl'):
-                hdf = h5py.File(DATASET_PATH, 'r')
+                hdf = h5py.File(self.dataset_path, 'r')
                 train_cmds = []
                 for key in train_keys:
                     traj_group = hdf[key]
@@ -365,7 +363,7 @@ class DatasetManager(object):
 
 
             if not os.path.isfile('train_cmds_task_gen.pkl') and not os.path.isfile('val_cmds_task_gen.pkl'):
-                hdf = h5py.File(DATASET_PATH, 'r')
+                hdf = h5py.File(self.dataset_path, 'r')
                 train_cmds = []
                 for key in train_keys:
                     traj_group = hdf[key]
@@ -506,10 +504,10 @@ class DatasetManager(object):
         elif split_style == 'low_high_scene':
             with open('lanmp_dataloader/div_runs.json', 'r') as file:
                 div_runs = json.load(file)
-            train_keys, val_keys = low_high_scene(DATASET_PATH, div_runs['train_envs'], div_runs['test_env'])
+            train_keys, val_keys = low_high_scene(self.dataset_path, div_runs['train_envs'], div_runs['test_env'])
 
         elif split_style == 'cluster':
-            train_keys, val_keys = cluster(DATASET_PATH, low_div=low_div)
+            train_keys, val_keys = cluster(self.dataset_path, low_div=low_div)
 
 
         if 'attribute_limits.json' not in os.listdir('./lanmp_dataloader'):
@@ -519,9 +517,9 @@ class DatasetManager(object):
                 attribute_limits = json.load(f)
             body_pose_lim, body_orientation_lim, end_effector_pose_lim = attribute_limits[0], attribute_limits[1], attribute_limits[2]
 
-        self.train_dataset = RT1Dataset(self.use_dist, train_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
-        self.val_dataset = RT1Dataset(self.use_dist, val_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
-        self.test_dataset = RT1Dataset(self.use_dist, test_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim)
+        self.train_dataset = RT1Dataset(self.use_dist, train_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim, dataset_path=self.dataset_path)
+        self.val_dataset = RT1Dataset(self.use_dist, val_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim, dataset_path=self.dataset_path)
+        self.test_dataset = RT1Dataset(self.use_dist, test_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim, dataset_path=self.dataset_path)
 
     def determine_min_max_range(self, data_subset_keys):
 
@@ -532,7 +530,7 @@ class DatasetManager(object):
         
 
 
-        with h5py.File(DATASET_PATH, 'r') as hdf:
+        with h5py.File(self.dataset_path, 'r') as hdf:
             for dataset_keys in data_subset_keys:
 
                 if dataset_keys is None:
@@ -644,7 +642,7 @@ class DatasetManager(object):
 
 class RT1Dataset(Dataset):
 
-    def __init__(self, use_dist, data_split_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim, tokenize_action=True):
+    def __init__(self, use_dist, data_split_keys, body_pose_lim, body_orientation_lim, end_effector_pose_lim, tokenize_action=True, dataset_path=None):
 
         self.use_dist = use_dist
         self.dataset_keys = data_split_keys 
@@ -654,8 +652,9 @@ class RT1Dataset(Dataset):
         self.num_bins = 254
 
         self.tokenize_action = tokenize_action
+        self.dataset_path = dataset_path
 
-        self.hdf =  h5py.File(DATASET_PATH, 'r')
+        self.hdf =  h5py.File(self.dataset_path, 'r')
     
     def __len__(self):
         return len(self.dataset_keys)

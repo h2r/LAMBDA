@@ -20,7 +20,6 @@ import pandas as pd
 from ai2thor_env import ThorEnv
 import pickle
 import time
-from tqdm import tqdm
 from ai2thor.controller import Controller
 import cv2
 
@@ -51,6 +50,12 @@ def parse_args():
         type=str,
         default="results/traj_rollouts/scene2",
         help = "directory to save the generated trajectory predicted by the model"
+    )
+    parser.add_argument(
+        "--dataset-path",
+        type=str,
+        default=None,
+        help="Path of the LAMBDA simulated dataset",
     )
     parser.add_argument(
         "--wandb",
@@ -98,11 +103,6 @@ def parse_args():
         help='use distance input if true, not if false', 
         action='store_true'
     )
-    parser.add_argument(
-        "--rand-agent",
-        help='use random agent if true, not if false', 
-        action='store_true'
-    )
     return parser.parse_args()
 
 
@@ -127,7 +127,7 @@ def main():
 
     print("Loading dataset...")
     
-    dataset_manager = DatasetManager(args.subset_amt, args.use_dist, args.test_scene, 0.8, 0.1, 0.1, split_style = args.split_type, diversity_scenes = args.num_diversity_scenes, max_trajectories = args.max_diversity_trajectories)
+    dataset_manager = DatasetManager(args.subset_amt, args.use_dist, args.test_scene, 0.8, 0.1, 0.1, split_style = args.split_type, diversity_scenes = args.num_diversity_scenes, max_trajectories = args.max_diversity_trajectories, dataset_path=args.dataset_path)
     
     train_dataloader = DataLoader(dataset_manager.train_dataset, batch_size = args.eval_batch_size, shuffle=False, num_workers=2, collate_fn= dataset_manager.collate_batches, drop_last = False)
     val_dataloader = DataLoader(dataset_manager.val_dataset, batch_size = args.eval_batch_size, shuffle=False, num_workers=2, collate_fn= dataset_manager.collate_batches, drop_last = False)
