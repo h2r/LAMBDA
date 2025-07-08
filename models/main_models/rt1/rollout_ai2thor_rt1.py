@@ -12,6 +12,8 @@ from torch.optim import Adam
 import tensorflow_hub as hub 
 from data import create_dataset
 from rt1_pytorch.rt1.rt1_policy import RT1Policy
+from rt1_pytorch.rm1.rm1_policy import RM1Policy
+from rt1_pytorch.rl1.rl1_policy import RL1Policy
 from tqdm import tqdm
 from lanmp_dataloader.rt1_dataloader import DatasetManager, DataLoader
 import gc
@@ -38,6 +40,11 @@ def parse_args():
         type=str,
         default="cuda",
         help="device to use for training",
+    )
+    parser.add_argument(
+        "--arch-type",
+        default = "transformer",
+        choices = ["transformer", "lstm", "mamba"],
     )
     parser.add_argument(
         "--checkpoint-file-path",
@@ -278,21 +285,28 @@ def main():
 
 
     print("Loading chosen checkpoint to model...")
-    rt1_model_policy = RT1Policy(
+    if args.arch_type == "transformer":
+        policy = RT1Policy
+    elif args.arch_type == "lstm":
+        policy = RL1Policy
+    else:
+        policy = RM1Policy
+
+    model_policy = policy(
         dist=args.use_dist,
         observation_space=observation_space,
         action_space=action_space,
         device=args.device,
         checkpoint_path=args.checkpoint_file_path,
     ) 
-    rt1_model_policy.model.eval()
+    model_policy.model.eval()
 
     # Total number of params
-    # total_params = sum(p.numel() for p in rt1_model_policy.model.parameters())
+    # total_params = sum(p.numel() for p in model_policy.model.parameters())
     # # Transformer params
-    # transformer_params = sum(p.numel() for p in rt1_model_policy.model.transformer.parameters())
+    # transformer_params = sum(p.numel() for p in model_policy.model.transformer.parameters())
     # # FiLM-EfficientNet and TokenLearner params
-    # tokenizer_params = sum(p.numel() for p in rt1_model_policy.model.image_tokenizer.parameters())
+    # tokenizer_params = sum(p.numel() for p in model_policy.model.image_tokenizer.parameters())
     # print(f"Total params: {total_params}")
     # print(f"Transformer params: {transformer_params}")
     # print(f"FiLM-EfficientNet+TokenLearner params: {tokenizer_params}")
@@ -325,8 +339,9 @@ def main():
     if args.eval_set == 'train':
         iterable_keys = np.random.choice(np.array(iterable_keys), size=len(test_dataloader.dataset.dataset_keys), replace=False)
 
-    for task in tqdm(iterable_keys):   
-
+    for task in iterable_keys:
+        # print(task)
+        # continue
         traj_group = train_dataloader.dataset.hdf[task]
         
         traj_steps = list(traj_group.keys())
@@ -335,6 +350,8 @@ def main():
         traj_json_dict = json.loads(json_str)
 
         nl_cmd = traj_json_dict['nl_command']
+        # print(nl_cmd)
+        # continue
 
         #skip tasks that already rolled out
         if nl_cmd in completed_dict and completed_dict[nl_cmd] == 1:
@@ -425,7 +442,7 @@ def main():
                     'context': language_command_embedding
                 }
 
-            generated_action_tokens = rt1_model_policy.act(curr_observation)
+            generated_action_tokens = model_policy.act(curr_observation)
         
            
             # terminate_episode = generated_action_tokens['terminate_episode'][0] #not needed for actual rolling out

@@ -25,7 +25,8 @@ from sentence_transformers import SentenceTransformer
 from collections import defaultdict
 import pickle as pk
 
-np.random.seed(47)
+sample_rng  = np.random.RandomState(45)
+shuffle_rng = np.random.RandomState(47)
 
 sys.path.append('..')
 
@@ -342,7 +343,8 @@ class DatasetManager(object):
             for scene in self.scenes:
                 
                 scene_keys = copy(self.scene_to_keys[scene])
-                np.random.shuffle(scene_keys)
+                shuffle_rng.shuffle(scene_keys)
+
                     
                 split_idx = int(len(scene_keys)*(train_split))
                 split_idx2 = int(len(scene_keys)*(train_split+val_split))
@@ -350,7 +352,7 @@ class DatasetManager(object):
                 if subset_amt is not None:
                     train_keys_temp = scene_keys[:split_idx]
                     num_samples = int(np.ceil(len(train_keys_temp) * (int(subset_amt) / 100)))
-                    train_keys += np.random.choice(train_keys_temp, size=num_samples, replace=False).tolist()
+                    train_keys += sample_rng.choice(train_keys_temp, size=num_samples, replace=False).tolist()
                 else:
                     train_keys += scene_keys[:split_idx]
                 val_keys += scene_keys[split_idx:split_idx2]

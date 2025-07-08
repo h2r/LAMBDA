@@ -278,7 +278,9 @@ models/main_models/rt1/motionglot/all_tokens_ids.pkl
 
 models/main_models/rt1/tests
 models/main_models/rt1/cluster_dict.json
+models/main_models/rt1/main_pretrain.py
 
 run_training/rt1/ft_outputs/
 run_training/rt1/run_pretrain/
+run_training/rt1/ablation_outputs
 run_training/rt1/train_finetune.sbatch

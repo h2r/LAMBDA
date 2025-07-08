@@ -96,6 +96,11 @@ def parse_args():
         help="device to use for training",
     )
     parser.add_argument(
+        "--arch-type",
+        default = "transformer",
+        choices = ["transformer", "lstm", "mamba"],
+    )
+    parser.add_argument(
         "--eval-freq",
         type=int,
         default=0, #200
@@ -169,16 +174,6 @@ def parse_args():
         help='if true, freezes layers to finetune the model, if false trains model from scratch', 
         action='store_true'
     )
-    parser.add_argument(
-        "--lstm",
-        help='if true, uses lstm instead of transformer', 
-        action='store_true'
-    )
-    parser.add_argument(
-        "--mamba",
-        help='if true, uses mamba instead of transformer', 
-        action='store_true'
-    )
     return parser.parse_args()
 
 
@@ -205,7 +200,7 @@ def main():
     else:
         freeze = "unfrozen" 
     if args.wandb:
-        wandb.init(project=f"mamba-{train_type}-{freeze}-{dist}-{args.split_type}-{args.subset_amt}-{args.test_scene}", config=vars(args))
+        wandb.init(project=f"{args.arch_type}-{train_type}-{freeze}-{dist}-{args.split_type}-{args.subset_amt}-{args.test_scene}", config=vars(args))
 
     os.makedirs(args.checkpoint_dir, exist_ok=True)
 
@@ -255,9 +250,9 @@ def main():
     )
 
     print("Building policy...")
-    if args.lstm:
+    if args.arch_type == "lstm":
         policyttype = RL1Policy
-    elif args.mamba:
+    elif args.arch_type == "mamba":
         policyttype = RM1Policy
     else:
         policyttype = RT1Policy

@@ -49,7 +49,7 @@ with h5py.File(hdf5_file_path, 'a') as hdf_file:  # Open HDF5 file with append m
                     elif file_name.endswith('.npy'):
                         data = np.load(file_path)
                         dataset_name = os.path.splitext(file_name)[0]
-                        timestep_group.create_dataset(dataset_name, data=data, compression="gzip")
+                        timestep_group.create_dataset(dataset_name, data=data, compression="gzip") #compress image
 
         # Cleanup the temporary directory after processing each zip file
         if os.path.exists('temp_extract_dir'):

@@ -157,6 +157,21 @@ def detokenize_action(discrete_action, index):
         return yaw_delta_val
     
 def load_traj():
+    if (os.path.exists('all_imgs.pkl') and
+        os.path.exists('all_text.pkl') and
+        os.path.exists('all_lang_instruct.pkl') and
+        os.path.exists('all_scenes.pkl')):
+        with open('all_imgs.pkl', 'rb') as file:
+            all_imgs = pickle.load(file)
+        with open('all_text.pkl', 'rb') as file:
+            all_text = pickle.load(file)
+        with open('all_lang_instruct.pkl', 'rb') as file:
+            all_lang_instruct = pickle.load(file)
+        with open('all_scenes.pkl', 'rb') as file:
+            all_scenes = pickle.load(file)
+        return all_imgs, all_text, all_lang_instruct, all_scenes
+
+
     all_files = os.listdir(args.dataset_path )
     yaw, eef_x, eef_y, eef_z , id0_range, id1_range, id2_range,id3_range, id4_range,id5_range,id6_range = get_max_min_ranges()
     yaw, eef_x, eef_y, eef_z , id0_range, id1_range, id2_range,id3_range, id4_range,id5_range,id6_range = get_max_min_ranges()
@@ -264,6 +279,13 @@ def get_unified_strings( img_tokens, lang_instruct,  text_output ):
     return ids , mask 
 
 def tokenize_images():
+    if os.path.exists('all_tokens_ids.pkl') and os.path.exists('all_masks.pkl'):
+        with open('all_tokens_ids.pkl', 'rb') as file:
+            all_tokens_ids = pickle.load(file)
+        with open('all_masks.pkl', 'rb') as file:
+            all_masks = pickle.load(file)
+        return all_tokens_ids, all_masks
+
 
     num_traj = len(all_img)
     all_tokens_ids = []
@@ -327,6 +349,18 @@ def define_vocabulary():
 
 
 def split_by_scene(all_token_ids, all_masks, all_scenes, all_lang):
+    if (os.path.exists('scene_to_ids.json') and
+        os.path.exists('scene_to_masks.json') and
+        os.path.exists('scene_to_langs.json')):
+        with open('scene_to_ids.json', 'r') as f:
+            scene_to_ids = json.load(f)
+        with open('scene_to_masks.json', 'r') as f:
+            scene_to_masks = json.load(f)
+        with open('scene_to_langs.json', 'r') as f:
+            scene_to_langs = json.load(f)
+        return scene_to_ids, scene_to_masks, scene_to_langs
+
+
     #mapping which ids are relevant to specific scenes
     scene_to_ids = {}
     scene_to_masks = {}

@@ -62,7 +62,6 @@ class RM1Policy:
         )
 
         # CHANGED: Updated RT1Model instantiation to remove unused num_heads parameter.
-        # breakpoint()
         self.model = RM1Model(
             dist=self.dist,
             arch=arch,
