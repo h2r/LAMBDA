@@ -2,7 +2,7 @@
   <h1>LAMBDA (λ) Benchmark</h1>
 </div>
 <p align="center">
-  Under IROS Review 
+  Published at IROS 
   <br>
   <a href="https://lambdabenchmark.github.io/">Website</a> |
   <a href="https://arxiv.org/abs/2412.05313">arXiv</a> |
