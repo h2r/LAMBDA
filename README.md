@@ -2,20 +2,25 @@
   <h1>LAMBDA (λ) Benchmark</h1>
 </div>
 <p align="center">
-  Published at IROS 
+  <b>Published at IROS 2025</b>
   <br>
   <a href="https://lambdabenchmark.github.io/">Website</a> |
   <a href="https://arxiv.org/abs/2412.05313">arXiv</a> |
   <!-- <a href="">Model Checkpoints</a> | -->
   <a href="https://www.dropbox.com/scl/fo/c1q9s420pzu1285t1wcud/AGMDPvgD5R1ilUFId0i94KE?rlkey=7lwmxnjagi7k9kgimd4v7fwaq&dl=0">Dataset</a> |
-  <a href="https://github.com/h2r/LaNPM-Dataset/blob/main/DataCard.md">Data Card</a>
+  <a href="https://github.com/h2r/LaNPM-Dataset/blob/main/DataCard.md">Data Card</a> |
+  <a href="">Q&A</a> |
+  <a href="https://www.youtube.com/watch?v=CJL5X23rq34">Video</a> |
+  <a href="https://drive.google.com/file/d/1Ir7uycSlLL1h_rf9-AK1oZIiPqx9GqE1/view">Poster</a> |
+  <a href="https://drive.google.com/file/d/1HXcpJdCI9OgdEj1TJ6EmmCmdO1Dtv6VI/view?usp=sharing">Slides</a> |
+  <a href="https://www.x.com/">Tweet</a>
 </p>
 
 ##
 
 ![Sequential timesteps of images from sim and real collected robot trajectories along with the natural language command describing the task.](./media/lambda_splash.png "Sim and real trajectories")
 
-Learning to execute long-horizon mobile manipulation tasks is crucial for advancing robotics in household and workplace settings. However, current approaches are typically data-inefficient, underscoring the need for improved models that require realistically sized benchmarks to evaluate their efficiency. To address this, we introduce the LAMBDA (λ) benchmark––Long-horizon Actions for Mobile-manipulation Benchmarking of Directed Activities––which evaluates the data efficiency of models on language-conditioned, long-horizon, multi-room, multi-floor, pick-and-place tasks using a dataset of manageable size, more feasible for collection. Our benchmark includes 571 human-collected demonstrations that provide realism and diversity in simulated and real-world settings. Unlike planner-generated data, these trajectories offer natural variability and replay-verifiability, ensuring robust learning and evaluation. We leverage LAMBDA to benchmark current end-to-end learning methods and a modular neuro-symbolic approaches that combines foundation models with task and motion planning. We find that end-to-end methods—even when pretrained—yield lower success rates, while neuro-symbolic methods perform significantly better and require less data.
+Learning to execute long-horizon mobile manipulation tasks is crucial for advancing robotics in household and workplace settings. However, current approaches are typically data-inefficient, underscoring the need for improved models that require realistically sized benchmarks to evaluate their efficiency. To address this, we introduce the LAMBDA ($\lambda$) benchmark-Long-horizon Actions for Mobile-manipulation Benchmarking of Directed Activities-which evaluates the data efficiency of models on language-conditioned, long-horizon, multi-room, multi-floor, pick-and-place tasks using a dataset of manageable size, more feasible for collection. Our benchmark includes 571 human-collected demonstrations that provide realism and diversity in simulated and real-world settings. Unlike planner-generated data, these trajectories offer natural variability and replay-verifiability, ensuring robust learning and evaluation. We leverage $\lambda$ to benchmark current end-to-end learning methods and a modular neuro-symbolic approach that combines foundation models with task and motion planning. We find that learning methods, even when pretrained, yield lower success rates, while a neuro-symbolic method performs significantly better and requires less data.
 
 ## Dataset Format 🗂️
 More detailed dataset information can be found in the dataset card [DataCard.md](https://github.com/h2r/LaNPM-Dataset/blob/main/DataCard.md#lanmp).
@@ -258,6 +263,10 @@ When running any of the finetuning or pretraining scripts, please ensure the fol
 8. Checkpoints for pretraining should be saved chronologically (by step number) in the `checkpoint-dir` directory
 -->
 
+## Q&A
+1. Are the delta_* fields in the simulation-collected metadata the delta from the last and current timestamp or the delta between the current timestamp and the next timestamp? **It is the delta between the current and previous steps (from this [file](https://github.com/h2r/LAMBDA/blob/main/collect_data/collect_sim/custom_ai2thor_lib_code/get_data.py), for example, this [line](https://github.com/h2r/LAMBDA/blob/21f3b10e61a0932535ad7efc8e1a426e3e5ba7ec/collect_data/collect_sim/custom_ai2thor_lib_code/get_data.py#L140C12-L140C122)).**
+2. Is there a set Hz that the dataset was sampled at? Was there any sort of compression done to remove timestamps where the robot wasn't doing anything? **For the simulation dataset, there isn't a set Hz per se. Data was only recorded every time the robot took an action. If the robot didn't do anything, then nothing was recorded, and the simulator was frozen. So no compression was done as the timesteps where the robot wasn't doing anything weren't recorded to begin with.**
+3. What are the units of the data fields? **According to [this](https://ai2thor.allenai.org/manipulathor/documentation/#environment-state), which I used when building the data collection code, it's meters.**
 
 
 
@@ -265,13 +274,13 @@ When running any of the finetuning or pretraining scripts, please ensure the fol
 ## Citation 📝
 If you utilize our work, please consider citing:
 ```
-   @misc{lambdabenchmark,
+@misc{jaafar2025lambdabenchmarkdataefficiencylonghorizon,
       title={{\lambda}: A Benchmark for Data-Efficiency in Long-Horizon Indoor Mobile Manipulation Robotics}, 
-      author={Ahmed Jaafar and Shreyas Sundara Raman and Yichen Wei and Sudarshan Harithas and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
+      author={Ahmed Jaafar and Shreyas Sundara Raman and Sudarshan Harithas and Yichen Wei and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
       year={2025},
       eprint={2412.05313},
       archivePrefix={arXiv},
       primaryClass={cs.RO},
       url={https://arxiv.org/abs/2412.05313}, 
-    }
+}
 ```
