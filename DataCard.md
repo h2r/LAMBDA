@@ -269,7 +269,7 @@ Current base to goal distance | 1.8696562407438535 | The current distance in met
 Body state | [4.0, 6.2, 7.5 , 226] | The global state of the robot, [x, y, z, yaw]
 Delta global body state | [-1.6689300537109375e-06, 0.0, 0.19999980926513672, 0.0] | The difference of the robot body state between the current and previous steps
 End-effector state | [2.59, 0.89, -4.17, -1.94, -1.27, 1.94] | The global state of the robot's end-effector, [x, y, z, roll, pitch, yaw]
-Relative end-effector state' [-1.7881393432617188e-07, 0.0, 0.40000009536743164] | The state relative to the shoulder of the robot's end-effector, [x, y, z, roll, pitch, yaw]
+Relative end-effector state' | [-1.7881393432617188e-07, 0.0, 0.40000009536743164] | The state relative to the shoulder of the robot's end-effector, [x, y, z, roll, pitch, yaw]
 Delta global end-effector state | [-1.6689300537109375e-06, 0.0, 0.19999980926513672, -6.49544211011719e-11, 0.0, 6.495442110119837e-11] | The difference of the robot end-effector state between the current and previous steps
 Delta relative end-effector state | [0.0, 0.0, 0.0] | The difference of the relative (to shoulder) robot end-effector state between the current and previous steps
 Current end-effector to target object distance | 7.126992729878325 | The current distance, in meters, between the end-effector and the target object
@@ -333,16 +333,33 @@ Simulation:
 {
     "nl_command": "Go to the table and pick up the salt and place it in the white bin in the living room.",
     "scene": "FloorPlan_Train8_1",
+    "target_obj": "Salt_Shaker_1",
+    "target_obj_start_pos": [9.101999282836914, 0.7313970327377319, -1.2660019397735596],
+    "target_receptacle": 'bin_6',
+    "base_start_pos": [3.0, 0.9009992480278015, -4.5],
+    "goal_pos": [4.658524036407471, 0.9009992480278015, -3.6369168758392334],
+    "base_start_to_goal_dist": 1.8696562407438535,
     "steps": [
         {
             "sim_time": 0.1852477639913559,
             "wall-clock_time": "15:10:47.900",
             "action": "Initialize",
+            "head_pitch": 60.00001525878906,
             "state_body": [3.0, 0.9009992480278015, -4.5, 269.9995422363281],
             "state_ee": [2.5999975204467773, 0.8979992270469666, -4.171003341674805, -1.9440563492718068e-07, -1.2731799533306385, 1.9440386333307377e-07],
-            "hand_sphere_radius": 0.05999999865889549
+            "relative_state_ee": [-1.7881393432617188e-07, 0.0, 0.40000009536743164],
+            "hand_sphere_radius": 0.05999999865889549,
+            "hand_sphere_center": [2.3899972438812256, 0.4509992301464081, -4.1710052490234375],
             "held_objs": [],
+            "curr_target_obj_pos": [9.102008819580078, 0.7318447828292847, -1.2660081386566162],
+            "curr_ee_to_target_obj_dist": 7.126992729878325,
+            "curr_base_to_goal_dist": 1.8696562407438535,
+            "curr_ee_to_release_dist": 2.6474130993433422,
+            "delta_global_state_body": [-1.6689300537109375e-06, 0.0, 0.19999980926513672, 0.0],
+            "delta_global_state_ee": [-1.6689300537109375e-06, 0.0, 0.19999980926513672, -6.49544211011719e-11, 0.0, 6.495442110119837e-11],
+            "delta_relative_state_ee": [0.0, 0.0, 0.0],
             "held_objs_state": {},
+            "reward": 0,
             "inst_det2D": {
                 "keys": [
                     "Wall_4|0.98|1.298|-2.63",
@@ -472,15 +489,15 @@ out for, or other relevant information or considerations. -->
 
 **BiBTeX:**
 ```
- @misc{lambdabenchmark,
-      title={{\lambda}: A Benchmark for Data-Efficiency in Long-Horizon Indoor Mobile Manipulation Robotics}, 
-      author={Ahmed Jaafar and Shreyas Sundara Raman and Yichen Wei and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
-      year={2025},
-      eprint={2412.05313},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2412.05313}, 
-    }
+@misc{lambdabenchmark,
+        title={{\lambda}: A Benchmark for Data-Efficiency in Long-Horizon Indoor Mobile Manipulation Robotics}, 
+        author={Ahmed Jaafar and Shreyas Sundara Raman and Sudarshan Harithas and Yichen Wei and Sofia Juliani and Anneke Wernerfelt and Benedict Quartey and Ifrah Idrees and Jason Xinyu Liu and Stefanie Tellex},
+        year={2025},
+        eprint={2412.05313},
+        archivePrefix={arXiv},
+        primaryClass={cs.RO},
+        url={https://arxiv.org/abs/2412.05313}, 
+  }
 ```
 
 ## Access
@@ -972,17 +989,17 @@ Number of annotators per example | 1
 
 **Above:** Humans that gave natural language commands of tasks for the real-world robot to execute.
 
-**Employees** | **Number**
+**Description** | **Number**
 --- | ---
-Number of unique annotations | 524
-Total number of annotations | 524
+Number of unique annotations | 521
+Total number of annotations | 521
 Average annotations per example | 1
-Number of annotators | 15
+Number of annotators | 1
 Number of annotators per example | 1
 
-**Above:** Humans that exected the trajectories in the simulator.
+**Above:** Humans who executed the trajectories in the simulator.
 
-**Crowdsourcing** | **Number**
+**Description** | **Number**
 --- | ---
 Number of unique annotations | 521
 Total number of annotations | 521
@@ -990,7 +1007,7 @@ Average annotations per example | 1
 Number of annotators | 41
 Number of annotators per example | 1
 
-**Above:**  Humans that gave natural language commands of tasks for the simulated robot to execute.
+**Above:**  Humans who gave natural language commands of tasks for the simulated robot to execute.
 
 
 #### Annotation Description(s)
@@ -1094,15 +1111,15 @@ following for each annotation type.) -->
 **Annotation platforms:** N/A
 
 
-**Employed Simulator Command Collection**
+**Simulator Trajectory Collection**
 
-**Task type:**  Humans that exected the trajectories in the simulator
+**Task type:**  Humans who executed the trajectories in the simulator
 
-**Number of unique annotators:** 7
+**Number of unique annotators:** 1
 
-**Expertise of annotators:** Non-Expert
+**Expertise of annotators:** Expert
 
-**Description of annotators:** General adults
+**Description of annotators:** Author
 
 **Language distribution of annotators:** English
 
@@ -1224,97 +1241,3 @@ following for each validator type.) -->
 **Training provided:** Summarize here. Include links if available.
 
 **Additional Notes:** Add here -->
-
-## Sampling Methods
-<!-- info: Fill out the following block if your dataset employs any sampling
-methods. -->
-#### Method(s) Used
-<!-- scope: telescope -->
-<!-- info: Select **all applicable** methods used in the creation of this
-dataset: -->
-- Unsampled
-
-## Known Applications & Benchmarks
-<!-- info: Fill out the following section if your dataset was primarily
-created for use in AI or ML system(s) -->
-#### ML Application(s)
-<!-- scope: telescope -->
-<!-- info: Provide a list of key ML tasks
-that the dataset has been
-used for.
-
-Usage Note: Use comma-separated keywords. -->
-*Classification, Regression, Supervised Learning, Imitation Learning*
-
-#### Evaluation Result(s)
-<!-- scope: periscope -->
-<!-- info: Provide the evaluation results from
-models that this dataset has been used
-in.
-
-Use additional notes to capture any
-other relevant information or
-considerations.
-
-(Usage Note: Duplicate and complete the
-following for each model.) -->
-**RT-1**
-
-**Model Card:** In page 21 of the [paper](https://robotics-transformer.github.io/assets/rt1.pdf).
-
-**Additional Notes:** These results are from the simulation data only.
-
-#### Evaluation Process(es)
-<!-- scope: microscope -->
-<!-- info: Provide a description of the evaluation process for
-the model's overall performance or the
-determination of how the dataset contributes to
-the model's performance.
-
-Use additional notes to capture any other relevant
-information or considerations.
-
-(Usage Note: Duplicate and complete the following
-for each model and method used.) -->
-
-**[Metrics used]:**
-
-**Additional Notes:** 
-
-#### Description(s) and Statistic(s)
-<!-- scope: periscope -->
-<!-- info: Provide a description of the model(s) and
-task(s) that this dataset has been used
-in.
-
-Use additional notes to capture any
-other relevant information or
-considerations.
-
-(Usage Note: Duplicate and complete the
-following for each model.) -->
-**RT-1**
-
-**Model Card:** In page 21 of the [paper](https://robotics-transformer.github.io/assets/rt1.pdf).
-
-**Model Description:** Robotics Transformer 1 (RT-1) is a model designed for generalizing across large-scale, multi-task datasets with real-time inference capabilities. RT-1 leverages a Transformer architecture to process images and natural language instructions to generate discretized actions for mobile manipulation. RT-1 is trained on a diverse dataset of approximately 130K episodes across more
-than 700 tasks collected using 13 robots. This enables RT-1 to learn through BC from human
-demonstrations annotated with detailed instructions.
-
-- Model Size: 35M (params)
-
-
-#### Expected Performance and Known Caveats
-<!-- scope: microscope -->
-<!-- info: Provide a description of the expected performance
-and known caveats of the models for this dataset.
-
-Use additional notes to capture any other relevant
-information or considerations.
-
-(Usage Note: Duplicate and complete the following
-for each model.) -->
-
-**Expected Performance:** 
-
-**Known Caveats:** 
