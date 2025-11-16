@@ -52,8 +52,8 @@ organizations belong: -->
 institutions or multiple affiliations.) -->
 - Ahmed Jaafar, Brown University
 - Shreyas Sundara Raman, Brown University
-- Yichen Wei, Brown University
-- Sudarshan Harithas, Brown University
+- Sudarshan Harithas*, Brown University
+- Yichen Wei*, Brown University
 - Sofia Juliani, Rutgers University
 - Anneke Wernerfelt, University of Pennsylvania
 - Benedict Quartey, Brown University
@@ -101,11 +101,10 @@ to include relevant information, considerations, and links to table(s) with
 more detailed breakdowns.) -->
 Category | Data
 --- | ---
-Size of Dataset | 288400 MB
+Size of Dataset | 111.19 GB
 Number of Instances | 571
 Human Labels | 571
 Capabilities | 4
-Avg. Trajectory Length | 496 (sim)
 Number of environments | 8
 Number of rooms | 30
 Number of actions | 12
@@ -120,9 +119,9 @@ Number of robots | 2
 #### Content Description
 <!-- scope: microscope -->
 <!-- info: Provide a short description of the content in a data point: -->
-Every data point in simulation (trajectory time step) contains these important aspects: natural language command, egocentric RGB-D, instance segmentations, bounding boxes, robot body pose, robot end-effector pose, and grasped object poses.
+Every data point in simulation (trajectory time step) contains these important aspects: natural language command, egocentric RGB-D, instance segmentations, bounding boxes, robot body pose, robot end-effector pose, and grasped object poses, etc.
 
-Every data point in real (trajectory time step) contains on a high-level: natural language command, egocentric RGB-D, egocentric RGB-D, gripper RGB-D, gripper instance segmentations, robot body pose, robot arm pose, feet positions, joint angles, robot body velocity, robot arm velocity, gripper open percentage, object held boolean.
+Every data point in real (trajectory time step) contains on a high-level: natural language command, egocentric RGB-D, egocentric RGB-D, gripper RGB-D, gripper instance segmentations, robot body pose, robot arm pose, feet positions, joint angles, robot body velocity, robot arm velocity, gripper open percentage, object held boolean, etc.
 
 #### Descriptive Statistics
 <!-- width: full -->
@@ -137,12 +136,12 @@ strings. -->
 Statistic | Simulation Trajectories | Real Trajectories 
 --- | --- | --- 
 count | 521 | 50
-mean |496| 323
+mean |- | 323
 std | - | 187
 min | - | 123
 max | - | 733
 
-**Above:** The mean, std, min, and max of the trajectories refers to their lengths.
+**Above:** The mean, std, min, and max of the trajectories refer to their lengths.
 
 <!-- **Additional Notes:** Add here. -->
 
@@ -257,14 +256,32 @@ Simulation | Value | Description
 --- | --- | ---
 Natural Language | "Go pick up the apple and put it on the couch." | The command the human tells the robot for completing a certain task
 Scene | "FloorPlan_Train8_1" | The simulation environment in AI2THOR
+Target object | 'Salt_Shaker_1' | The meant to be picked up
+Target object start position | [9.101999282836914, 0.7313970327377319, -1.2660019397735596] | Where the target object is located initially
+Target receptacle | 'bin_6' | Where the target object is meant to be placed
+Current target object position |  [9.102008819580078, 0.7318447828292847, -1.2660081386566162] | The current position of the target object
 Sim time | 0.19645 | The simulation time
 Wall clock time |  14:49:37 | The real-world time
+Base start position | [3.0, 0.9009992480278015, -4.5] | Where the robot is initially located on the map
+Goal position | [4.658524036407471, 0.9009992480278015, -3.6369168758392334] | The robot's base position on the map when it places the object in the receptacle
+Base start to goal distance | 1.8696562407438535 | The distance, in meters, between the "Base start position" and the "Goal position"
+Current base to goal distance | 1.8696562407438535 | The current distance in meters, between the robot base and the "Goal position"
 Body state | [4.0, 6.2, 7.5 , 226] | The global state of the robot, [x, y, z, yaw]
+Delta global body state | [-1.6689300537109375e-06, 0.0, 0.19999980926513672, 0.0] | The difference of the robot body state between the current and previous steps
 End-effector state | [2.59, 0.89, -4.17, -1.94, -1.27, 1.94] | The global state of the robot's end-effector, [x, y, z, roll, pitch, yaw]
-Hand sphere radius | 0.059 | The radius of the hand grasp field
+Relative end-effector state' [-1.7881393432617188e-07, 0.0, 0.40000009536743164] | The state relative to the shoulder of the robot's end-effector, [x, y, z, roll, pitch, yaw]
+Delta global end-effector state | [-1.6689300537109375e-06, 0.0, 0.19999980926513672, -6.49544211011719e-11, 0.0, 6.495442110119837e-11] | The difference of the robot end-effector state between the current and previous steps
+Delta relative end-effector state | [0.0, 0.0, 0.0] | The difference of the relative (to shoulder) robot end-effector state between the current and previous steps
+Current end-effector to target object distance | 7.126992729878325 | The current distance, in meters, between the end-effector and the target object
+Current end-effector to release distance | 2.6474130993433422 | The current distance, in meters, between the end-effector and where the end-effector will be when it releases the target object into the target receptacle
+Hand sphere radius | 0.059 | The radius of the end-effector grasp field/bubble
+Hand sphere center | [2.3899972438812256, 0.4509992301464081, -4.1710052490234375] | The center position of the end-effector grasp field/bubble
 Held objects | [Apple] | A list of objects currently held by the robot
 Held object state | [4.4, 2.3, 5.1] | The global state of the currently held objects, [x, y, z]
+Action | 'LookDown' | The discrete action the robot performed
+Reward| 0 | The current sparse reward, 3 for goal, 1 for picking up obj, 0 otherwise
 Bounding boxes  |  {"keys": [Apple], "values":[418, 42, 23, 321]}  | The objects detected with bounding boxes and the coordinates of those boxes
+Head pitch | 60.00001525878906 | The angle, in degrees, of the egocentric camera
 RGB | `./rgb_0.npy` | The path to the RGB npy egocentric image of the time step
 Depth | `./depth_0.npy` | The path to the depth npy egocentric image of the time step
 Instance segmentations | `./inst_seg_0.npy` | The path to the instance segmentations npy egocentric image of the time step
